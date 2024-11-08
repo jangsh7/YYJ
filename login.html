@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+    
+    @font-face { 
+        font-family: "SCDream4";
+        src: url("font/SCDream4.otf") format("truetype");
+        font-weight: normal;
+    }
+    * {
+        font-family: 'SCDream4';
+    }
+    body {
+        background-color: #333333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+    .login-container {
+        background-color: white;
+        width: 300px;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .login-container h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    .error-message {
+        background-color: #ce2727c1;
+        color: white;
+        padding: 10px 0;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        font-size: 12px;
+        display: none;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    input[type="text"], input[type="password"] {
+        width: 100%;
+        height: 35px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        padding-left: 10px;
+        box-sizing: border-box;
+        margin-bottom: 15px;
+    }
+    .btn {
+        width: 100%;
+        height: 35px;
+        font-size: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #333333;
+        color: white;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+    .btn:hover {
+        background-color: #555555;
+    }
+    .links {
+        margin-top: 15px;
+        font-size: 12px;
+        color: gray;
+    }
+    .links a {
+        color: gray;
+        text-decoration: none;
+        margin: 0 5px;
+    }
+    .links a:hover {
+        color: black;
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+    <div class="error-message" id="error-message">Invalid ID or password</div>
+    <form onsubmit="return validateLogin()">
+        <input type="text" id="username" placeholder="ID">
+        <input type="password" id="password" placeholder="Password">
+        <input type="submit" value="Login" class="btn">
+    </form>
+    <div class="links">
+        <a href="find_id.html">아이디 찾기</a> |
+        <a href="find_password.html">비밀번호 찾기</a> |
+        <a href="signup.html">회원가입</a>
+    </div>
+</div>
+
+<script>
+    function validateLogin() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const errorMessage = document.getElementById("error-message");
+
+        if (username === "" || password === "") {
+            errorMessage.style.display = "block"; // 오류 메시지 표시
+            return false; // 폼 제출 방지
+        } else {
+            errorMessage.style.display = "none"; // 오류 메시지 숨김
+            return true;
+        }
+    }
+</script>
+</body>
+</html> 
