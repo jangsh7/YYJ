@@ -5920,5 +5920,117 @@
     "gameContent": "롯데5vs1NC",
     "stadium": "창원",
     "rain": 0
+  },
+  {
+    "day": "10.02(수)",
+    "time": "18:30",
+    "gameContent": "KT4vs0두산",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.03(목)",
+    "time": "14:00",
+    "gameContent": "KT1vs0두산",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.05(토)",
+    "time": "14:00",
+    "gameContent": "KT3vs2LG",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.06(일)",
+    "time": "14:00",
+    "gameContent": "KT2vs7LG",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.08(화)",
+    "time": "18:30",
+    "gameContent": "LG6vs5KT",
+    "stadium": "수원",
+    "rain": 0
+  },
+  {
+    "day": "10.09(수)",
+    "time": "14:00",
+    "gameContent": "LG5vs6KT",
+    "stadium": "수원",
+    "rain": 0
+  },
+  {
+    "day": "10.11(금)",
+    "time": "18:30",
+    "gameContent": "KT1vs4LG",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.13(일)",
+    "time": "14:00",
+    "gameContent": "LG4vs10삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "10.15(화)",
+    "time": "18:30",
+    "gameContent": "LG5vs10삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "10.17(목)",
+    "time": "18:30",
+    "gameContent": "삼성0vs1LG",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.19(토)",
+    "time": "14:00",
+    "gameContent": "삼성1vs0LG",
+    "stadium": "잠실",
+    "rain": 0
+  },
+  {
+    "day": "10.21(월)",
+    "time": "18:30",
+    "gameContent": "삼성1vs5KIA",
+    "stadium": "광주",
+    "rain": 0
+  },
+  {
+    "day": "10.23(수)",
+    "time": "18:30",
+    "gameContent": "삼성3vs8KIA",
+    "stadium": "광주",
+    "rain": 0
+  },
+  {
+    "day": "10.25(금)",
+    "time": "18:30",
+    "gameContent": "KIA2vs4삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "10.26(토)",
+    "time": "14:00",
+    "gameContent": "KIA9vs2삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "10.28(월)",
+    "time": "18:30",
+    "gameContent": "삼성5vs7KIA",
+    "stadium": "광주",
+    "rain": 0
   }
 ]

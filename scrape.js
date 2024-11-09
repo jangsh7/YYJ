@@ -12,7 +12,7 @@ async function scrapeSchedule() {
 
     // 스크래핑 함수
     async function scrapeData(series, months) {
-        // 시즌 선택 (프리시즌 또는 정규시즌)
+        // 시즌 선택 (프리시즌, 정규시즌 또는 포스트시즌)
         await page.select('#ddlSeries', series);
 
         for (const month of months) {
@@ -39,6 +39,11 @@ async function scrapeSchedule() {
                     const stadiumCell = dayCell ? row.querySelector('td:nth-child(8)') : row.querySelector('td:nth-child(7)');
                     const rainCell = dayCell ? row.querySelector('td:nth-child(9)') : row.querySelector('td:nth-child(8)');
 
+                    // "이동일"인 경우, 해당 경기 건너뛰기
+                    if (rainCell && rainCell.innerText.includes("이동일")) {
+                        return null;  // null로 반환하여 이후 필터링에서 제거
+                    }
+
                     let day = dayCell ? dayCell.innerText.trim() : lastDay;
                     if (dayCell) lastDay = day;
 
@@ -48,7 +53,7 @@ async function scrapeSchedule() {
                     const rain = rainCell && rainCell.innerText.includes("우천취소") ? 1 : 0;
 
                     return { day, time, gameContent, stadium, rain };
-                });
+                }).filter(game => game !== null);  // null인 항목 제거
             });
 
             // 해당 월 데이터 추가
@@ -63,9 +68,12 @@ async function scrapeSchedule() {
     // 정규시즌(3월~10월) 스크래핑
     await scrapeData('0,9,6', [3, 4, 5, 6, 7, 8, 9, 10]);
 
+    // 포스트시즌(10월) 스크래핑
+    await scrapeData('3,4,5,7', [10]);
+
     // JSON 파일로 저장
     fs.writeFileSync(path.join(__dirname, 'schedule.json'), JSON.stringify(fullSchedule, null, 2), 'utf-8');
-    console.log("All scraped data (preseason and regular season) has been saved to schedule.json.");
+    console.log("All scraped data (preseason, regular season, and postseason) has been saved to schedule.json.");
 
     await browser.close();
 }
