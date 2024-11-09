@@ -11,7 +11,7 @@
             font-weight: normal;
         }
         * {
-        font-family: 'SCDream4';
+            font-family: 'SCDream4';
         }
 
         body {
@@ -142,8 +142,38 @@
             gap: 20px;
         }
         .visibility-selection label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 12px; 
+            cursor: pointer;
+        }
+        .visibility-selection input[type="radio"] {
+            display: none;
+        }
+        .visibility-selection input[type="radio"] + span {
+            display: inline-block;
+            width: 15px; 
+            height: 15px; 
+            border: 2px solid #999;
+            border-radius: 3px;
+            background-color: #f0f0f0;
+            position: relative;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        .visibility-selection input[type="radio"]:checked + span {
+            background-color: #333333;
+            border-color: #333333;
+        }
+        .visibility-selection input[type="radio"]:checked + span::before {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .header-form {
             display: flex;
@@ -246,7 +276,7 @@
                     <option value="맑음">맑음</option>
                     <option value="흐림">흐림</option>
                     <option value="비">비</option>
-                    <option value="눈">눈</option>
+                    <option value="눈">우천 취소</option>
                 </select>
             </div>
             <div>
@@ -330,8 +360,8 @@
         </div>
 
         <div class="visibility-selection">
-            <label><input type="radio" name="visibility" value="public" checked> 공개</label>
-            <label><input type="radio" name="visibility" value="private"> 비공개</label>
+            <label><input type="radio" name="visibility" value="public" checked><span></span> 공개</label>
+            <label><input type="radio" name="visibility" value="private"><span></span> 비공개</label>
         </div>
 
         <div class="buttons">
