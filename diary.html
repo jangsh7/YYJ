@@ -222,6 +222,33 @@
             background-color: #333333;
             color: white;
         }
+
+        .image-upload-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: white;
+            color: black;
+            cursor: pointer;
+            display: inline-block;
+            border: 2px solid black;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.4s, color 0.4s;
+        }
+        .image-upload-btn:hover {
+            background-color: black;
+            color: white;
+        }
+        .image-upload-btn:focus {
+            outline: none;
+        }
+
+        .image-upload-input {
+            display: none;
+        }
+
+        /* 모달 스타일 */
         .modal {
             display: none;
             position: fixed;
@@ -296,7 +323,7 @@
 
         <div class="scoreboard">
             <div>
-                <img src="C:\Users\kimso\OneDrive\바탕 화면\옾소\옾소 프로젝트\images\KIAtigers.jpg" alt="홈 팀 로고" class="team-image">
+                <img src="images/KIAtigers.jpg" alt="홈 팀 로고" class="team-image">
                 <p>기아 타이거즈</p>
             </div>
             <div>
@@ -305,7 +332,7 @@
                 <input type="number" min="0" max="99" placeholder="0" aria-label="Away Team Score">
             </div>
             <div>
-                <img src="C:\Users\kimso\OneDrive\바탕 화면\옾소\옾소 프로젝트\images\KIAtigers.jpg" alt="어웨이 팀 로고" class="team-image">
+                <img src="images/DOOSANbears.jpg" alt="어웨이 팀 로고" class="team-image">
                 <p>두산 베어스</p>
             </div>
         </div>
@@ -331,9 +358,8 @@
             </div>
             <div class="field">
                 <div id="imageUploadContainer">
-                    <p id="imageUploadLabel">이미지 추가하기</p>
-                    <button id="addImageButton">+</button>
-                    <input type="file" id="fieldImage" class="image-upload" accept="image/*" onchange="loadFieldImage(event)" style="display: none;">
+                    <button class="image-upload-btn" id="addImageButton">이미지 추가하기</button>
+                    <input type="file" id="fieldImage" class="image-upload-input" accept="image/*" onchange="loadFieldImage(event)">
                 </div>
                 <div id="imageDisplayContainer" style="margin-top: 20px; display: none;">
                     <img id="fieldDisplay" alt="야구장 포지션" width="400">
