@@ -56,15 +56,17 @@
         width: 90vw;
         max-width: 1200px;
         height: 90vh;
-        margin: 20px auto; /* 중앙 정렬을 위해 auto 여백 추가 */
+        margin: 20px auto;
     }
 
     .image-space {
         width: 25%;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
         border-right: 1px solid #ccc;
+        text-align: center;
     }
 
     .calendar-container {
@@ -102,14 +104,14 @@
         grid-template-columns: repeat(7, 1fr);
         gap: 10px;
         width: 100%;
-        padding-left: 10px; /* 좌우 여백 추가 */
+        padding-left: 10px;
         padding-right: 10px;
         box-sizing: border-box;
     }
 
     .calendar-day {
         width: 100%;
-        aspect-ratio: 1; /* 정사각형 비율 유지 */
+        aspect-ratio: 1;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -138,9 +140,31 @@
     }
 
     .today {
-        background-color: #5d5d5d;
+        background-color: #9a1010d3;
         color: white;
         border-radius: 10px;
+    }
+
+    .stats-section {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+
+    .stats-section input[type="number"] {
+        width: 50px;
+        font-size: 16px;
+        padding: 5px;
+        border: none;
+        text-align: center;
+        margin: 0 5px;
+    }
+
+    .stats-section input[type="text"] {
+        width: 70px;
+        font-size: 16px;
+        text-align: center;
+        border: none;
+        background-color: transparent;
     }
 </style>
 </head>
@@ -167,7 +191,17 @@
 
 <div class="container">
     <div class="image-space">
-        <img src="C:\Users\kimso\OneDrive\바탕 화면\옾소\옾소 프로젝트\images.png" alt="달력 이미지" width="150">
+        <img src="images/KIAtigers.jpg" alt="달력 이미지" width="150">
+        
+        <div class="stats-section">
+            <div>
+                승률: <input type="text" id="winRate" value="0.0%" readonly>
+            </div>
+            <div>
+                <input type="number" id="winsInput" placeholder="0" oninput="calculateWinRate()" min="0"> 승
+                <input type="number" id="lossesInput" placeholder="0" oninput="calculateWinRate()" min="0"> 패
+            </div>
+        </div>
     </div>
 
     <div class="calendar-container">
@@ -270,6 +304,15 @@
     function updateSelectors() {
         document.getElementById("yearSelect").value = currentDate.getFullYear();
         document.getElementById("monthSelect").value = currentDate.getMonth();
+    }
+
+    function calculateWinRate() {
+        const wins = parseInt(document.getElementById("winsInput").value) || 0;
+        const losses = parseInt(document.getElementById("lossesInput").value) || 0;
+        const totalGames = wins + losses;
+
+        let winRate = totalGames > 0 ? ((wins / totalGames) * 100).toFixed(1) : "0.0";
+        document.getElementById("winRate").value = winRate + "%";
     }
 
     initYearMonthSelectors();
