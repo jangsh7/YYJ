@@ -1,0 +1,338 @@
+[
+  {
+    "day": "03.09(토)",
+    "time": "13:00",
+    "gameContent": "키움8vs12두산",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.09(토)",
+    "time": "13:00",
+    "gameContent": "SSG1vs6롯데",
+    "stadium": "사직",
+    "rain": 0
+  },
+  {
+    "day": "03.09(토)",
+    "time": "13:00",
+    "gameContent": "KIA10vs3NC",
+    "stadium": "창원",
+    "rain": 0
+  },
+  {
+    "day": "03.09(토)",
+    "time": "13:00",
+    "gameContent": "LG5vs2KT",
+    "stadium": "수원",
+    "rain": 0
+  },
+  {
+    "day": "03.09(토)",
+    "time": "13:00",
+    "gameContent": "삼성2vs6한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.10(일)",
+    "time": "13:00",
+    "gameContent": "키움1vs3두산",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.10(일)",
+    "time": "13:00",
+    "gameContent": "SSG5vs13롯데",
+    "stadium": "사직",
+    "rain": 0
+  },
+  {
+    "day": "03.10(일)",
+    "time": "13:00",
+    "gameContent": "KIA4vs6NC",
+    "stadium": "창원",
+    "rain": 0
+  },
+  {
+    "day": "03.10(일)",
+    "time": "13:00",
+    "gameContent": "LG2vs3KT",
+    "stadium": "수원",
+    "rain": 0
+  },
+  {
+    "day": "03.10(일)",
+    "time": "13:00",
+    "gameContent": "삼성6vs1한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.11(월)",
+    "time": "13:00",
+    "gameContent": "두산3vs0롯데",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.11(월)",
+    "time": "13:00",
+    "gameContent": "LG5vs2삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "03.11(월)",
+    "time": "13:00",
+    "gameContent": "키움3vs9NC",
+    "stadium": "창원",
+    "rain": 0
+  },
+  {
+    "day": "03.11(월)",
+    "time": "13:00",
+    "gameContent": "SSG3vs0KT",
+    "stadium": "수원",
+    "rain": 0
+  },
+  {
+    "day": "03.11(월)",
+    "time": "13:00",
+    "gameContent": "KIA3vs0한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.12(화)",
+    "time": "13:00",
+    "gameContent": "두산vs롯데",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.12(화)",
+    "time": "13:00",
+    "gameContent": "LG3vs0삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "03.12(화)",
+    "time": "13:00",
+    "gameContent": "키움7vs8NC",
+    "stadium": "창원",
+    "rain": 0
+  },
+  {
+    "day": "03.12(화)",
+    "time": "13:00",
+    "gameContent": "SSG4vs8KT",
+    "stadium": "수원",
+    "rain": 0
+  },
+  {
+    "day": "03.12(화)",
+    "time": "13:00",
+    "gameContent": "KIA1vs9한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.14(목)",
+    "time": "13:00",
+    "gameContent": "KIA2vs7두산",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.14(목)",
+    "time": "13:00",
+    "gameContent": "롯데7vs0삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "03.14(목)",
+    "time": "13:00",
+    "gameContent": "LG4vs6NC",
+    "stadium": "창원",
+    "rain": 0
+  },
+  {
+    "day": "03.14(목)",
+    "time": "13:00",
+    "gameContent": "KT4vs6한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.14(목)",
+    "time": "18:00",
+    "gameContent": "키움5vs4SSG",
+    "stadium": "문학",
+    "rain": 0
+  },
+  {
+    "day": "03.15(금)",
+    "time": "13:00",
+    "gameContent": "KIA4vs5두산",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.15(금)",
+    "time": "13:00",
+    "gameContent": "롯데2vs3삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "03.15(금)",
+    "time": "13:00",
+    "gameContent": "LG11vs7NC",
+    "stadium": "창원",
+    "rain": 0
+  },
+  {
+    "day": "03.15(금)",
+    "time": "13:00",
+    "gameContent": "KT11vs11한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.15(금)",
+    "time": "14:00",
+    "gameContent": "키움6vs11SSG",
+    "stadium": "문학",
+    "rain": 0
+  },
+  {
+    "day": "03.16(토)",
+    "time": "13:00",
+    "gameContent": "키움1vs3LG",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.16(토)",
+    "time": "13:00",
+    "gameContent": "두산2vs1SSG",
+    "stadium": "문학",
+    "rain": 0
+  },
+  {
+    "day": "03.16(토)",
+    "time": "13:00",
+    "gameContent": "한화8vs2롯데",
+    "stadium": "사직",
+    "rain": 0
+  },
+  {
+    "day": "03.16(토)",
+    "time": "13:00",
+    "gameContent": "NC2vs3삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "03.16(토)",
+    "time": "13:00",
+    "gameContent": "KT5vs4KIA",
+    "stadium": "광주",
+    "rain": 0
+  },
+  {
+    "day": "03.17(일)",
+    "time": "13:00",
+    "gameContent": "두산11vs6SSG",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.17(일)",
+    "time": "13:00",
+    "gameContent": "한화14vs2롯데",
+    "stadium": "사직",
+    "rain": 0
+  },
+  {
+    "day": "03.17(일)",
+    "time": "13:00",
+    "gameContent": "NC5vs2삼성",
+    "stadium": "대구",
+    "rain": 0
+  },
+  {
+    "day": "03.17(일)",
+    "time": "13:00",
+    "gameContent": "KT4vs14KIA",
+    "stadium": "광주",
+    "rain": 0
+  },
+  {
+    "day": "03.18(월)",
+    "time": "13:00",
+    "gameContent": "롯데2vs3KT",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.18(월)",
+    "time": "13:00",
+    "gameContent": "두산2vs0한화",
+    "stadium": "대전",
+    "rain": 0
+  },
+  {
+    "day": "03.18(월)",
+    "time": "18:00",
+    "gameContent": "NC1vs3SSG",
+    "stadium": "문학",
+    "rain": 0
+  },
+  {
+    "day": "03.18(월)",
+    "time": "18:00",
+    "gameContent": "삼성8vs3KIA",
+    "stadium": "광주",
+    "rain": 0
+  },
+  {
+    "day": "03.19(화)",
+    "time": "13:00",
+    "gameContent": "키움1vs12LG",
+    "stadium": "",
+    "rain": 0
+  },
+  {
+    "day": "03.19(화)",
+    "time": "13:00",
+    "gameContent": "NC7vs2SSG",
+    "stadium": "문학",
+    "rain": 0
+  },
+  {
+    "day": "03.19(화)",
+    "time": "13:00",
+    "gameContent": "롯데vsKT",
+    "stadium": "수원",
+    "rain": 1
+  },
+  {
+    "day": "03.19(화)",
+    "time": "13:00",
+    "gameContent": "삼성3vs9KIA",
+    "stadium": "광주",
+    "rain": 0
+  },
+  {
+    "day": "03.19(화)",
+    "time": "13:00",
+    "gameContent": "두산7vs7한화",
+    "stadium": "대전",
+    "rain": 0
+  }
+]

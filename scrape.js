@@ -1,4 +1,6 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
 
 async function scrapeSchedule() {
     const browser = await puppeteer.launch();
@@ -43,14 +45,9 @@ async function scrapeSchedule() {
         });
     });
 
-    schedule.forEach((game, index) => {
-        console.log(`\n날짜: ${game.day}`);
-        console.log(`시간: ${game.time}`);
-        console.log(`경기 내용: ${game.gameContent}`);
-        console.log(`구장: ${game.stadium}`);
-        console.log(`우천취소 여부: ${game.rain}`);
-        console.log('-------------------');
-    });
+    // JSON 파일로 저장
+    fs.writeFileSync(path.join(__dirname, 'schedule.json'), JSON.stringify(schedule, null, 2), 'utf-8');
+    console.log("스크래핑된 데이터가 schedule.json에 저장되었습니다.");
 
     await browser.close();
 }
