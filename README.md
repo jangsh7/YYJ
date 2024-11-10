@@ -6,7 +6,15 @@ As professional baseball's popularity grows day by day, a flow of writing an int
 <img src="diary_example.png" alt="logo image" width="300px">
 
 ## 🗓Schedule
-Due date: 2024/12/17
+- **Due date: 2024/12/17**
+
+- **1st meeting(2024/11/06):**
+  Create repository and distribute roles
+- **2nd meeting(2024/11/09):**
+  Report on the progress of each activity
+- **3rd meeting(2024/11/15):**
+  Connecting between platform functions and performing individual roles
+- **4th meeting(2024/11/22):**
 
 ## 👩‍💻Team roles
 
