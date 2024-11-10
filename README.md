@@ -1,8 +1,9 @@
 # 요야정⚾_요즘 야구 정리
-<img src="/images/DOOSANbears.jpg" alt="logo image" width="300px">
+<img src="/images/DOOSANbears.jpg" alt="logo image" width="100px">
 
 ## 📍Abstract
 As professional baseball's popularity grows day by day, a flow of writing an intuitive diary has been created. Therefore, our group intends to provide an opportunity for visitors to actively share their intuitive experiences and enjoy sports more than just watching sports by creating a platform to share and even implementing a function to calculate the intuitive win rate after writing an intuitive diary.
+<img src="diary_example.png" alt="logo image" width="300px">
 
 ## 🗓Schedule
 Due date: 2024/12/17
