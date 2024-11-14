@@ -1,5 +1,5 @@
 # 요야정⚾_요즘 야구 정리
-<img src="/images/DOOSANbears.jpg" alt="logo image" width="100px">
+<img src="YOYAJUNG.png" alt="logo image" width="300px">
 
 ## 📍Abstract
 프로야구의 인기가 날로 높아지고 있습니다. 팬들의 열정적인 관심과 참여는 야구장뿐만 아니라 다양한 온라인 플랫폼에서도 눈에 띄게 증가하고 있습니다.
