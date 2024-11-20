@@ -276,6 +276,12 @@
             dateDiv.classList.add("calendar-day");
             dateDiv.textContent = day;
 
+            // 클릭 이벤트
+            dateDiv.addEventListener("click", () => {
+                const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
+                window.location.href = `diary.html?date=${formattedDate}`;
+            });
+
             if (
                 day === new Date().getDate() &&
                 month === new Date().getMonth() &&
