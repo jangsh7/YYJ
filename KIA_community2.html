@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.phl Q&A List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face { 
+            font-family: "SCDream4";
+            src: url("font/SCDream4.otf") format("truetype");
+            font-weight: normal;
+        }
+        * {
+            font-family: 'SCDream4';
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header {
+            background-color: #333333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            background-color: #333333;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        header a:hover {
+            color: #d32f2f;
+        }
+        
+
+        .post-list {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-title {
+            font-size: 18px;
+            color: #000000;
+            cursor: pointer;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .post-actions button {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 3px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .post-actions button:hover {
+            background-color: #a07271;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+
+        .pagination button {
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #ddd;
+        }
+
+        .pagination button.active {
+            background-color: #333333;
+            color: white;
+        }
+
+        .pagination button:disabled {
+            cursor: not-allowed;
+            background-color: #eee;
+        }
+
+        .add-post {
+            text-align: right;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 800px;
+        }
+
+        .add-post a {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-post a:hover {
+            background-color: #a94442;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>KIA Q&A</h1>
+    <div class="nav-links">
+        <a href="KIA_community1.html">커뮤니티</a>
+        <a href="">다이어리</a>
+        <a href="main.html">메인</a>
+    </div>
+</header>
+
+<div class="post-list" id="post-list">
+    <!-- Q&A posts will be displayed here -->
+</div>
+
+<div class="pagination" id="pagination">
+    <!-- Pagination buttons will be rendered here -->
+</div>
+
+<div class="add-post">
+    <a href="test1.html">질문 작성</a> <!-- 질문 작성 페이지 이동 -->
+</div>
+
+<script>
+    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시 ㄱㄴ 15개
+    let currentPage = 1; // 현재 페이지 번호
+
+    // localStorage에서 Q&A 데이터 로드
+    let qnas = JSON.parse(localStorage.getItem('qnas')) || [];
+    const postList = document.getElementById('post-list');
+
+    function renderQnAs() {
+        postList.innerHTML = ''; // 기존 Q&A 목록 초기화
+
+        if (qnas.length === 0) {
+            postList.innerHTML = '<p>등록된 Q&A가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
+            return;
+        }
+
+        // 최신순 정렬
+        const sortedQnAs = qnas.map((qna, index) => ({ ...qna, originalIndex: index }));
+        sortedQnAs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+        // 현재 페이지에 맞는 Q&A 데이터를 가져오기
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const endIndex = startIndex + ITEMS_PER_PAGE;
+        const currentQnAs = sortedQnAs.slice(startIndex, endIndex);
+
+        // Q&A 목록 렌더링
+        currentQnAs.forEach((qna) => {
+            const postItem = document.createElement('div');
+            postItem.className = 'post-item';
+            postItem.innerHTML = `
+                <div>
+                    <div class="post-title" onclick="goToDetail(${qna.originalIndex})">${qna.title}</div>
+                    <div class="post-meta">작성자: ${qna.author} | ${new Date(qna.timestamp).toLocaleString()}</div>
+                </div>
+                <div class="post-actions">
+                    <button onclick="deleteQnA(${qna.originalIndex})">삭제</button>
+                </div>
+            `;
+            postList.appendChild(postItem);
+        });
+
+        // 페이지네이션 렌더링
+        renderPagination(sortedQnAs.length);
+    }
+
+    function renderPagination(totalItems) {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+        // 이전 페이지 버튼
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<';
+        prevButton.disabled = currentPage === 1;
+        prevButton.onclick = () => changePage(currentPage - 1);
+        paginationContainer.appendChild(prevButton);
+
+        // 페이지 번호 버튼
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.innerHTML = i;
+            pageButton.className = i === currentPage ? 'active' : '';
+            pageButton.onclick = () => changePage(i);
+            paginationContainer.appendChild(pageButton);
+        }
+
+        // 다음 페이지 버튼
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = '>';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.onclick = () => changePage(currentPage + 1);
+        paginationContainer.appendChild(nextButton);
+    }
+
+    function changePage(page) {
+        currentPage = page;
+        renderQnAs();
+    }
+
+    function deleteQnA(index) {
+        if (confirm("이 Q&A를 삭제하시겠습니까?")) {
+            // Q&A 삭제
+            qnas.splice(index, 1);
+            localStorage.setItem('qnas', JSON.stringify(qnas)); // Q&A 목록 업데이트
+
+            // 관련 댓글 삭제
+            localStorage.removeItem(`comments-${index}`);
+
+            // 화면 갱신
+            renderQnAs();
+        }
+    }
+
+    function goToDetail(originalIndex) {
+        window.location.href = `test3.html?id=${originalIndex}`;
+    }
+
+    // 초기 Q&A 렌더링
+    renderQnAs();
+</script>
+
+</body>
+</html>

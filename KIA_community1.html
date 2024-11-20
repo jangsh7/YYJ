@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Board with Links</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face { 
+            font-family: "SCDream4";
+            src: url("font/SCDream4.otf") format("truetype");
+            font-weight: normal;
+        }
+        * {
+            font-family: 'SCDream4';
+        }
+
+        header {
+            background-color: #333333;
+            color: white;
+            padding: 30px 50px;
+            text-align: center;
+            border-bottom: 4px solid #fff;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        header div {
+            margin-top: 15px;
+            font-size: 20px;
+        }
+
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        header a:hover {
+            color: #d32f2f;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .section-container {
+            display: flex;
+            gap: 20px;
+            justify-content: space-between;
+            width: 80%;
+        }
+
+        .post-section {
+            flex: 1;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            padding: 20px;
+
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .post-section h2 {
+            margin-bottom: 10px;
+        }
+
+        .post-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .post-item:last-child {
+            border-bottom: none;
+        }
+
+        .post-title {
+            font-size: 18px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .post-title:hover {
+            color: #d9534f;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #777;
+        }
+
+        footer {
+            background-color: #333333;
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Button Styling */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .link-button {
+            display: inline-block;
+            background-color: #333333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .link-button:hover {
+            background-color: #333333;
+        }
+
+        .link-button:active {
+            background-color: #333333;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>KIA 커뮤니티</h1>
+    <div>
+        <a href="KIA_community2.html">Q&A</a> | 
+        <a href="#">커뮤니티</a>
+    </div>
+</header>
+
+<div class="main-content">
+    <div class="section-container">
+        <div class="post-section">
+            <h2>Q&A</h2>
+            <div class="post-list" id="qna-section">
+            </div>
+        </div>
+
+        <!-- Community Section -->
+        <div class="post-section">
+            <h2>커뮤니티</h2>
+            <div class="post-list">
+                <div class="post-item">
+                    <div>
+                        <div class="post-title">2024 기아 타이거즈 우승!!!! </div> <!-- 임시 -->
+                        <div class="post-meta">작성자: songhye0u0 | 2024-10-24</div> <!-- 임시 -->
+                    </div>
+                </div>
+                <div class="post-item">
+                    <div>
+                        <div class="post-title"> 김도영, 그는 신인가? </div> <!-- 임시 -->
+                        <div class="post-meta">작성자: songhye030 | 2024-10-24</div> <!-- 임시 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="button-container">
+        <a class="link-button" href="https://www.youtube.com/@kiatigerstv" target="_blank">유튜브 채널</a>
+        <a class="link-button" href="https://www.tigers.co.kr/" target="_blank">기아 타이거즈</a>
+        <a class="link-button" href="https://teamstore.tigers.co.kr/" target="_blank">팀스토어</a>
+    </div>
+    <p>&copy; 요아정 - 요즘 야구 이야기</p>
+</footer>
+
+<script>
+    // localStorage에서 Q&A 데이터 가져오기
+    const qnas = JSON.parse(localStorage.getItem('qnas')) || [];
+    const qnaSection = document.getElementById('qna-section');
+
+    function renderLatestQnAs() {
+        if (qnas.length === 0) {
+            qnaSection.innerHTML = '<p>등록된 Q&A가 없습니다.</p>';
+        } else {
+            // 최신순으로 정렬 후 상위 5개 가져오기
+            const latestQnAs = qnas
+                .map((qna, index) => ({ ...qna, id: index }))
+                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+                .slice(0, 5);
+
+            // Q&A 렌더링
+            latestQnAs.forEach(qna => {
+                const postItem = document.createElement('div');
+                postItem.className = 'post-item';
+                postItem.innerHTML = `
+                    <div>
+                        <div class="post-title" onclick="window.location.href='test3.html?id=${qna.id}'">
+                            ${qna.title}
+                        </div>
+                        <div class="post-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
+                    </div>
+                `;
+                qnaSection.appendChild(postItem);
+            });
+        }
+    }
+
+    // 최신 Q&A 렌더링
+    renderLatestQnAs();
+</script>
+
+</body>
+</html>
