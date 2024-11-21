@@ -55,7 +55,6 @@
             color: #d32f2f;
         }
         
-
         .post-list {
             width: 80%;
             max-width: 800px;
@@ -160,7 +159,7 @@
 <header>
     <h1>KIA Q&A</h1>
     <div class="nav-links">
-        <a href="KIA_community1.html">커뮤니티</a>
+        <a id="com-link" href="#">커뮤니티</a>
         <a href="">다이어리</a>
         <a href="main.html">메인</a>
     </div>
@@ -175,15 +174,22 @@
 </div>
 
 <div class="add-post">
-    <a href="test1.html">질문 작성</a> <!-- 질문 작성 페이지 이동 -->
+    <a id="qna-link" href="#">질문 작성</a> <!-- 질문 작성 페이지 이동 -->
 </div>
 
 <script>
-    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시 ㄱㄴ 15개
+    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Q&A 개수
     let currentPage = 1; // 현재 페이지 번호
 
+    // URL에서 team 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const team = urlParams.get('team'); // 'kia', 'samsung' 등
+
+    // 팀별 localStorage 키
+    const teamKey = team ? `qnas_${team}` : null;
+
     // localStorage에서 Q&A 데이터 로드
-    let qnas = JSON.parse(localStorage.getItem('qnas')) || [];
+    let qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
     const postList = document.getElementById('post-list');
 
     function renderQnAs() {
@@ -195,12 +201,13 @@
         }
 
         // 최신순 정렬
-        const sortedQnAs = qnas.map((qna, index) => ({ ...qna, originalIndex: index }));
-        sortedQnAs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        const sortedQnAs = qnas
+            .map((qna, index) => ({ ...qna, originalIndex: index }))
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        // 현재 페이지에 맞는 Q&A 데이터를 가져오기
+        // 현재 페이지에 맞는 Q&A 데이터 가져오기
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
+        const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedQnAs.length);
         const currentQnAs = sortedQnAs.slice(startIndex, endIndex);
 
         // Q&A 목록 렌더링
@@ -260,25 +267,42 @@
 
     function deleteQnA(index) {
         if (confirm("이 Q&A를 삭제하시겠습니까?")) {
-            // Q&A 삭제
             qnas.splice(index, 1);
-            localStorage.setItem('qnas', JSON.stringify(qnas)); // Q&A 목록 업데이트
-
-            // 관련 댓글 삭제
-            localStorage.removeItem(`comments-${index}`);
-
-            // 화면 갱신
+            localStorage.setItem(teamKey, JSON.stringify(qnas)); // localStorage 업데이트
             renderQnAs();
         }
     }
 
     function goToDetail(originalIndex) {
-        window.location.href = `test3.html?id=${originalIndex}`;
+        if (team) {
+            window.location.href = `KIA_community3.html?id=${originalIndex}&team=${team}`;
+        }
     }
 
-    // 초기 Q&A 렌더링
-    renderQnAs();
+    // 팀별 질문 작성 링크 업데이트
+    const qnaLink = document.getElementById('qna-link');
+    if (team) {
+        qnaLink.href = `KIA_community3.html?team=${team}`;
+    } else {
+        qnaLink.href = '#';
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+    const comLink = document.getElementById('com-link');
+    if (team) {
+        comLink.href = `KIA_community1.html?team=${team}`;
+    } else {
+        comLink.href = '#';
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+
+    // 초기 렌더링
+    if (teamKey) {
+        renderQnAs();
+    } else {
+        postList.innerHTML = '<p>유효하지 않은 팀입니다. URL에 team 파라미터를 추가하세요.</p>';
+    }
 </script>
+
 
 </body>
 </html>

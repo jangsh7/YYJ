@@ -67,7 +67,9 @@
             border-radius: 8px;
             padding: 20px;
 
-            max-height: 500px;
+            /* 고정 높이 설정 */
+            max-height: 500px; /* 최대 높이 */
+            min-height: 400px; /* 최소 높이: 약 5개의 항목 */
             overflow-y: auto;
         }
 
@@ -145,45 +147,32 @@
 </head>
 <body>
 
-<header>
-    <h1>KIA 커뮤니티</h1>
-    <div>
-        <a href="KIA_community2.html">Q&A</a> | 
-        <a href="#">커뮤니티</a>
-    </div>
-</header>
+    <header>
+        <h1 id="header-title"></h1>
+        <div nav-links>
+            <a id="qna-link" href="#">Q&A</a> | 
+            <a id="community-link" href="#">커뮤니티</a> | 
+            <a href="main.html">메인</a>
+        </div>
+    </header>
 
 <div class="main-content">
     <div class="section-container">
         <div class="post-section">
             <h2>Q&A</h2>
-            <div class="post-list" id="qna-section">
-            </div>
+            <div class="post-list" id="qna-section"></div>
         </div>
 
         <!-- Community Section -->
         <div class="post-section">
             <h2>커뮤니티</h2>
-            <div class="post-list">
-                <div class="post-item">
-                    <div>
-                        <div class="post-title">2024 기아 타이거즈 우승!!!! </div> <!-- 임시 -->
-                        <div class="post-meta">작성자: songhye0u0 | 2024-10-24</div> <!-- 임시 -->
-                    </div>
-                </div>
-                <div class="post-item">
-                    <div>
-                        <div class="post-title"> 김도영, 그는 신인가? </div> <!-- 임시 -->
-                        <div class="post-meta">작성자: songhye030 | 2024-10-24</div> <!-- 임시 -->
-                    </div>
-                </div>
-            </div>
+            <div class="post-list" id="community-section"></div>
         </div>
     </div>
 </div>
 
 <footer>
-    <div class="button-container">
+    <div class="button-container" id="footer-links">
         <a class="link-button" href="https://www.youtube.com/@kiatigerstv" target="_blank">유튜브 채널</a>
         <a class="link-button" href="https://www.tigers.co.kr/" target="_blank">기아 타이거즈</a>
         <a class="link-button" href="https://teamstore.tigers.co.kr/" target="_blank">팀스토어</a>
@@ -191,12 +180,36 @@
     <p>&copy; 요아정 - 요즘 야구 이야기</p>
 </footer>
 
+
 <script>
-    // localStorage에서 Q&A 데이터 가져오기
-    const qnas = JSON.parse(localStorage.getItem('qnas')) || [];
+    // URL에서 team 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const team = urlParams.get('team'); // 'kia', 'samsung' 등
+
     const qnaSection = document.getElementById('qna-section');
+    const headerTitle = document.getElementById('header-title');
+    const qnaLink = document.getElementById('qna-link');
+    const communityLink = document.getElementById('community-link');
+
+    // Q&A와 커뮤니티 링크 업데이트
+    if (team) {
+        qnaLink.href = `KIA_community2.html?team=${team}`;
+        communityLink.href = `KIA_community3.html?team=${team}`;
+        headerTitle.textContent = `${team.toUpperCase()} 커뮤니티`;
+    } else {
+        qnaLink.href = '#';
+        communityLink.href = '#';
+        headerTitle.textContent = "커뮤니티";
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+
+    // 로컬 스토리지에서 Q&A 데이터 가져오기
+    const teamKey = team ? `qnas_${team}` : null;
+    const qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
 
     function renderLatestQnAs() {
+        qnaSection.innerHTML = ''; // 기존 내용 초기화
+
         if (qnas.length === 0) {
             qnaSection.innerHTML = '<p>등록된 Q&A가 없습니다.</p>';
         } else {
@@ -206,13 +219,12 @@
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
                 .slice(0, 5);
 
-            // Q&A 렌더링
             latestQnAs.forEach(qna => {
                 const postItem = document.createElement('div');
                 postItem.className = 'post-item';
                 postItem.innerHTML = `
                     <div>
-                        <div class="post-title" onclick="window.location.href='test3.html?id=${qna.id}'">
+                        <div class="post-title" onclick="window.location.href='KIA_community3.html?id=${qna.id}&team=${team}'">
                             ${qna.title}
                         </div>
                         <div class="post-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
@@ -226,6 +238,8 @@
     // 최신 Q&A 렌더링
     renderLatestQnAs();
 </script>
+
+
 
 </body>
 </html>
