@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q&A Detail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        .qna-detail {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .qna-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .qna-meta {
+            font-size: 14px;
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .qna-content {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .comments-section {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .comment-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+
+        .comment-item p {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .comment-item small {
+            display: block;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .comment-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .comment-actions button {
+            background-color: #333333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .comment-actions button:hover {
+            background-color: #555555;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .comment-input-container input {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .comment-input-container button {
+            background-color: #333333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .comment-input-container button:hover {
+            background-color: #555555;
+        }
+
+        .back-button {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .back-button a {
+            display: inline-block;
+            background-color: #333333;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .back-button a:hover {
+            background-color: #555555;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Q&A Detail</h1>
+</header>
+
+<div class="qna-detail" id="qna-detail">
+    <!-- The Q&A details will be displayed here -->
+</div>
+
+<div class="comments-section">
+    <h3>댓글</h3>
+    <div id="comments-list">
+        <!-- Comments will be displayed here -->
+    </div>
+
+    <div class="comment-input-container">
+        <input type="text" id="comment-input" placeholder="댓글을 입력하세요..." />
+        <button id="submit-comment">댓글 작성</button>
+    </div>
+</div>
+
+<div class="back-button">
+    <a id="back-link" href="#">뒤로가기</a>
+</div>
+
+<script>
+    // URL에서 Q&A의 id와 team을 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const qnaIndex = urlParams.get('id');
+    const team = urlParams.get('team');
+
+    // 팀별 localStorage 키
+    const qnasKey = team ? `qnas_${team}` : null;
+    const commentsKey = team && qnaIndex ? `comments-${qnaIndex}-${team}` : null;
+
+    // localStorage에서 Q&A 데이터 가져오기
+    const qnas = qnasKey ? JSON.parse(localStorage.getItem(qnasKey)) || [] : [];
+    const qna = qnas[qnaIndex];
+
+    // 관련 댓글 데이터 가져오기
+    const comments = commentsKey ? JSON.parse(localStorage.getItem(commentsKey)) || [] : [];
+
+    const qnaDetail = document.getElementById('qna-detail');
+    const commentsList = document.getElementById('comments-list');
+    const commentInput = document.getElementById('comment-input');
+    const submitCommentButton = document.getElementById('submit-comment');
+    const backLink = document.getElementById('back-link');
+
+    // Q&A 데이터 확인
+    if (!qna) {
+        alert("해당 Q&A를 찾을 수 없습니다. 목록으로 돌아갑니다.");
+        window.location.href = team ? `KIA_community2.html?team=${team}` : 'main.html';
+    }
+
+    // Q&A 데이터 표시
+    qnaDetail.innerHTML = `
+        <div class="qna-title">${qna.title || "제목 없음"}</div>
+        <div class="qna-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
+        <div class="qna-content">${qna.description || "내용이 없습니다."}</div>
+    `;
+
+    // 댓글 렌더링
+    function renderComments() {
+        commentsList.innerHTML = '';
+        comments.forEach((comment, index) => {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment-item';
+            commentElement.innerHTML = `
+                <p>${comment.text}</p>
+                <small>${comment.date}</small>
+                <div class="comment-actions">
+                    <button onclick="editComment(${index})">수정</button>
+                    <button onclick="deleteComment(${index})">삭제</button>
+                </div>
+            `;
+            commentsList.appendChild(commentElement);
+        });
+    }
+
+    // 댓글 수정
+    function editComment(index) {
+        const newText = prompt("댓글을 수정하세요:", comments[index].text);
+        if (newText && newText.trim() !== '') {
+            comments[index].text = newText.trim();
+            localStorage.setItem(commentsKey, JSON.stringify(comments));
+            renderComments();
+        }
+    }
+
+    // 댓글 삭제
+    function deleteComment(index) {
+        if (confirm("이 댓글을 삭제하시겠습니까?")) {
+            comments.splice(index, 1);
+            localStorage.setItem(commentsKey, JSON.stringify(comments));
+            renderComments();
+        }
+    }
+
+    // 댓글 작성
+    submitCommentButton.onclick = function() {
+        const commentText = commentInput.value;
+        if (commentText.trim()) {
+            const newComment = {
+                text: commentText.trim(),
+                date: new Date().toLocaleString()
+            };
+            comments.push(newComment);
+            localStorage.setItem(commentsKey, JSON.stringify(comments));
+            commentInput.value = '';
+            renderComments();
+        }
+    };
+
+    // 뒤로가기 링크 설정
+    if (team) {
+        backLink.href = `KIA_community2.html?team=${team}`;
+    } else {
+        backLink.href = 'main.html';
+    }
+
+    // 초기 댓글 렌더링
+    renderComments();
+</script>
+
+</body>
+</html>

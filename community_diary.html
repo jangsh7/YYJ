@@ -181,7 +181,7 @@
 </div>
 
 <script>
-    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Q&A 개수
+    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 다이어리 개수
     let currentPage = 1; // 현재 페이지 번호
 
     // URL에서 team 파라미터 추출
@@ -189,69 +189,69 @@
     const team = urlParams.get('team'); // 'kia', 'samsung' 등
 
     // 팀별 localStorage 키
-    const teamKey = team ? `qnas_${team}` : null;
+    const teamKey = team ? `diary_${team}` : null; // "qnas_" 대신 "diary_"로 변경
 
-    // localStorage에서 Q&A 데이터 로드
-    let qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
+    // localStorage에서 다이어리 데이터 로드
+    let diaries = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
     const postList = document.getElementById('post-list');
+
     // 팀별 헤더 이름 설정
     const headerTitle = document.getElementById('header-title');
     if (team) {
         const teamNames = {
-            kia: 'KIA Q&A',
-            samsung: '삼성 Q&A',
-            lg: 'LG Q&A',
-            dusan: '두산 Q&A',
-            kt: 'KT Q&A',
-            ssg: 'SSG Q&A',
-            lotte: '롯데 Q&A',
-            hanwa: '한화 Q&A',
-            nc: 'NC Q&A',
-            kiwoom: '키움 Q&A'
-            // 필요에 따라 다른 팀 이름 추가 가능
+            kia: 'KIA 다이어리',
+            samsung: '삼성 다이어리',
+            lg: 'LG 다이어리',
+            dusan: '두산 다이어리',
+            kt: 'KT 다이어리',
+            ssg: 'SSG 다이어리',
+            lotte: '롯데 다이어리',
+            hanwa: '한화 다이어리',
+            nc: 'NC 다이어리',
+            kiwoom: '키움 다이어리'
         };
 
-        headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
+        headerTitle.textContent = teamNames[team] || '커뮤니티'; 
     } else {
         headerTitle.textContent = '커뮤니티';
     }
-    
-    function renderQnAs() {
-        postList.innerHTML = ''; // 기존 Q&A 목록 초기화
 
-        if (qnas.length === 0) {
-            postList.innerHTML = '<p>등록된 Q&A가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
+    function renderDiaries() {
+        postList.innerHTML = ''; // 기존 다이어리 목록 초기화
+
+        if (diaries.length === 0) {
+            postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // 다이어리가 없을 경우 메시지 표시
             return;
         }
 
         // 최신순 정렬
-        const sortedQnAs = qnas
-            .map((qna, index) => ({ ...qna, originalIndex: index }))
+        const sortedDiaries = diaries
+            .map((diary, index) => ({ ...diary, originalIndex: index }))
             .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-        // 현재 페이지에 맞는 Q&A 데이터 가져오기
+        // 현재 페이지에 맞는 다이어리 데이터 가져오기
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedQnAs.length);
-        const currentQnAs = sortedQnAs.slice(startIndex, endIndex);
+        const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedDiaries.length);
+        const currentDiaries = sortedDiaries.slice(startIndex, endIndex);
 
-        // Q&A 목록 렌더링
-        currentQnAs.forEach((qna) => {
+        // 다이어리 목록 렌더링
+        currentDiaries.forEach((diary) => {
             const postItem = document.createElement('div');
             postItem.className = 'post-item';
             postItem.innerHTML = `
                 <div>
-                    <div class="post-title" onclick="goToDetail(${qna.originalIndex})">${qna.title}</div>
-                    <div class="post-meta">작성자: ${qna.author} | ${new Date(qna.timestamp).toLocaleString()}</div>
+                    <div class="post-title" onclick="goToDetail(${diary.originalIndex})">${diary.title}</div>
+                    <div class="post-meta">작성자: ${diary.author} | ${new Date(diary.timestamp).toLocaleString()}</div>
                 </div>
                 <div class="post-actions">
-                    <button onclick="deleteQnA(${qna.originalIndex})">삭제</button>
+                    <button onclick="deleteDiary(${diary.originalIndex})">삭제</button>
                 </div>
             `;
             postList.appendChild(postItem);
         });
 
         // 페이지네이션 렌더링
-        renderPagination(sortedQnAs.length);
+        renderPagination(sortedDiaries.length);
     }
 
     function renderPagination(totalItems) {
@@ -286,14 +286,14 @@
 
     function changePage(page) {
         currentPage = page;
-        renderQnAs();
+        renderDiaries();
     }
 
-    function deleteQnA(index) {
-        if (confirm("이 Q&A를 삭제하시겠습니까?")) {
-            qnas.splice(index, 1);
-            localStorage.setItem(teamKey, JSON.stringify(qnas)); // localStorage 업데이트
-            renderQnAs();
+    function deleteDiary(index) {
+        if (confirm("이 다이어리를 삭제하시겠습니까?")) {
+            diaries.splice(index, 1);
+            localStorage.setItem(teamKey, JSON.stringify(diaries)); // localStorage 업데이트
+            renderDiaries();
         }
     }
 
@@ -303,7 +303,7 @@
         }
     }
 
-    // 팀별 질문 작성 링크 업데이트
+    // 팀별 다이어리 작성 링크 업데이트
     const qnaLink = document.getElementById('qna-link');
     if (team) {
         qnaLink.href = `KIA_community3.html?team=${team}`;
@@ -321,7 +321,7 @@
 
     // 초기 렌더링
     if (teamKey) {
-        renderQnAs();
+        renderDiaries();
     } else {
         postList.innerHTML = '<p>유효하지 않은 팀입니다. URL에 team 파라미터를 추가하세요.</p>';
     }
