@@ -49,7 +49,7 @@
 * 구단별 로고 및 캘린더 이미지 제작 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/f06a221143728f3ae7b36200b38bda833bd98340)) ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/21d229d01b98b72f6849381cafd092dc33786844))
 * 메인 로고 제작 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/bb97dbeb46fcdd21d9230b2b6757d7a1584b8e58))
 * 프로젝트 아이디어 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/c18a962b1f8188a9931396df66fa1df78d527add))
-* 프로젝트 주제 요약 및 docs 관리 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/c18a962b1f8188a9931396df66fa1df78d527add))
+* 프로젝트 주제 요약 및 docs 관리 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/8f7669b90589f60cec41669c2665564d48e56015))
 * 구단별 캘린더 이미지 변경 구현
 * 일기 페이지에서 추가한 이미지 캘린더에 삽입 구현 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/2b76e03bef55807da8442f877c78382ce4163fdc))
 
