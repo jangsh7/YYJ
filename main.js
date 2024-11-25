@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 "use strict";
 
 const express = require("express");
@@ -8,8 +7,6 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const config = require("./config");
 const userRoutes = require("./model/user-routes");
-
-
 
 app.use(express.json());
 app.use(cors());
@@ -31,9 +28,9 @@ app.use("/api", userRoutes.routes);
 
 // 서버 시작
 app.listen(config.port, () =>
-  console.log("App is Listening on url http://localhost:" + config.port)
+    console.log("App is Listening on url http://localhost:" + config.port)
 );
-=======
+
 function checkForAlert() {
     const urlParams = new URLSearchParams(window.location.search);
     const alertMessage = urlParams.get('alert'); // 'alert' 키 값 확인
@@ -130,4 +127,3 @@ async function showGameOptions(date, event) {
         console.error("Error loading game data:", error);
     }
 }
->>>>>>> 6b7a8f57e464eb65ea3ebbfaa1aa78a978195254
