@@ -232,7 +232,7 @@
             <div class="nav-links">
                 <a id="com-link" href="#">커뮤니티</a>
                 <a href="">다이어리</a>
-                <a href="main.html">메인</a>
+                <a href="calendar.html">메인</a>
             </div>
         </div>
     </header>
@@ -283,7 +283,7 @@
     // Q&A 데이터 확인
     if (!qna) {
         alert("해당 Q&A를 찾을 수 없습니다. 목록으로 돌아갑니다.");
-        window.location.href = team ? `KIA_community2.html?team=${team}` : 'main.html';
+        window.location.href = team ? `KIA_community2.html?team=${team}` : 'calendar.html';
     }
 
     // Q&A 데이터 표시
@@ -349,7 +349,7 @@
     if (team) {
         backLink.href = `KIA_community2.html?team=${team}`;
     } else {
-        backLink.href = 'main.html';
+        backLink.href = 'calendar.html';
     }
 
     // 초기 댓글 렌더링
