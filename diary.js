@@ -2,9 +2,15 @@ async function loadDiaryData() {
     // URL에서 날짜 가져오기
     const urlParams = new URLSearchParams(window.location.search);
     const selectedDate = urlParams.get('date');
+    const selectedGameContent = urlParams.get('game');
 
     if (!selectedDate) {
         window.location.href = "main.html?alert=날짜가 선택되지 않았습니다.";
+        return;
+    }
+
+    if (!selectedGameContent) {
+        window.location.href = "main.html?alert=경기가 선택되지 않았습니다.";
         return;
     }
 
@@ -26,6 +32,14 @@ async function loadDiaryData() {
 
         if (gamesOnSelectedDate.length === 0) {
             window.location.href = "main.html?alert=해당 날짜에 경기가 없습니다.";
+            return;
+        }
+
+        // URL에서 전달된 게임 내용과 일치하는 경기 찾기
+        const game = gamesOnSelectedDate.find(game => game.gameContent === selectedGameContent);
+
+        if (!game) {
+            window.location.href = "main.html?alert=선택한 경기를 찾을 수 없습니다.";
             return;
         }
 
@@ -79,9 +93,6 @@ async function loadDiaryData() {
             "대전": "이글스 파크",
             "고척": "고척"
         };
-
-        // 첫 번째 경기 정보로 필드 채우기: 추가 구현 예정
-        const game = gamesOnSelectedDate[0];
 
         // 경기 날짜 설정
         if (gameDateInput) gameDateInput.value = selectedDate.replace(/\./g, '-');

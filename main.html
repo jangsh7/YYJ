@@ -278,9 +278,9 @@
             dateDiv.textContent = day;
 
             // 클릭 이벤트
-            dateDiv.addEventListener("click", () => {
+            dateDiv.addEventListener("click", (event) => {
                 const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
-                window.location.href = `diary.html?date=${formattedDate}`;
+                showGameOptions(formattedDate, event); // 마우스 위치를 함께 전달
             });
 
             if (
