@@ -15,7 +15,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // 정적 파일 제공 (public 디렉토리)
-app.use(express.static(path.join(__dirname, "public")));
+//app.use(express.static(path.join(__dirname, "public")));
+// 정적 파일 제공 설정
+app.use(express.static('public'));
 
 
 // 기본 경로로 요청 시 login.html 제공
