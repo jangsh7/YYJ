@@ -9,3 +9,14 @@ document.querySelectorAll('.calendar-day').forEach(day => {
         window.location.href = `diary.html?date=${fullDate}`;
     });
 });
+
+function checkForAlert() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const alertMessage = urlParams.get('alert'); // 'alert' 키 값 확인
+
+    if (alertMessage) {
+        alert(decodeURIComponent(alertMessage));
+        history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+window.onload = checkForAlert;

@@ -4,13 +4,12 @@ async function loadDiaryData() {
     const selectedDate = urlParams.get('date');
 
     if (!selectedDate) {
-        alert("날짜가 선택되지 않았습니다.");
-        window.location.href = "main.html"; // main.html로 리다이렉트
+        window.location.href = "main.html?alert=날짜가 선택되지 않았습니다.";
         return;
     }
 
     // 날짜 형식을 schedule.json에 맞게 변환
-    const dateObj = new Date(selectedDate.replace(/-/g, '/'));
+    const dateObj = new Date(selectedDate);
     const formattedDate = `${String(dateObj.getMonth() + 1).padStart(2, '0')}.${String(dateObj.getDate()).padStart(2, '0')}(${['일', '월', '화', '수', '목', '금', '토'][dateObj.getDay()]})`;
 
     try {
@@ -26,8 +25,7 @@ async function loadDiaryData() {
         const gamesOnSelectedDate = schedule.filter(game => game.day === formattedDate);
 
         if (gamesOnSelectedDate.length === 0) {
-            alert("해당 날짜에 경기가 없습니다.");
-            window.location.href = "main.html";
+            window.location.href = "main.html?alert=해당 날짜에 경기가 없습니다.";
             return;
         }
 
@@ -86,7 +84,7 @@ async function loadDiaryData() {
         const game = gamesOnSelectedDate[0];
 
         // 경기 날짜 설정
-        if (gameDateInput) gameDateInput.value = selectedDate;
+        if (gameDateInput) gameDateInput.value = selectedDate.replace(/\./g, '-');
 
         // 경기 시간 설정
         if (gameTimeInput) gameTimeInput.value = game.time;
@@ -109,8 +107,7 @@ async function loadDiaryData() {
 
         if (!match) {
             console.error(`Invalid game content format: ${game.gameContent}`);
-            alert("경기 데이터를 분석할 수 없습니다.");
-            window.location.href = "main.html";
+            window.location.href = "main.html?alert=경기 데이터를 분석할 수 없습니다.";
             return;
         }
 
@@ -118,7 +115,7 @@ async function loadDiaryData() {
 
         // 홈 팀 정보 설정
         if (homeTeamLogo) {
-            homeTeamLogo.src = logoMapping[homeTeam] || "logos/default.png";
+            homeTeamLogo.src = logoMapping[homeTeam];
             homeTeamLogo.alt = homeTeam;
         }
         if (homeTeamName) homeTeamName.textContent = nameMapping[homeTeam];
@@ -126,7 +123,7 @@ async function loadDiaryData() {
 
         // 어웨이 팀 정보 설정
         if (awayTeamLogo) {
-            awayTeamLogo.src = logoMapping[awayTeam] || "logos/default.png";
+            awayTeamLogo.src = logoMapping[awayTeam];
             awayTeamLogo.alt = awayTeam;
         }
         if (awayTeamName) awayTeamName.textContent = nameMapping[awayTeam];
@@ -134,8 +131,8 @@ async function loadDiaryData() {
 
     } catch (error) {
         console.error("Error loading game data:", error);
-        alert("경기 데이터를 불러오는 데 실패했습니다.");
-        window.location.href = "main.html";
+        window.location.href = "main.html?alert=경기 데이터를 불러오는 데 실패했습니다.";
+        return;
     }
 }
 
