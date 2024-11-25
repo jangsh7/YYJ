@@ -61,8 +61,8 @@
             }
     
             .nav-links a:hover {
-                color: var(--hover-color, #d32f2f);
-            }
+            color: var(--hover-color, #d32f2f);
+        }
     
             .post-list {
                 width: 800px;
@@ -161,7 +161,7 @@
             }
     
             .add-post a:hover {
-                background-color: #a94442;
+                background-color: var(--hover-dark-color, #a94442);
             }
         </style>
     </head>
@@ -171,7 +171,7 @@
     <h1 id="header-title"></h1>
     <div class="nav-links">
         <a id="com-link" href="#">커뮤니티</a>
-        <a href="">다이어리</a>
+        <a id="diary-link" href="#">다이어리</a>
         <a href="main.html">메인</a>
     </div>
 </header>
@@ -198,7 +198,7 @@
         kia: '#EA0029',      // KIA
         samsung: '#074CA1',  // 삼성
         lg: '#C30452',       // LG
-        dusan: '#131230',    // 두산
+        doosan: '#131230',    // 두산
         kt: '#EB1C24',       // KT
         ssg: '#CE0E2D',      // SSG
         lotte: '#041E42',    // 롯데
@@ -214,6 +214,8 @@
         document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
     }
     
+
+    
     // 팀별 localStorage 키
     const teamKey = team ? `qnas_${team}` : null;
 
@@ -227,7 +229,7 @@
             kia: 'KIA Q&A',
             samsung: '삼성 Q&A',
             lg: 'LG Q&A',
-            dusan: '두산 Q&A',
+            doosan: '두산 Q&A',
             kt: 'KT Q&A',
             ssg: 'SSG Q&A',
             lotte: '롯데 Q&A',
@@ -341,6 +343,13 @@
         comLink.href = `KIA_community1.html?team=${team}`;
     } else {
         comLink.href = '#';
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+    const diaryLink = document.getElementById('diary-link');
+    if (team) {
+        diaryLink.href = `community_diary.html?team=${team}`;
+    } else {
+        diaryLink.href = '#';
         alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
     }
 
