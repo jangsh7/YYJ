@@ -120,7 +120,7 @@
 <body>
 <div class="signup-container">
     <h2>회원가입</h2>
-    <form onsubmit="return validateSignup()">
+    <form onsubmit="return validateSignup()" id="post-form">
         <input type="text" id="name" placeholder="이름" required>
         <p class="error-text" id="name-error">이름을 입력하세요.</p>
         
@@ -142,10 +142,10 @@
         
         <div style="margin: 10px 0;">
             <button type="button" class="btn" onclick="openTeamSelection()">구단 선택</button>
-            <p id="selected-team">선택된 구단: 미정</p>
+            <p id="selected_team">선택된 구단: 미정</p>
         </div>
         
-        <input type="submit" value="회원가입" class="btn">
+        <input type="submit" value="회원가입" class="btn" id="submit-btn">
     </form>
     <div class="links">
         <a href="login.html">로그인 페이지로 돌아가기</a>
@@ -176,20 +176,118 @@
 <!-- 회원가입 성공 팝업 -->
 <div class="popup-overlay" id="successOverlay">
     <div class="popup-content">
-        <h3>✧･ﾟ: *✧･ﾟ:*뭘 보노*:･ﾟ✧*:･ﾟ✧</h3>
+        <h3>✧･ﾟ: *✧･ﾟ:*회원가입 완료*:･ﾟ✧*:･ﾟ✧</h3>
         <p>회원가입이 성공적으로 완료되었습니다.</p>
         <button class="btn" onclick="goToLogin()">확인</button>
     </div>
 </div>
 
+
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>   
 <script>
+
+    
+
+// Firebase 초기화 코드
+var firebaseConfig = {
+  apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+  authDomain: "yyjdb-1e121.firebaseapp.com",
+  databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
+  projectId: "yyjdb-1e121",
+  storageBucket: "yyjdb-1e121.firebasestorage.app",
+  messagingSenderId: "455353963754",
+  appId: "1:455353963754:web:2a64f5411a4061e9143393"
+};
+
+// Firebase 초기화
+firebase.initializeApp(firebaseConfig);
+
+console.log("Firestore 연결 테스트:", firebase.firestore());
+
+
+    var db = firebase.firestore();
+
+    // Function to get the next post number
+    function getNextpostNumber() {
+  return db.runTransaction((transaction) => {
+    // counterDB의 postCounter 문서 가져오기
+    var docRef = db.collection('counterDB').doc('postCounter');
+    return transaction.get(docRef).then((counterDoc) => {
+      if (!counterDoc.exists) {
+        // 문서가 없으면 새로 만들고 postNumber를 1로 설정
+        transaction.set(docRef, { postNumber: 1 });
+        return 1;  // 처음 postNumber는 1
+      } else {
+        // 문서가 있으면 postNumber를 읽어서 증가시킴
+        var newpostNumber = counterDoc.data().postNumber + 1;
+        transaction.update(docRef, { postNumber: newpostNumber });
+        return newpostNumber;  // 증가된 postNumber 반환
+      }
+    });
+  });
+}
+
+
+    // Function to write the post to Firestore
+    function writePost(ID, PW, email, name, selected_team) {
+    getNextpostNumber().then((postNumber) => {
+    db.collection("User").add({  // 'User' 컬렉션에 데이터 추가
+    ID: ID,  // 아이디
+    PW: PW,  // 비밀번호
+    email: email,  // 이메일
+    name: name,  // 이름
+    selected_team: selected_team || "미정", //선택 구단
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()  // Firestore 서버 타임스탬프
+  })
+  .then(function(docRef) {
+      console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+      console.error("Error adding document: ", error);
+    });
+  }).catch(function(error) {
+    console.error("Error in transaction: ", error);
+  });
+}
+
+
+// Form submission event listener
+document.getElementById('post-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  var ID = document.getElementById('username').value;
+  var PW = document.getElementById('password').value;
+  var email = document.getElementById('email').value;
+  var name = document.getElementById('name').value;
+  var selected_team = document.getElementById('selected_team').textContent.replace("선택된 구단: ", ""); // 텍스트에서 구단명 추출
+  var submitButton = document.getElementById('submit-btn');
+  submitButton.disabled = true;  // Disable the button
+  
+  
+  writePost(ID, PW, name, email, selected_team);  // Pass writer as a parameter
+
+  console.log("Form Data:", { ID, PW, email, name, selected_team }); // 디버깅 로그
+  
+  setTimeout(function() {
+    submitButton.disabled = false;  // Re-enable button after 5 seconds
+  }, 5000);
+});
+
+
+
+
+
     function openTeamSelection() {
         document.getElementById("popupOverlay").style.display = "flex";
     }
 
     function confirmTeamSelection() {
         const selectedTeam = document.querySelector('input[name="team"]:checked').value;
-        document.getElementById("selected-team").textContent = "선택된 구단: " + selectedTeam;
+        document.getElementById("selected_team").textContent = "선택된 구단: " + selectedTeam;
         document.getElementById("popupOverlay").style.display = "none";
     }
 
