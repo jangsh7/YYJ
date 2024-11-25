@@ -223,6 +223,7 @@
     </div>
 </div>
 
+<script src="main.js"></script>
 <script>
     let currentDate = new Date();
 
@@ -275,6 +276,12 @@
             const dateDiv = document.createElement("div");
             dateDiv.classList.add("calendar-day");
             dateDiv.textContent = day;
+
+            // 클릭 이벤트
+            dateDiv.addEventListener("click", (event) => {
+                const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
+                showGameOptions(formattedDate, event); // 마우스 위치를 함께 전달
+            });
 
             if (
                 day === new Date().getDate() &&
