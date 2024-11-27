@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>회원가입</title>
 <style>
+    @font-face { 
+            font-family: "SCDream4";
+            src: url("font/SCDream4.otf") format("truetype");
+            font-weight: normal;
+        }
+        * {
+            font-family: 'SCDream4';
+        }
     body {
         background-color: #333333;
         display: flex;
@@ -32,7 +40,7 @@
     }
     .error-text, .info-text {
         color: #ab0419;
-        font-size: 7px;
+        font-size: 10px;
         height: 10px;
         margin-top: -5px;
         margin-bottom: 5px;
@@ -135,7 +143,7 @@
         <p class="error-text" id="email-error">유효한 이메일을 입력하세요.</p>
         
         <input type="password" id="password" placeholder="비밀번호" required>
-        <p class="error-text" id="password-error">비밀번호는 8자 이상, 알파벳, 숫자, 특수 문자를 포함해야 합니다.</p>
+        <p class="error-text" id="password-error">8자 이상, 알파벳, 숫자, 특수 문자를 포함해야 합니다.</p>
         
         <input type="password" id="confirm-password" placeholder="비밀번호 확인" required>
         <p class="error-text" id="confirm-password-error">비밀번호가 일치하지 않습니다.</p>
@@ -182,15 +190,12 @@
     </div>
 </div>
 
-
 <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>   
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>   
 <script>
-
-    
 
 // Firebase 초기화 코드
 var firebaseConfig = {
@@ -231,7 +236,6 @@ console.log("Firestore 연결 테스트:", firebase.firestore());
   });
 }
 
-
     // Function to write the post to Firestore
     function writePost(ID, PW, email, name, selected_team) {
     getNextpostNumber().then((postNumber) => {
@@ -254,7 +258,6 @@ console.log("Firestore 연결 테스트:", firebase.firestore());
   });
 }
 
-
 // Form submission event listener
 document.getElementById('post-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -276,10 +279,6 @@ document.getElementById('post-form').addEventListener('submit', function(e) {
     submitButton.disabled = false;  // Re-enable button after 5 seconds
   }, 5000);
 });
-
-
-
-
 
     function openTeamSelection() {
         document.getElementById("popupOverlay").style.display = "flex";
