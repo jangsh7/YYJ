@@ -5,12 +5,12 @@ async function loadDiaryData() {
     const selectedGameContent = urlParams.get('game');
 
     if (!selectedDate) {
-        window.location.href = "main.html?alert=날짜가 선택되지 않았습니다.";
+        window.location.href = "calendar.html?alert=날짜가 선택되지 않았습니다.";
         return;
     }
 
     if (!selectedGameContent) {
-        window.location.href = "main.html?alert=경기가 선택되지 않았습니다.";
+        window.location.href = "calendar.html?alert=경기가 선택되지 않았습니다.";
         return;
     }
 
@@ -31,7 +31,7 @@ async function loadDiaryData() {
         const gamesOnSelectedDate = schedule.filter(game => game.day === formattedDate);
 
         if (gamesOnSelectedDate.length === 0) {
-            window.location.href = "main.html?alert=해당 날짜에 경기가 없습니다.";
+            window.location.href = "calendar.html?alert=해당 날짜에 경기가 없습니다.";
             return;
         }
 
@@ -39,7 +39,7 @@ async function loadDiaryData() {
         const game = gamesOnSelectedDate.find(game => game.gameContent === selectedGameContent);
 
         if (!game) {
-            window.location.href = "main.html?alert=선택한 경기를 찾을 수 없습니다.";
+            window.location.href = "calendar.html?alert=선택한 경기를 찾을 수 없습니다.";
             return;
         }
 
@@ -48,6 +48,7 @@ async function loadDiaryData() {
         const gameTimeInput = document.getElementById("game-time");
         const stadiumSelect = document.getElementById("stadium");
         const weatherSelect = document.getElementById("game-weather");
+        const resultSelect = document.getElementById('result');
         const homeTeamLogo = document.querySelector('.scoreboard img[alt="홈 팀 로고"]');
         const awayTeamLogo = document.querySelector('.scoreboard img[alt="어웨이 팀 로고"]');
         const homeTeamName = document.querySelector('.scoreboard p[aria-label="Home Team Name"]');
@@ -103,7 +104,8 @@ async function loadDiaryData() {
         // 날씨 설정 (rain 값에 따라 변경)
         if (weatherSelect) {
             if (game.rain === 1) {
-                weatherSelect.value = "우천 취소";
+                weatherSelect.value = "비";
+                resultSelect.value = "rain";
             } else {
                 weatherSelect.value = "맑음"; // 기본값을 맑음으로 설정
             }
@@ -118,7 +120,7 @@ async function loadDiaryData() {
 
         if (!match) {
             console.error(`Invalid game content format: ${game.gameContent}`);
-            window.location.href = "main.html?alert=경기 데이터를 분석할 수 없습니다.";
+            window.location.href = "calendar.html?alert=경기 데이터를 분석할 수 없습니다.";
             return;
         }
 
@@ -142,10 +144,10 @@ async function loadDiaryData() {
 
     } catch (error) {
         console.error("Error loading game data:", error);
-        window.location.href = "main.html?alert=경기 데이터를 불러오는 데 실패했습니다.";
+        window.location.href = "calendar.html?alert=경기 데이터를 불러오는 데 실패했습니다.";
         return;
     }
 }
 
-// 페이지 로드 시 실행
-loadDiaryData();
+loadDiaryData(); // 페이지 로드 시 실행
+
