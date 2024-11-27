@@ -233,8 +233,6 @@
 </head>
 
 <body>
-
-
     <!-- 상단 메뉴 -->
     <div class="top-menu">
         <div class="logo-space">
@@ -262,7 +260,8 @@
 
     <div class="container">
         <div class="image-space">
-            <img src="images/KTwiz.jpg" alt="달력 이미지" width="150">
+            <!--<img src="images/KTwiz.jpg" alt="달력 이미지" width="150">-->
+            <canvas id="monthCanvas" width="150" height="150" style="border: 1px solid black;"></canvas>
 
             <div class="stats-section">
                 <div>
@@ -431,6 +430,7 @@
             border-radius: 10px;
         }
     </style>
+    <script src="main.js"></script>
 </body>
 
 </html>
