@@ -312,13 +312,13 @@
 
         function goToDetail(originalIndex) {
             if (team) {
-                window.location.href = `KIA_community4.html?id=${originalIndex}&team=${team}`;
+                window.location.href = `community4.html?id=${originalIndex}&team=${team}`;
             }
         }
 
         const qnaLink = document.getElementById('qna-link');
         if (team) {
-            qnaLink.href = `KIA_community2.html?team=${team}`;
+            qnaLink.href = `community2.html?team=${team}`;
         } else {
             qnaLink.href = '#';
             alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
@@ -327,7 +327,7 @@
 
         const comLink = document.getElementById('com-link');
         if (team) {
-            comLink.href = `KIA_community1.html?team=${team}`;
+            comLink.href = `community1.html?team=${team}`;
         } else {
             comLink.href = '#';
             alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
