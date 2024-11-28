@@ -126,7 +126,7 @@
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup-content">
         <h3>아이디 찾기 성공!</h3>
-        <p>아이디 찾기 요청이 접수되었습니다.<br>입력하신 이메일로 아이디를 전송해드리겠습니다.</p>
+        <p>입력하신 이메일을 확인해주세요.</p>
         <button class="btn" onclick="closePopup()">확인</button>
     </div>
 </div>
@@ -139,37 +139,26 @@
 
 <script>
     // Firebase 초기화 코드
-var firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "yyjdb-1e121.firebasestorage.app",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
+    var firebaseConfig = {
+        apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+        authDomain: "yyjdb-1e121.firebaseapp.com",
+        databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
+        projectId: "yyjdb-1e121",
+        storageBucket: "yyjdb-1e121.firebasestorage.app",
+        messagingSenderId: "455353963754",
+        appId: "1:455353963754:web:2a64f5411a4061e9143393"
     };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
     console.log("Firestore 초기화 확인:", db);
 
-    db.collection("User").get()
-  .then((querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      console.log("User Document:", doc.data());
-    });
-  })
-  .catch((error) => {
-    console.error("Error fetching User documents:", error);
-  });
-
-
     // 아이디 찾기 함수
     function findId() {
         const name = document.getElementById("name").value.trim();
         const email = document.getElementById("email").value.trim();
 
-        // Firestore에서 데이터 검색
+        // Firestore에서 사용자 검색
         db.collection("User")
             .where("name", "==", name)
             .where("email", "==", email)
@@ -192,11 +181,11 @@ var firebaseConfig = {
         return false; // 폼 새로고침 방지
     }
 
-    // 이메일 전송 함수 (SMTP 서버 사용)
+    // 이메일 전송 함수
     function sendIdEmail(toEmail, userId) {
         // 백엔드 API를 호출해 이메일 전송 요청
         $.ajax({
-            url: "http://localhost:8080/send-id", // 백엔드 엔드포인트 (nodemailer 연결)
+            url: "http://localhost:8080/send-id", // 백엔드 엔드포인트
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
