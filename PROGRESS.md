@@ -30,14 +30,14 @@
 ![Sample UI](/calendar_example.png)
 
 ### 📖Diary
-<img src="diary_example.png" alt="logo image" width="300px">
+![Sample UI](/diary_example.png)
 
 ### 👨‍👩‍👧‍👦community
-<img src="community_example.png" alt="logo image" width="300px">
+<img src="community_example.png" alt="logo image" width="400px">
 
-<img src="memo_example1.png" alt="logo image" width="300px">
-<img src="memo_example2.png" alt="logo image" width="300px">
-<img src="memo_example3.png" alt="logo image" width="300px">
+<img src="memo_example1.png" alt="logo image" width="400px">
+<img src="memo_example2.png" alt="logo image" width="400px">
+<img src="memo_example3.png" alt="logo image" width="400px">
 
 
 
