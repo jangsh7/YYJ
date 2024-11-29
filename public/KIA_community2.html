@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Node.phl Q&A List</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+        <style>
+            @font-face { 
+                font-family: "SCDream4";
+                src: url("font/SCDream4.otf") format("truetype");
+                font-weight: normal;
+            }
+            * {
+                font-family: 'SCDream4';
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+    
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #f5f5f5;
+                overflow-x: hidden;
+            }
+    
+            header {
+                background-color: #333333;
+                color: white;
+                width: 100%;
+                height: 100px; /* 고정 높이 설정 */
+                text-align: center;
+                position: relative;
+            }
+
+            header h1 {
+                font-size: 32px; /* 고정 글씨 크기 설정 */
+                line-height: 100px; /* 세로 중앙 정렬 */
+                margin: 0;
+                font-weight: bold;
+            }
+    
+            .nav-links {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                right: 20px;
+                display: flex;
+                gap: 10px;
+            }
+    
+            .nav-links a {
+                color: white;
+                text-decoration: none;
+                background-color: #333333;
+                padding: 8px 15px;
+                border-radius: 5px;
+                font-size: 14px;
+                transition: background-color 0.3s ease;
+            }
+    
+            .nav-links a:hover {
+            color: var(--hover-color, #d32f2f);
+        }
+    
+            .post-list {
+                width: 800px;
+                margin: 20px auto;
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+    
+            .post-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 10px 0;
+                border-bottom: 1px solid #ddd;
+            }
+    
+            .post-item:last-child {
+                border-bottom: none;
+            }
+    
+            .post-title {
+                font-size: 16px;
+                font-weight: bold;
+                color: #000000;
+                cursor: pointer;
+            }
+    
+            .post-meta {
+                font-size: 12px;
+                color: #777;
+            }
+    
+            .post-actions button {
+                background-color: #d9534f;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 12px;
+                transition: background-color 0.3s ease;
+            }
+    
+            .post-actions button:hover {
+                background-color: #a07271;
+            }
+    
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+                gap: 5px;
+            }
+    
+            .pagination button {
+                background-color: #f5f5f5;
+                border: 1px solid #ddd;
+                padding: 5px 10px;
+                border-radius: 5px;
+                font-size: 12px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+    
+            .pagination button:hover {
+                background-color: #ddd;
+            }
+    
+            .pagination button.active {
+                background-color: #333333;
+                color: white;
+            }
+    
+            .pagination button:disabled {
+                cursor: not-allowed;
+                background-color: #eee;
+            }
+    
+            .add-post {
+                text-align: right;
+                margin: 20px auto;
+                width: 800px;
+            }
+    
+            .add-post a {
+                background-color: #d9534f;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+            }
+    
+            .add-post a:hover {
+                background-color: var(--hover-dark-color, #a94442);
+            }
+        </style>
+    </head>
+    <body>
+
+<header>
+    <h1 id="header-title"></h1>
+    <div class="nav-links">
+        <a id="com-link" href="#">커뮤니티</a>
+        <a id="diary-link" href="#">다이어리</a>
+        <a href="calendar.html">메인</a>
+    </div>
+</header>
+
+<div class="post-list" id="post-list">
+</div>
+
+<div class="pagination" id="pagination">
+</div>
+
+<div class="add-post">
+    <a id="qna-link" href="#">질문 작성</a> <!-- 질문 작성 페이지 이동 -->
+</div>
+
+<script>
+    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Q&A 개수
+    let currentPage = 1; // 현재 페이지 번호
+
+    // URL에서 team 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const team = urlParams.get('team');
+
+    const teamColors = {
+        kia: '#EA0029',      // KIA
+        samsung: '#074CA1',  // 삼성
+        lg: '#C30452',       // LG
+        doosan: '#131230',    // 두산
+        kt: '#EB1C24',       // KT
+        ssg: '#CE0E2D',      // SSG
+        lotte: '#041E42',    // 롯데
+        hanwa: '#F73600',    // 한화
+        nc: '#315288',       // NC
+        kiwoom: '#570514'    // 키움
+    };
+
+    // 구단별 색상 적용
+    if (team && teamColors[team]) {
+        document.documentElement.style.setProperty('--hover-color', teamColors[team]);
+    } else {
+        document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
+    }
+    
+
+    
+    // 팀별 localStorage 키
+    const teamKey = team ? `qnas_${team}` : null;
+
+    // localStorage에서 Q&A 데이터 로드
+    let qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
+    const postList = document.getElementById('post-list');
+    // 팀별 헤더 이름 설정
+    const headerTitle = document.getElementById('header-title');
+    if (team) {
+        const teamNames = {
+            kia: 'KIA Q&A',
+            samsung: '삼성 Q&A',
+            lg: 'LG Q&A',
+            doosan: '두산 Q&A',
+            kt: 'KT Q&A',
+            ssg: 'SSG Q&A',
+            lotte: '롯데 Q&A',
+            hanwa: '한화 Q&A',
+            nc: 'NC Q&A',
+            kiwoom: '키움 Q&A'
+        };
+
+        headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
+    } else {
+        headerTitle.textContent = '커뮤니티';
+    }
+    
+    function renderQnAs() {
+        postList.innerHTML = ''; // 기존 Q&A 목록 초기화
+
+        if (qnas.length === 0) {
+            postList.innerHTML = '<p>등록된 Q&A가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
+            return;
+        }
+
+        // 최신순 정렬
+        const sortedQnAs = qnas
+            .map((qna, index) => ({ ...qna, originalIndex: index }))
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+        // 현재 페이지에 맞는 Q&A 데이터 가져오기
+        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+        const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedQnAs.length);
+        const currentQnAs = sortedQnAs.slice(startIndex, endIndex);
+
+        // Q&A 목록 렌더링
+        currentQnAs.forEach((qna) => {
+            const postItem = document.createElement('div');
+            postItem.className = 'post-item';
+            postItem.innerHTML = `
+                <div>
+                    <div class="post-title" onclick="goToDetail(${qna.originalIndex})">${qna.title}</div>
+                    <div class="post-meta">작성자: ${qna.author} | ${new Date(qna.timestamp).toLocaleString()}</div>
+                </div>
+                <div class="post-actions">
+                    <button onclick="deleteQnA(${qna.originalIndex})">삭제</button>
+                </div>
+            `;
+            postList.appendChild(postItem);
+        });
+
+        // 페이지네이션 렌더링
+        renderPagination(sortedQnAs.length);
+    }
+
+    function renderPagination(totalItems) {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+        // 이전 페이지 버튼
+        const prevButton = document.createElement('button');
+        prevButton.innerHTML = '<';
+        prevButton.disabled = currentPage === 1;
+        prevButton.onclick = () => changePage(currentPage - 1);
+        paginationContainer.appendChild(prevButton);
+
+        // 페이지 번호 버튼
+        for (let i = 1; i <= totalPages; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.innerHTML = i;
+            pageButton.className = i === currentPage ? 'active' : '';
+            pageButton.onclick = () => changePage(i);
+            paginationContainer.appendChild(pageButton);
+        }
+
+        // 다음 페이지 버튼
+        const nextButton = document.createElement('button');
+        nextButton.innerHTML = '>';
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.onclick = () => changePage(currentPage + 1);
+        paginationContainer.appendChild(nextButton);
+    }
+
+    function changePage(page) {
+        currentPage = page;
+        renderQnAs();
+    }
+
+    function deleteQnA(index) {
+        if (confirm("이 Q&A를 삭제하시겠습니까?")) {
+            qnas.splice(index, 1);
+            localStorage.setItem(teamKey, JSON.stringify(qnas)); // localStorage 업데이트
+            renderQnAs();
+        }
+    }
+
+    function goToDetail(originalIndex) {
+        if (team) {
+            window.location.href = `KIA_community4.html?id=${originalIndex}&team=${team}`;
+        }
+    }
+
+    // 팀별 질문 작성 링크 업데이트
+    const qnaLink = document.getElementById('qna-link');
+    if (team) {
+        qnaLink.href = `KIA_community3.html?team=${team}`;
+    } else {
+        qnaLink.href = '#';
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+    const comLink = document.getElementById('com-link');
+    if (team) {
+        comLink.href = `KIA_community1.html?team=${team}`;
+    } else {
+        comLink.href = '#';
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+    const diaryLink = document.getElementById('diary-link');
+    if (team) {
+        diaryLink.href = `community_diary.html?team=${team}`;
+    } else {
+        diaryLink.href = '#';
+        alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
+
+    // 초기 렌더링
+    if (teamKey) {
+        renderQnAs();
+    } else {
+        postList.innerHTML = '<p>유효하지 않은 팀입니다. URL에 team 파라미터를 추가하세요.</p>';
+    }
+</script>
+
+
+</body>
+</html>
