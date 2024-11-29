@@ -77,8 +77,18 @@
  - perform individual roles
 
 **4th meeting(2024/11/22):**
-- .
+- Branch orientation during PR
+- Implement your role before the next meeting
+- Implement each branch and post PR after completing
 
+**5th meeting(2024/11/25):**
+- Proceed with database pull request
+- Proceed with community page pull request
+- Distribute and implement the remaining features to be implemented
+
+**6th meeting(2024/11/29)**
+- Combine with all feature develop branches
+- To modify the Commit link at PROGRESS.md
 
 
 
@@ -86,3 +96,5 @@
 <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
 <img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white">
 <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">
+<img src="https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white">

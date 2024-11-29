@@ -122,27 +122,82 @@
     </div>
 </div>
 
-<!-- 팝업 오버레이 -->
 <div class="popup-overlay" id="popupOverlay">
     <div class="popup-content">
-        <h3>비밀번호 찾기 성공</h3>
-        <p>이메일을 확인해주세요.</p>
+        <h3>비밀번호 찾기 성공!</h3>
+        <p>입력하신 이메일을 확인해주세요.</p>
         <button class="btn" onclick="closePopup()">확인</button>
     </div>
 </div>
 
-<script>
-    function findPassword() {
-        const username = document.getElementById("username").value;
-        const email = document.getElementById("email").value;
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-        if (username && email) {
-            document.getElementById("popupOverlay").style.display = "flex";
-        } else {
-            alert("아이디와 이메일을 모두 입력해 주세요.");
-        }
-        
-        return false;
+<script>
+    // Firebase 초기화 코드
+    var firebaseConfig = {
+        apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+        authDomain: "yyjdb-1e121.firebaseapp.com",
+        databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
+        projectId: "yyjdb-1e121",
+        storageBucket: "yyjdb-1e121.firebasestorage.app",
+        messagingSenderId: "455353963754",
+        appId: "1:455353963754:web:2a64f5411a4061e9143393"
+        };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+    console.log("Firestore 초기화 확인:", db);
+
+    // 비밀번호 찾기 함수
+    function findPassword() {
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+
+        // Firestore에서 사용자 검색
+        db.collection("User")
+            .where("ID", "==", username)
+            .where("email", "==", email)
+            .get()
+            .then((querySnapshot) => {
+                if (querySnapshot.empty) {
+                    alert("입력하신 아이디와 이메일에 해당하는 사용자를 찾을 수 없습니다.");
+                } else {
+                    querySnapshot.forEach((doc) => {
+                        const userPassword = doc.data().PW; // DB에서 가져온 비밀번호
+                        sendPasswordEmail(email, userPassword); // 이메일 전송 함수 호출
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Error finding user:", error);
+                alert("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+            });
+
+        return false; // 폼 새로고침 방지
+    }
+
+    // 이메일 전송 함수
+    function sendPasswordEmail(toEmail, userPassword) {
+        $.ajax({
+            url: "http://localhost:8080/send-password", // 백엔드 엔드포인트
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                email: toEmail,
+                password: userPassword,
+            }),
+            success: function () {
+                document.getElementById("popupOverlay").style.display = "flex"; // 성공 팝업 표시
+            },
+            error: function (err) {
+                console.error("Error sending email:", err);
+                alert("비밀번호 전송 중 오류가 발생했습니다.");
+            },
+        });
     }
 
     function closePopup() {

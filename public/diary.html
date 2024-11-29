@@ -50,7 +50,7 @@
         .scoreboard img {
             width: 100px;
             height: auto;
-            margin-bottom: 10px;
+            margin-top: 10px;
         }
         .scoreboard input {
             width: 80px;
@@ -303,12 +303,12 @@
                     <option value="맑음">맑음</option>
                     <option value="흐림">흐림</option>
                     <option value="비">비</option>
-                    <option value="눈">우천 취소</option>
                 </select>
             </div>
             <div>
                 <label for="stadium">구장:</label>
                 <select id="stadium">
+                    <option value="NC 파크">NC 파크</option>
                     <option value="고척">고척 스카이돔</option>
                     <option value="랜더스 필드">랜더스 필드</option>
                     <option value="사직">사직 야구장</option>
@@ -319,12 +319,21 @@
                     <option value="이글스 파크">이글스 파크</option>
                 </select>
             </div>
+            <div>
+                <label for="result">결과: </label>
+                <select id="result">
+                    <option value="win">승리</option>
+                    <option value="lose">패배</option>
+                    <option value="draw">무승부</option>
+                    <option value="rain">우천 취소</option>
+                </select>
+            </div>
         </div>
 
         <div class="scoreboard">
             <div>
-                <img src="logos/kia.png" alt="홈 팀 로고" class="team-image">
-                <p>기아 타이거즈</p>
+                <img src="" alt="홈 팀 로고" class="team-image">
+                <p aria-label="Home Team Name">홈 팀</p>
             </div>
             <div>
                 <input type="number" min="0" max="99" placeholder="0" aria-label="Home Team Score">
@@ -332,11 +341,11 @@
                 <input type="number" min="0" max="99" placeholder="0" aria-label="Away Team Score">
             </div>
             <div>
-                <img src="logos/doosan.png" alt="어웨이 팀 로고" class="team-image">
-                <p>두산 베어스</p>
+                <img src="" alt="어웨이 팀 로고" class="team-image">
+                <p aria-label="Away Team Name">어웨이 팀</p>
             </div>
         </div>
-
+        
         <div class="mvp-section">
             <h3>✿∘˚˳°∘ 나만의 MVP ∘°˳˚∘✿</h3>
             <input type="text" placeholder="MVP">
@@ -385,11 +394,6 @@
             <textarea placeholder="일기 작성 ㄱㄱ"></textarea>
         </div>
 
-        <div class="visibility-selection">
-            <label><input type="radio" name="visibility" value="public" checked><span></span> 공개</label>
-            <label><input type="radio" name="visibility" value="private"><span></span> 비공개</label>
-        </div>
-
         <div class="buttons">
             <button class="save-button" onclick="openModal()">저장하기</button>
             <button class="back-button" onclick="goBack()">뒤로가기</button>
@@ -404,6 +408,7 @@
         </div>
     </div>
 
+    <script src="diary.js"></script>
     <script>
         document.getElementById('addImageButton').addEventListener('click', function() {
             document.getElementById('fieldImage').click();
@@ -425,11 +430,11 @@
 
         function closeModal() {
             document.getElementById("saveModal").style.display = "none";
-            window.location.href = "main.html";
+            window.location.href = "calendar.html";
         }
 
         function goBack() {
-            window.location.href = "main.html";
+            window.location.href = "calendar.html";
         }
 
         window.onclick = function(event) {

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <style>
+        @font-face {
+            font-family: "SCDream4";
+            src: url("font/SCDream4.otf") format("truetype");
+            font-weight: normal;
+        }
+
+        * {
+            font-family: 'SCDream4';
+        }
+
+        body {
+            background-color: #333333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #1D1D1D;
+        }
+
+        .signup-container {
+            background-color: white;
+            width: 300px;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            box-sizing: border-box;
+            color: #1D1D1D;
+        }
+
+        .signup-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .error-text,
+        .info-text {
+            color: #ab0419;
+            font-size: 10px;
+            height: 10px;
+            margin-top: -5px;
+            margin-bottom: 5px;
+            visibility: hidden;
+            text-align: left;
+        }
+
+        .info-text {
+            color: #1D1D1D;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            height: 35px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            padding-left: 10px;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 35px;
+            font-size: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1D1D1D;
+            color: white;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            background-color: #555555;
+        }
+
+        .check-id-btn {
+            width: 100px;
+            height: 35px;
+            font-size: 14px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1D1D1D;
+            color: white;
+            cursor: pointer;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .popup-content h3 {
+            margin-bottom: 10px;
+        }
+
+        .popup-content .btn {
+            background-color: #1D1D1D;
+            /* 검정색 배경 */
+            color: white;
+            /* 흰색 글씨 */
+        }
+
+        .links {
+            margin-top: 15px;
+            font-size: 12px;
+        }
+
+        .links a {
+            color: gray;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .links a:hover {
+            color: black;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="signup-container">
+        <h2>회원가입</h2>
+        <form onsubmit="return validateSignup()" id="post-form">
+            <input type="text" id="name" placeholder="이름" required>
+            <p class="error-text" id="name-error">이름을 입력하세요.</p>
+
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="username" placeholder="아이디" style="flex: 1;" required
+                    oninput="validateUsername()">
+                <button type="button" class="check-id-btn" onclick="checkDuplicateId()">중복 확인</button>
+            </div>
+            <p class="error-text" id="username-error">아이디를 입력하세요.</p>
+            <p class="info-text" id="username-info"></p>
+
+            <input type="email" id="email" placeholder="이메일" required>
+            <p class="error-text" id="email-error">유효한 이메일을 입력하세요.</p>
+
+            <input type="password" id="password" placeholder="비밀번호" required>
+            <p class="error-text" id="password-error">8자 이상, 알파벳, 숫자, 특수 문자를 포함해야 합니다.</p>
+
+            <input type="password" id="confirm-password" placeholder="비밀번호 확인" required>
+            <p class="error-text" id="confirm-password-error">비밀번호가 일치하지 않습니다.</p>
+
+            <div style="margin: 10px 0;">
+                <button type="button" class="btn" onclick="openTeamSelection()">구단 선택</button>
+                <p id="selected_team">선택된 구단: 미정</p>
+            </div>
+
+            <input type="submit" value="회원가입" class="btn" id="submit-btn">
+        </form>
+        <div class="links">
+            <a href="login.html">로그인 페이지로 돌아가기</a>
+        </div>
+    </div>
+
+    <!-- 구단 선택 팝업 -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <h3>구단 선택</h3>
+            <form id="teamForm">
+                <label><input type="radio" name="team" value="두산 베어스"> 두산 베어스</label><br>
+                <label><input type="radio" name="team" value="삼성 라이온즈"> 삼성 라이온즈</label><br>
+                <label><input type="radio" name="team" value="LG 트윈스"> LG 트윈스</label><br>
+                <label><input type="radio" name="team" value="NC 다이노스"> NC 다이노스</label><br>
+                <label><input type="radio" name="team" value="롯데 자이언츠"> 롯데 자이언츠</label><br>
+                <label><input type="radio" name="team" value="SSG 랜더스"> SSG 랜더스</label><br>
+                <label><input type="radio" name="team" value="한화 이글스"> 한화 이글스</label><br>
+                <label><input type="radio" name="team" value="키움 히어로즈"> 키움 히어로즈</label><br>
+                <label><input type="radio" name="team" value="KIA 타이거즈"> KIA 타이거즈</label><br>
+                <label><input type="radio" name="team" value="KT 위즈"> KT 위즈</label><br>
+                <label><input type="radio" name="team" value="미정" checked> 미정</label><br><br>
+                <button type="button" onclick="confirmTeamSelection()">확인</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 회원가입 성공 팝업 -->
+    <div class="popup-overlay" id="successOverlay">
+        <div class="popup-content">
+            <h3>✧･ﾟ: *✧･ﾟ:*회원가입 완료*:･ﾟ✧*:･ﾟ✧</h3>
+            <p>회원가입이 성공적으로 완료되었습니다.</p>
+            <button class="btn" onclick="goToLogin()">확인</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+
+        // Firebase 초기화 코드
+        var firebaseConfig = {
+            apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+            authDomain: "yyjdb-1e121.firebaseapp.com",
+            databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
+            projectId: "yyjdb-1e121",
+            storageBucket: "yyjdb-1e121.firebasestorage.app",
+            messagingSenderId: "455353963754",
+            appId: "1:455353963754:web:2a64f5411a4061e9143393"
+        };
+
+        // Firebase 초기화
+        firebase.initializeApp(firebaseConfig);
+
+        console.log("Firestore 연결 테스트:", firebase.firestore());
+
+
+        var db = firebase.firestore();
+
+        // Function to get the next post number
+        function getNextpostNumber() {
+            return db.runTransaction((transaction) => {
+                // counterDB의 postCounter 문서 가져오기
+                var docRef = db.collection('counterDB').doc('postCounter');
+                return transaction.get(docRef).then((counterDoc) => {
+                    if (!counterDoc.exists) {
+                        // 문서가 없으면 새로 만들고 postNumber를 1로 설정
+                        transaction.set(docRef, { postNumber: 1 });
+                        return 1;  // 처음 postNumber는 1
+                    } else {
+                        // 문서가 있으면 postNumber를 읽어서 증가시킴
+                        var newpostNumber = counterDoc.data().postNumber + 1;
+                        transaction.update(docRef, { postNumber: newpostNumber });
+                        return newpostNumber;  // 증가된 postNumber 반환
+                    }
+                });
+            });
+        }
+
+        // Function to write the post to Firestore
+        function writePost(ID, PW, name, email, selected_team) {
+            getNextpostNumber().then((postNumber) => {
+                db.collection("User").add({  // 'User' 컬렉션에 데이터 추가
+                    ID: ID,  // 아이디
+                    PW: PW,  // 비밀번호
+                    email: email,  // 이메일
+                    name: name,  // 이름
+                    selected_team: selected_team || "미정", //선택 구단
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()  // Firestore 서버 타임스탬프
+                })
+                    .then(function (docRef) {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch(function (error) {
+                        console.error("Error adding document: ", error);
+                    });
+            }).catch(function (error) {
+                console.error("Error in transaction: ", error);
+            });
+        }
+
+        // Form submission event listener
+        document.getElementById('post-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var ID = document.getElementById('username').value;
+            var PW = document.getElementById('password').value;
+            var email = document.getElementById('email').value;
+            var name = document.getElementById('name').value;
+            var selected_team = document.getElementById('selected_team').textContent.replace("선택된 구단: ", ""); // 텍스트에서 구단명 추출
+            var submitButton = document.getElementById('submit-btn');
+            submitButton.disabled = true;  // Disable the button
+
+
+            writePost(ID, PW, name, email, selected_team);  // Pass writer as a parameter
+
+            console.log("Form Data:", { ID, PW, email, name, selected_team }); // 디버깅 로그
+
+            setTimeout(function () {
+                submitButton.disabled = false;  // Re-enable button after 5 seconds
+            }, 5000);
+        });
+
+        function openTeamSelection() {
+            document.getElementById("popupOverlay").style.display = "flex";
+        }
+
+        function confirmTeamSelection() {
+            const selectedTeam = document.querySelector('input[name="team"]:checked').value;
+            document.getElementById("selected_team").textContent = "선택된 구단: " + selectedTeam;
+            document.getElementById("popupOverlay").style.display = "none";
+        }
+
+        function checkDuplicateId() {
+            const username = document.getElementById("username").value;
+            const usernameError = document.getElementById("username-error");
+            const usernameInfo = document.getElementById("username-info");
+
+            if (username) {
+                usernameError.style.visibility = "hidden";
+                usernameInfo.style.visibility = "visible";
+                usernameInfo.textContent = "중복 확인 완료";
+            } else {
+                usernameError.style.visibility = "visible";
+                usernameError.textContent = "아이디를 입력하세요.";
+                usernameInfo.style.visibility = "hidden";
+            }
+        }
+
+        function validateUsername() {
+            const usernameField = document.getElementById("username");
+            usernameField.value = usernameField.value.replace(/[^a-zA-Z0-9]/g, '');
+        }
+
+        function validateSignup() {
+            const name = document.getElementById("name").value;
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+
+            let isValid = true;
+
+            const nameError = document.getElementById("name-error");
+            const usernameError = document.getElementById("username-error");
+            const emailError = document.getElementById("email-error");
+            const passwordError = document.getElementById("password-error");
+            const confirmPasswordError = document.getElementById("confirm-password-error");
+
+            if (!name) {
+                nameError.style.visibility = "visible";
+                isValid = false;
+            } else {
+                nameError.style.visibility = "hidden";
+            }
+
+            if (!username) {
+                usernameError.style.visibility = "visible";
+                isValid = false;
+            } else {
+                usernameError.style.visibility = "hidden";
+            }
+
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(email)) {
+                emailError.style.visibility = "visible";
+                isValid = false;
+            } else {
+                emailError.style.visibility = "hidden";
+            }
+
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+            if (!passwordPattern.test(password)) {
+                passwordError.style.visibility = "visible";
+                isValid = false;
+            } else {
+                passwordError.style.visibility = "hidden";
+            }
+
+            if (password !== confirmPassword) {
+                confirmPasswordError.style.visibility = "visible";
+                isValid = false;
+            } else {
+                confirmPasswordError.style.visibility = "hidden";
+            }
+
+            if (isValid) {
+                document.getElementById("successOverlay").style.display = "flex"; // 회원가입 성공 팝업 열기
+            }
+
+            return false; // 기본 폼 제출 방지
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html'; // 로그인 페이지로 이동
+        }
+    </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전체 화면 캘린더</title>
+    <title>캘린더</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -244,6 +244,10 @@
             color: black;
             text-shadow: 1px 1px 2px white;
         }
+        .calendar-day.selected {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -321,6 +325,7 @@
     <!--파일 업로드 input 태그 추가-->
     <input type="file" id="imageUpload" style="display: none;" accept="image/*">
 
+    <script src="calendar.js"></script>
     <script>
         let currentDate = new Date();
         let selectedDayElement = null;
@@ -376,10 +381,18 @@
             for (let day = 1; day <= lastDay.getDate(); day++) {
                 const dateDiv = document.createElement("div");
                 dateDiv.classList.add("calendar-day");
-                dateDiv.innerHTML = `
-                <img src="" alt="이미지" class="day-image" style="display: none;">
-                <span class="day-text">${day}</span>
-            `;
+                dateDiv.textContent = day;
+
+                // dateDiv.innerHTML = `
+                // <img src="" alt="이미지" class="day-image" style="display: none;">
+                // <span class="day-text">${day}</span>
+            // `;
+
+                // 클릭 이벤트
+                dateDiv.addEventListener("click", (event) => {
+                    const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
+                    showGameOptions(formattedDate, event); // 마우스 위치를 함께 전달
+            });
 
                 if (
                     day === new Date().getDate() &&
@@ -422,55 +435,46 @@
             document.getElementById("monthSelect").value = currentDate.getMonth();
         }
 
-        // 날짜 클릭 이벤트
-        document.getElementById("calendarGrid").addEventListener("click", function (e) {
-            const dayElement = e.target.closest(".calendar-day");
-            if (dayElement) {
-                if (selectedDayElement) {
-                    selectedDayElement.classList.remove("selected");
-                }
+        // // 날짜 클릭 이벤트
+        // document.getElementById("calendarGrid").addEventListener("click", function (e) {
+        //     const dayElement = e.target.closest(".calendar-day");
+        //     if (dayElement) {
+        //         if (selectedDayElement) {
+        //             selectedDayElement.classList.remove("selected");
+        //         }
 
-                selectedDayElement = dayElement;
-                selectedDayElement.classList.add("selected");
+        //         selectedDayElement = dayElement;
+        //         selectedDayElement.classList.add("selected");
 
-                // 파일 업로드 창 열기
-                document.getElementById("imageUpload").click();
-            }
-        });
+        //         // 파일 업로드 창 열기
+        //         document.getElementById("imageUpload").click();
+        //     }
+        // });
 
-        document.getElementById("imageUpload").addEventListener("change", function () {
-            const file = this.files[0];
-            if (file && selectedDayElement) {
-                const reader = new FileReader();
+        // document.getElementById("imageUpload").addEventListener("change", function () {
+        //     const file = this.files[0];
+        //     if (file && selectedDayElement) {
+        //         const reader = new FileReader();
 
-                reader.onload = function (event) {
-                    const imageUrl = event.target.result;
-                    const dayImage = selectedDayElement.querySelector(".day-image");
+        //         reader.onload = function (event) {
+        //             const imageUrl = event.target.result;
+        //             const dayImage = selectedDayElement.querySelector(".day-image");
 
-                    if (dayImage) {
-                        dayImage.src = imageUrl;
-                        dayImage.style.display = "block";
+        //             if (dayImage) {
+        //                 dayImage.src = imageUrl;
+        //                 dayImage.style.display = "block";
 
-                        // 이미지가 삽입되면 셀 크기 조정
-                        selectedDayElement.style.minHeight = "110px";
-                    }
-                };
+        //                 // 이미지가 삽입되면 셀 크기 조정
+        //                 selectedDayElement.style.minHeight = "110px";
+        //             }
+        //         };
 
-                reader.readAsDataURL(file);
-            }
-        });
+        //         reader.readAsDataURL(file);
+        //     }
+        // });
 
         initYearMonthSelectors();
         renderCalendar();
     </script>
-
-    <style>
-        .calendar-day.selected {
-            border: 2px solid #007bff;
-            border-radius: 10px;
-        }
-    </style>
-    <script src="main.js"></script>
 </body>
-
 </html>
