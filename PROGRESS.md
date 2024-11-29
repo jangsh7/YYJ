@@ -52,7 +52,8 @@
 * 프로젝트 아이디어 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/c18a962b1f8188a9931396df66fa1df78d527add))
 * 프로젝트 주제 요약 및 docs 관리 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/8f7669b90589f60cec41669c2665564d48e56015))
 * 회원 가입 디자인 및 성공 메시지 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/d251a59fa6d32ab63f334271c4b063e30c85cac7))
-* 구단별 캘린더 이미지 변경 구현
+* 캘린더 탑 메뉴 구성 구현 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/2b76e03bef55807da8442f877c78382ce4163fdc))
+* 구단별 캘린더 이미지 변경 구현 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/de38196990a4da9d0a512b36a019db41f3c085d9))
 * 일기 페이지에서 추가한 이미지 캘린더에 삽입 구현 ([Commit Link](https://github.com/choehyeonjin/OSS-YYJ-group5/commit/2b76e03bef55807da8442f877c78382ce4163fdc))
 
 ### 2023202070 최현진
