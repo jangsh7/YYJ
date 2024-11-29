@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Q&A</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "SCDream4";
+            src: url("font/SCDream4.otf") format("truetype");
+            font-weight: normal;
+        }
+
+        * {
+            font-family: 'SCDream4';
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        header {
+            background-color: #333333;
+            color: white;
+            padding: 20px 0;
+            /* 상하 여백 고정 */
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+            /* 글씨 크기 고정 */
+        }
+
+        .form-container {
+            width: 600px;
+            /* 고정 너비 */
+            margin: 30px auto;
+            /* 중앙 정렬 */
+            background-color: white;
+            padding: 25px;
+            /* 내부 여백 고정 */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 20px;
+            /* 글씨 크기 고정 */
+        }
+
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 12px;
+            /* 내부 여백 고정 */
+            margin-bottom: 15px;
+            /* 아래 여백 고정 */
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            /* 글씨 크기 고정 */
+            box-sizing: border-box;
+        }
+
+        .form-container textarea {
+            resize: none;
+            height: 100px;
+            /* 고정 높이 */
+        }
+
+        .form-container input:focus,
+        .form-container textarea:focus {
+            border-color: #333333;
+            outline: none;
+            box-shadow: 0 0 5px rgba(109, 76, 65, 0.5);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            /* 버튼 우측 정렬 */
+            gap: 10px;
+            /* 버튼 간격 고정 */
+            margin-top: 20px;
+            /* 위 여백 고정 */
+        }
+
+        .button-container button,
+        .button-container a {
+            background-color: #333333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            /* 버튼 내부 여백 고정 */
+            border-radius: 6px;
+            font-size: 14px;
+            /* 글씨 크기 고정 */
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover,
+        .button-container a:hover {
+            background-color: #555555;
+        }
+
+        /* 팝업 스타일 */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            /* 화면 중앙 정렬 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            /* 내부 여백 고정 */
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            /* 고정 너비 */
+        }
+
+        .popup h2 {
+            margin: 0;
+            font-size: 18px;
+            /* 글씨 크기 고정 */
+            margin-bottom: 10px;
+        }
+
+        .popup p {
+            margin: 10px 0;
+            font-size: 14px;
+            /* 글씨 크기 고정 */
+            color: #333;
+        }
+
+        .popup button {
+            background-color: #333333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            /* 버튼 내부 여백 고정 */
+            border-radius: 6px;
+            font-size: 14px;
+            /* 글씨 크기 고정 */
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #555555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>MEMO</h1>
+    </header>
+
+    <div class="form-container">
+        <h2>메모 작성</h2>
+        <form id="qna-form">
+            <input type="text" id="title" placeholder="제목" required>
+            <textarea id="description" rows="5" placeholder="작성해주세요!" required></textarea>
+            <div class="button-container">
+                <button type="submit">작성</button>
+                <a id="cancel-link" href="#">취소</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- 팝업 메시지 -->
+    <div class="popup" id="popup">
+        <h2>✨ *·:*:·.*뭘 보노*.·:*:·* ✨</h2>
+        <p>작성이 성공적으로 완료되었습니다.</p>
+        <button id="popup-close">확인</button>
+    </div>
+
+    <script>
+        document.getElementById('qna-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const timestamp = new Date().toISOString();
+
+            // URL에서 team 파라미터 추출
+            const urlParams = new URLSearchParams(window.location.search);
+            const team = urlParams.get('team');
+
+            if (!team) {
+                alert("올바른 팀 정보를 찾을 수 없습니다. URL에 team 파라미터를 추가하세요.");
+                return;
+            }
+
+            if (title.trim() === '' || description.trim() === '') {
+                alert("제목과 내용을 모두 입력해 주세요.");
+                return;
+            }
+
+            const qna = { title, description, timestamp, author: 'User' }; // 저장, USER 바꾸기 DB
+
+            const teamKey = `qnas_${team}`; // 저장
+            const qnas = JSON.parse(localStorage.getItem(teamKey)) || []; // 저장
+
+            qnas.push(qna);
+
+            localStorage.setItem(teamKey, JSON.stringify(qnas));
+
+            document.getElementById('qna-form').reset(); // 'cancle-form' 오타 수정
+
+            const cancelLink = document.getElementById('cancel-link');
+            if (team) {
+                cancelLink.href = `community2.html?team=${team}`;
+            } else {
+                cancelLink.href = '#';
+                alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+            }
+
+            const popup = document.getElementById('popup');
+            popup.style.display = 'block';
+
+            document.getElementById('popup-close').addEventListener('click', function () {
+                popup.style.display = 'none';
+                window.location.href = `community2.html?team=${team}`; // 저장 후 목록 페이지로 이동
+            });
+        });
+
+        // 취소 링크에 URL 설정
+        const cancelLink = document.getElementById('cancel-link');
+        const urlParams = new URLSearchParams(window.location.search);
+        const team = urlParams.get('team');
+        if (team) {
+            cancelLink.href = `community2.html?team=${team}`;
+        } else {
+            cancelLink.href = '#';
+            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+        }
+    </script>
+</body>
+
+</html>
