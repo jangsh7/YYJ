@@ -17,17 +17,17 @@
 
 ## Project Screenshot
 ### 🔏Login
-<img src="login_example.png" alt="logo image" width="300px">
+<img src="login_example.png" alt="logo image" width="400px">
 
 ### 🔐SignUp
-<img src="signup_update.png" alt="logo image" width="300px">
-<img src="signup_success.png" alt="logo image" width="300px">
+<img src="signup_update.png" alt="logo image" width="400px">
+<img src="signup_success.png" alt="logo image" width="400px">
 
 ### 🔍Find id/pw
-<img src="find_idpw_example.png" alt="logo image" width="400px">
+![Sample UI](/find_idpw_example.png)
 
 ### 📅Calendar
-<img src="calendar_example.png" alt="logo image" width="400px">
+![Sample UI](/calendar_example.png)
 
 ### 📖Diary
 <img src="diary_example.png" alt="logo image" width="300px">
