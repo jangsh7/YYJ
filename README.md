@@ -87,7 +87,8 @@
 - Distribute and implement the remaining features to be implemented
 
 **6th meeting(2024/11/29)**
-- .
+- Combine with all feature develop branches
+- To modify the Commit link at PROGRESS.md
 
 
 
