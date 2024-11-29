@@ -244,6 +244,7 @@
             color: black;
             text-shadow: 1px 1px 2px white;
         }
+
         .calendar-day.selected {
             border: 2px solid #007bff;
             border-radius: 10px;
@@ -282,7 +283,7 @@
             <!--<img src="images/KTwiz.jpg" alt="달력 이미지" width="150">-->
             <div style="position: relative; width: 300px; height: 300px; border: 1px solid white;">
                 <!-- 배경 이미지 -->
-                <img src="images/KTwiz.jpg" alt="달력 배경 이미지" style="width: 300px; height: 300px; object-fit: contain;">
+                <img id="calendarBackground" src="images/KTwiz.jpg" alt="달력 배경 이미지" style="width: 300px; height: 300px; object-fit: contain;">
 
                 <!-- 월 숫자 텍스트 -->
                 <div class="calendar-text">
@@ -327,6 +328,31 @@
 
     <script src="calendar.js"></script>
     <script>
+        const teamImages = {
+            "두산 베어스": "DOOSANbears.jpg",
+            "한화 이글스": "HANHWAeagles.jpg",
+            "KIA 타이거즈": "KIAtigers.jpg",
+            "키움 히어로즈": "KIWOOMheroes.jpg",
+            "KT 위즈": "KTwiz.jpg",
+            "LG 트윈스": "LGtwins.jpg",
+            "롯데 자이언츠": "LOTTEgiants.jpg",
+            "NC 다이노스": "NCdinos.jpg",
+            "삼성 라이온즈": "SAMSUNGlions.jpg",
+            "SSG 랜더스": "SSGlanders.jpg"
+        };
+
+        // Assume selected_team is passed to the calendar.html as a query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedTeam = urlParams.get('selected_team');
+
+        // Update the background image based on the selected team
+        if (selectedTeam && teamImages[selectedTeam]) {
+            const imgElement = document.getElementById("calendarBackground");
+            imgElement.src = `images/${teamImages[selectedTeam]}`;
+        } else {
+            console.warn("No valid team selected, using default image.");
+        }
+
         let currentDate = new Date();
         let selectedDayElement = null;
 
@@ -386,13 +412,13 @@
                 // dateDiv.innerHTML = `
                 // <img src="" alt="이미지" class="day-image" style="display: none;">
                 // <span class="day-text">${day}</span>
-            // `;
+                // `;
 
                 // 클릭 이벤트
                 dateDiv.addEventListener("click", (event) => {
                     const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
                     showGameOptions(formattedDate, event); // 마우스 위치를 함께 전달
-            });
+                });
 
                 if (
                     day === new Date().getDate() &&
@@ -477,4 +503,5 @@
         renderCalendar();
     </script>
 </body>
+
 </html>
