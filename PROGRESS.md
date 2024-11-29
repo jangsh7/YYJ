@@ -12,7 +12,7 @@
 
 ## Project Schedule
 ![Sample Gantt](/roadmap.png)
-
+ 2024.11.29 기준 4주차 진행 중에 있습니다.
 
 
 ## Project Screenshot
