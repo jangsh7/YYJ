@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Node.phl Q&A List</title>
+    <title>메모 List</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -189,7 +189,7 @@
     </div>
 
     <div class="add-post">
-        <a id="qna-link" href="#">질문 작성</a> <!-- 질문 작성 페이지 이동 -->
+        <a id="qna-link" href="#">메모 작성</a> <!-- 질문 작성 페이지 이동 -->
     </div>
 
     <script>
@@ -208,7 +208,7 @@
             kt: '#EB1C24',       // KT
             ssg: '#CE0E2D',      // SSG
             lotte: '#041E42',    // 롯데
-            hanwa: '#F73600',    // 한화
+            hanwha: '#F73600',    // 한화
             nc: '#315288',       // NC
             kiwoom: '#570514'    // 키움
         };
@@ -232,16 +232,16 @@
         const headerTitle = document.getElementById('header-title');
         if (team) {
             const teamNames = {
-                kia: 'KIA Q&A',
-                samsung: '삼성 Q&A',
-                lg: 'LG Q&A',
-                doosan: '두산 Q&A',
-                kt: 'KT Q&A',
-                ssg: 'SSG Q&A',
-                lotte: '롯데 Q&A',
-                hanwa: '한화 Q&A',
-                nc: 'NC Q&A',
-                kiwoom: '키움 Q&A'
+                kia: 'KIA 메모장',
+                samsung: '삼성 메모장',
+                lg: 'LG 메모장',
+                doosan: '두산 메모장',
+                kt: 'KT 메모장',
+                ssg: 'SSG 메모장',
+                lotte: '롯데 메모장',
+                hanwha: '한화 메모장',
+                nc: 'NC 메모장',
+                kiwoom: '키움 메모장'
             };
 
             headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
@@ -253,7 +253,7 @@
             postList.innerHTML = ''; // 기존 Q&A 목록 초기화
 
             if (qnas.length === 0) {
-                postList.innerHTML = '<p>등록된 Q&A가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
+                postList.innerHTML = '<p>등록된 메모가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
                 return;
             }
 
@@ -323,7 +323,7 @@
         }
 
         function deleteQnA(index) {
-            if (confirm("이 Q&A를 삭제하시겠습니까?")) {
+            if (confirm("이 메모를 삭제하시겠습니까?")) {
                 qnas.splice(index, 1);
                 localStorage.setItem(teamKey, JSON.stringify(qnas)); // localStorage 업데이트
                 renderQnAs();
