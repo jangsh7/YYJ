@@ -28,7 +28,8 @@
         .top-menu {
             background-color: #333333;
             color: white;
-            padding: 12px 20px; /*양쪽에 동일한 여백 20px 결정*/
+            padding: 12px 20px;
+            /*양쪽에 동일한 여백 20px 결정*/
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -229,6 +230,20 @@
             justify-content: center;
             align-items: center;
         }
+
+        .calendar-text {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            /*left: 150px;
+            bottom: 3px;
+            transform: translateX(-27px);*/
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            font-weight: bold;
+            color: black;
+            text-shadow: 1px 1px 2px white;
+        }
     </style>
 </head>
 
@@ -241,7 +256,7 @@
             </div>
             <div class="title_logo">요야정: 요즘 야구 정리</div>
         </div>
-        
+
         <div class="nav-links">
             <a href="KIA_community1.html?team=kia">KIA</a>
             <a href="KIA_community1.html?team=samsung">삼성</a>
@@ -261,7 +276,17 @@
     <div class="container">
         <div class="image-space">
             <!--<img src="images/KTwiz.jpg" alt="달력 이미지" width="150">-->
-            <canvas id="monthCanvas" width="150" height="150" style="border: 1px solid black;"></canvas>
+            <div style="position: relative; width: 300px; height: 300px; border: 1px solid white;">
+                <!-- 배경 이미지 -->
+                <img src="images/KTwiz.jpg" alt="달력 배경 이미지" style="width: 300px; height: 300px; object-fit: contain;">
+
+                <!-- 월 숫자 텍스트 -->
+                <div class="calendar-text">
+                    <p>changeYearMonth()</p>
+                </div>
+            </div>
+
+
 
             <div class="stats-section">
                 <div>
@@ -320,6 +345,10 @@
 
             yearSelect.value = currentDate.getFullYear();
             monthSelect.value = currentDate.getMonth();
+
+            // 초기 월 숫자 표시
+            const calendarTextElement = document.querySelector(".calendar-text p");
+            calendarTextElement.textContent = currentDate.getMonth() + 1; // 월 초기값 설정
         }
 
         function renderCalendar() {
@@ -368,6 +397,8 @@
             currentDate.setMonth(currentDate.getMonth() + offset);
             updateSelectors();
             renderCalendar();
+
+            updateMonthText();
         }
 
         function changeYearMonth() {
@@ -375,6 +406,15 @@
             const monthSelect = document.getElementById("monthSelect").value;
             currentDate = new Date(yearSelect, monthSelect);
             renderCalendar();
+
+            updateMonthText();
+        }
+
+        // 월 숫자 텍스트를 업데이트하는 함수
+        function updateMonthText() {
+            const calendarTextElement = document.querySelector(".calendar-text p");
+            const monthNumber = currentDate.getMonth() + 1; // JavaScript의 월은 0부터 시작
+            calendarTextElement.textContent = monthNumber;
         }
 
         function updateSelectors() {
