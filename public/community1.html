@@ -170,10 +170,9 @@
         }
 
         .horizontal-box img {
-            width: 400px;
-            height: 300px;
+            width: 420px;  /* 고정 너비 */
+            height: 300px; /* 고정 높이 */
             border-radius: 10px;
-            object-fit: cover;
         }
 
         .horizontal-box-content {
@@ -225,20 +224,20 @@
     <header>
         <h1 id="header-title"></h1>
         <div>
-            <a id="qna-link" href="#">Q&A</a> |
+            <a id="qna-link" href="#">메모장</a> |
             <a id="diary-link" href="#">다이어리</a> |
-            <a href="main.html">메인</a>
+            <a href="calendar.html">메인</a>
         </div>
     </header>
 
     <div class="main-content">
         <div class="section-container">
             <div class="post-section">
-                <h2>질문 1억 개 올려도 됨, 대신 질문에 답은 안해줌</h2>
+                <h2>나만의 메모장</h2>
                 <div class="post-list" id="qna-section"></div>
             </div>
             <div class="post-section">
-                <h2>뭐든 적어도 됨, 대신 읽어주는 사람 없음</h2>
+                <h2>다이어리</h2>
                 <div class="post-list" id="diary-section"></div>
             </div>
         </div>
@@ -297,7 +296,7 @@
             kt: '#EB1C24',       // KT
             ssg: '#CE0E2D',      // SSG
             lotte: '#041E42',    // 롯데
-            hanwa: '#F73600',    // 한화
+            hanwha: '#F73600',    // 한화
             nc: '#315288',       // NC
             kiwoom: '#570514'    // 키움
         };
@@ -321,11 +320,11 @@
                 },
                 event2: {
                     texts: [
-                    "🍹🍤크림새우🍤🍹",
+                        "🍹🍤크림새우🍤🍹",
                         "🍺🍗광주원샷 치킨🍗🍺",
                         "🍢🌶️마성떡볶이🌶️🍢"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/kia.png"
                 },
                 event3: {
                     texts: [
@@ -339,9 +338,9 @@
             samsung: {
                 event1: {
                     texts: [
-                    "1982년 삼성 라이온즈 설립",
-                       "홈구장 : 대구 - 삼성라이온즈파크 ( 2016년 ~ 현재 ) ",
-                "감독 :  박진만"
+                        "1982년 삼성 라이온즈 설립",
+                        "홈구장 : 대구 - 삼성라이온즈파크 ( 2016년 ~ 현재 ) ",
+                        "감독 :  박진만"
                     ],
                     image: "logos/samsung.png" // 비율 조절 예정
                 },
@@ -349,13 +348,13 @@
                     texts: [
                         "🍹🍤크림새우🍤🍹",
                         "🥗🐟물회🐟🥗",
-                        "🔥🍖바비큐 존 - 고기🍖🔥"
+                        "🔥🌶️떡볶이🔥🌶️"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/samsung.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑2014👑✨",
+                        "✨👑2014👑✨",
                         "1985 | 2002 | 2005 ",
                         "2006 | 2011 | 2012 | 2013"
                     ],
@@ -365,9 +364,9 @@
             lg: {
                 event1: {
                     texts: [
-                       "1990년 LG 트윈스 설립",
-                       "홈구장 : 서울 - 종합운동장 야구장 ( 1985년 ~ 현재 ) ",
-                "감독 :  염경엽"
+                        "1990년 LG 트윈스 설립",
+                        "홈구장 : 서울 - 종합운동장 야구장 ( 1985년 ~ 현재 ) ",
+                        "감독 :  염경엽"
                     ],
                     image: "logos/lg.png"
                 },
@@ -381,7 +380,7 @@
                 },
                 event3: {
                     texts: [
-                    "✨👑2023👑✨",
+                        "✨👑2023👑✨",
                         "1990 | 1994 ",
                     ],
                     image: "ball/lg.png"
@@ -390,23 +389,23 @@
             doosan: {
                 event1: {
                     texts: [
-                       "1982년 두산 베어스 설립",
-                "홈구장 : 서울 - 종합운동장 야구장 ( 1985년 ~ 현재 ) ",
-                "감독 :  이승엽"
+                        "1982년 두산 베어스 설립",
+                        "홈구장 : 서울 - 종합운동장 야구장 ( 1985년 ~ 현재 ) ",
+                        "감독 :  이승엽"
                     ],
                     image: "logos/doosan.png" // 비율 조절 예정
                 },
                 event2: {
                     texts: [
-                    "🥢🍜김치말이국수🍜🥢",
+                        "🥢🍜김치말이국수🍜🥢",
                         "🍺🍗원샷치킨🍗🍺",
                         "🍱🥩삼겹살 도시락🥩🍱"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/seoul.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑2019👑✨",
+                        "✨👑2019👑✨",
                         "1982 | 1995 ",
                         "2001 | 2015 | 2016 "
                     ],
@@ -416,9 +415,9 @@
             kt: {
                 event1: {
                     texts: [
-                    "2013년 KT wiz 설립",
-                "홈구장 : 수원 - KT위즈 파크 ( 2015년 ~ 현재 ) ",
-                "감독 :  이강철"
+                        "2013년 KT wiz 설립",
+                        "홈구장 : 수원 - KT위즈 파크 ( 2015년 ~ 현재 ) ",
+                        "감독 :  이강철"
                     ],
                     image: "logos/kt.png" // 비율 조절 예정
                 },
@@ -428,11 +427,11 @@
                         "🥟🥟보영만두🥟🥟",
                         "🍱🥩통삼겹살 도시락🥩🍱"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/kt.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑2021👑✨",
+                        "✨👑2021👑✨",
                     ],
                     image: "ball/kt.png"
                 }
@@ -452,11 +451,11 @@
                         "🧀🍟치즈푸틴🍟🧀",
                         "🍫🍩오레오 츄러스🍩🍫"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/ssg.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑2022👑✨",
+                        "✨👑2022👑✨",
                         "2007 | 2008  ",
                         "2010 | 2018"
                     ],
@@ -466,7 +465,7 @@
             lotte: {
                 event1: {
                     texts: [
-                        "1982년 롯데 자이언츠 설립 (프로화 이전 기준 : 1975년)",
+                        "1982년 롯데 자이언츠 설립 (프로화 기준)",
                         "홈구장 : 부산 - 사직 야구장 ( 1986년 ~ 현재 ) ",
                         "감독 :  김태형"
                     ],
@@ -478,24 +477,24 @@
                         "🍢🌶️33떡볶이🌶️🍢",
                         "🍗🍯아리아리 닭강정🍯🍗"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/lotte.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑1992👑✨",
+                        "✨👑1992👑✨",
                         "1984 "
                     ],
                     image: "ball/lotte.png"
                 }
             },
-            hanwa: {
+            hanwha: {
                 event1: {
                     texts: [
                         "1986년 한화 이글스 설립",
                         "홈구장 : 대전 - 이글스 파크 ( 1986년 ~ 2024년 ) ",
                         "감독 :  김경문"
                     ],
-                    image: "logos/hanwa.png" // 비율 조절 예정
+                    image: "logos/hanhwa.png" // 비율 조절 예정
                 },
                 event2: {
                     texts: [
@@ -503,13 +502,13 @@
                         "🍜🥗열무국수🥗🍜",
                         "🍢🌶️떡볶이🌶️🍢"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/hanwha.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑1999👑✨",
+                        "✨👑1999👑✨",
                     ],
-                    image: "ball/hanwa.jpg"
+                    image: "ball/hanwha.png"
                 }
             },
             nc: {
@@ -531,9 +530,9 @@
                 },
                 event3: {
                     texts: [
-                    "✨👑2020👑✨",
+                        "✨👑2020👑✨",
                     ],
-                    image: "ball/nc.jpg"
+                    image: "ball/nc.png"
                 }
             },
             kiwoom: {
@@ -549,13 +548,13 @@
                     texts: [
                         "🍹🍤크림새우🍤",
                         "🔥🐙타코야끼🐙🔥",
-                        "🔥🥓대왕곱창 🥓🔥"
+                        "🔥🥓대왕곱창🥓🔥🔥"
                     ],
-                    image: "ball/test.png"
+                    image: "eat/kiwoom.png"
                 },
                 event3: {
                     texts: [
-                    "✨👑예정👑✨",
+                        "✨👑예정👑✨",
                     ],
                     image: "logos/kiwoom.png"
                 }
@@ -598,7 +597,7 @@
                 { text: "롯데", url: "https://www.giantsclub.com/html/" },
                 { text: "GIANTS SHOP", url: "https://www.lottegiantsshop.com/" }
             ],
-            hanwa: [
+            hanwha: [
                 { text: "Eagles TV", url: "https://www.youtube.com/@HanwhaEagles_official" },
                 { text: "한화", url: "https://www.hanwhaeagles.co.kr/index.do" },
                 { text: "이글스 샵", url: "https://eaglesshop.kr/" }
@@ -648,7 +647,7 @@
                 kt: 'KT 커뮤니티',
                 ssg: 'SSG 커뮤니티',
                 lotte: '롯데 커뮤니티',
-                hanwa: '한화 커뮤니티',
+                hanwha: '한화 커뮤니티',
                 nc: 'NC 커뮤니티',
                 kiwoom: '키움 커뮤니티'
             };
@@ -675,7 +674,7 @@
                 "https://www.youtube.com/embed/wBYboQtmPRU?si=OP3fW3hAGIoHCYUt"
             ],
             doosan: [
-               "https://www.youtube.com/embed/lMhDirLYvVo?si=f4EDXz6v0TUuyd5u",
+                "https://www.youtube.com/embed/lMhDirLYvVo?si=dIux4XXhBpanT_lY",
                 "https://www.youtube.com/embed/igPggbPRMac?si=lAOeEYfFdaKvRLbQ"
             ],
             kt: [
@@ -690,17 +689,17 @@
                 "https://www.youtube.com/embed/bvbomd5CLh0?si=IQ3sRkO4k89jRqtO",
                 "https://www.youtube.com/embed/rX9JivgYYt4?si=P6iOFgU0DI5gNoi9"
             ],
-            hanwa: [
+            hanwha: [
                 "https://www.youtube.com/embed/CiOBbj-6-gA?si=q2Hm0upQzpAnED9I",
                 "https://www.youtube.com/embed/K9RkIveMUH8?si=1lTv9Fa1misxVMF_"
             ],
             nc: [
-                "https://www.youtube.com/embed/6SKuiZtk17E?si=CpcmDBsXcIVmBMhZ" ,
+                "https://www.youtube.com/embed/6SKuiZtk17E?si=CpcmDBsXcIVmBMhZ",
                 "https://www.youtube.com/embed/Rv4od-Wo7X4?si=50mzYktulizYZWCI"
             ],
             kiwoom: [
-                "https://www.youtube.com/embed/OjoYnwcZMOI?si=gzlwsAESKi4iry4e" ,
-                "https://www.youtube.com/embed/GRTFEMXf_VQ?si=5msvCTa7EMwnO_g2" 
+                "https://www.youtube.com/embed/OjoYnwcZMOI?si=gzlwsAESKi4iry4e",
+                "https://www.youtube.com/embed/GRTFEMXf_VQ?si=5msvCTa7EMwnO_g2"
             ]
         };
 
@@ -727,7 +726,7 @@
 
         // Q&A와 커뮤니티 링크 업데이트
         if (team) {
-            qnaLink.href = `KIA_community2.html?team=${team}`;
+            qnaLink.href = `community2.html?team=${team}`;
             diaryLink.href = `community_diary.html?team=${team}`;
         } else {
             qnaLink.href = '#';
@@ -743,7 +742,7 @@
             qnaSection.innerHTML = ''; // 기존 내용 초기화
 
             if (qnas.length === 0) {
-                qnaSection.innerHTML = '<p>등록된 Q&A가 없습니다.</p>';
+                qnaSection.innerHTML = '<p>등록된 memo가 없습니다.</p>';
             } else {
                 // 최신순으로 정렬 후 상위 5개 가져오기
                 const latestQnAs = qnas
@@ -756,7 +755,7 @@
                     postItem.className = 'post-item';
                     postItem.innerHTML = `
                     <div>
-                        <div class="post-title" onclick="window.location.href='KIA_community4.html?id=${qna.id}&team=${team}'">
+                        <div class="post-title" onclick="window.location.href='community4.html?id=${qna.id}&team=${team}'">
                             ${qna.title}
                         </div>
                         <div class="post-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
