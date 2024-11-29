@@ -22,7 +22,7 @@
 ![Sample UI](/signup_update.png)
 ![Sample UI](/signup_success.png)
 #### Calendar
-![Sample UI](/calendar_example.jpeg)
+![Sample UI](/calendar_example.png)
 #### Diary
 ![Sample UI](/diary_example.png)
 
