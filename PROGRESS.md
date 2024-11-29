@@ -12,26 +12,32 @@
 
 ## Project Schedule
 ![Sample Gantt](/roadmap.png)
-
+- 2024.11.29 기준 4주차 진행 중에 있습니다.
 
 
 ## Project Screenshot
-### Login
-![Sample UI](/login_example.png)
-### SignUp
-![Sample UI](/signup_update.png)
-![Sample UI](/signup_success.png)
-### Find id/pw
+### 🔏Login
+<img src="login_example.png" alt="logo image" width="400px">
+
+### 🔐SignUp
+<img src="signup_update.png" alt="logo image" width="400px">
+<img src="signup_success.png" alt="logo image" width="400px">
+
+### 🔍Find id/pw
 ![Sample UI](/find_idpw_example.png)
-### Calendar
+
+### 📅Calendar
 ![Sample UI](/calendar_example.png)
-### Diary
+
+### 📖Diary
 ![Sample UI](/diary_example.png)
-### community
-![Sample UI](/community_example.png)
-![Sample UI](/memo_example1.png)
-![Sample UI](/memo_example2.png)
-![Sample UI](/memo_example3.png)
+
+### 👨‍👩‍👧‍👦community
+<img src="community_example.png" alt="logo image" width="400px">
+
+<img src="memo_example1.png" alt="logo image" width="400px">
+<img src="memo_example2.png" alt="logo image" width="400px">
+<img src="memo_example3.png" alt="logo image" width="400px">
 
 
 
