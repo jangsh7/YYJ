@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Node.phl Diary List</title>
+    <title>메모 List</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -32,13 +32,16 @@
             color: white;
             width: 100%;
             height: 100px;
+            /* 고정 높이 설정 */
             text-align: center;
             position: relative;
         }
 
         header h1 {
             font-size: 32px;
+            /* 고정 글씨 크기 설정 */
             line-height: 100px;
+            /* 세로 중앙 정렬 */
             margin: 0;
             font-weight: bold;
         }
@@ -150,6 +153,21 @@
             margin: 20px auto;
             width: 800px;
         }
+
+        .add-post a {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-post a:hover {
+            background-color: var(--hover-dark-color, #a94442);
+        }
     </style>
 </head>
 
@@ -159,7 +177,7 @@
         <h1 id="header-title"></h1>
         <div class="nav-links">
             <a id="com-link" href="#">커뮤니티</a>
-            <a id="qna-link" href="#"> 메모장 </a>
+            <a id="diary-link" href="#">다이어리</a>
             <a href="calendar.html">메인</a>
         </div>
     </header>
@@ -171,10 +189,11 @@
     </div>
 
     <div class="add-post">
+        <a id="qna-link" href="#">메모 작성</a> <!-- 질문 작성 페이지 이동 -->
     </div>
 
     <script>
-        const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 다이어리 개수
+        const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Q&A 개수
         let currentPage = 1; // 현재 페이지 번호
 
         // URL에서 team 파라미터 추출
@@ -182,89 +201,90 @@
         const team = urlParams.get('team');
 
         const teamColors = {
-            kia: '#EA0029',
-            samsung: '#074CA1',
-            lg: '#C30452',
-            doosan: '#131230',
-            kt: '#EB1C24',
-            ssg: '#CE0E2D',
-            lotte: '#041E42',
-            hanwha: '#F73600',
-            nc: '#315288',
-            kiwoom: '#570514'
+            kia: '#EA0029',      // KIA
+            samsung: '#074CA1',  // 삼성
+            lg: '#C30452',       // LG
+            doosan: '#131230',    // 두산
+            kt: '#EB1C24',       // KT
+            ssg: '#CE0E2D',      // SSG
+            lotte: '#041E42',    // 롯데
+            hanwha: '#F73600',    // 한화
+            nc: '#315288',       // NC
+            kiwoom: '#570514'    // 키움
         };
 
         // 구단별 색상 적용
         if (team && teamColors[team]) {
             document.documentElement.style.setProperty('--hover-color', teamColors[team]);
         } else {
-            document.documentElement.style.setProperty('--hover-color', '#d32f2f');
+            document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
         }
 
+
+
         // 팀별 localStorage 키
-        const teamKey = team ? `diary_${team}` : null;
+        const teamKey = team ? `qnas_${team}` : null;
 
-        // localStorage에서 다이어리 데이터 로드
-        let diaries = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
+        // localStorage에서 Q&A 데이터 로드
+        let qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
         const postList = document.getElementById('post-list');
-
         // 팀별 헤더 이름 설정
         const headerTitle = document.getElementById('header-title');
         if (team) {
             const teamNames = {
-                kia: 'KIA 다이어리',
-                samsung: '삼성 다이어리',
-                lg: 'LG 다이어리',
-                doosan: '두산 다이어리',
-                kt: 'KT 다이어리',
-                ssg: 'SSG 다이어리',
-                lotte: '롯데 다이어리',
-                hanwha: '한화 다이어리',
-                nc: 'NC 다이어리',
-                kiwoom: '키움 다이어리'
+                kia: 'KIA 메모장',
+                samsung: '삼성 메모장',
+                lg: 'LG 메모장',
+                doosan: '두산 메모장',
+                kt: 'KT 메모장',
+                ssg: 'SSG 메모장',
+                lotte: '롯데 메모장',
+                hanwha: '한화 메모장',
+                nc: 'NC 메모장',
+                kiwoom: '키움 메모장'
             };
 
-            headerTitle.textContent = teamNames[team] || '커뮤니티';
+            headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
         } else {
             headerTitle.textContent = '커뮤니티';
         }
 
-        function renderDiaries() {
-            postList.innerHTML = '';
+        function renderQnAs() {
+            postList.innerHTML = ''; // 기존 Q&A 목록 초기화
 
-            if (diaries.length === 0) {
-                postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>';
+            if (qnas.length === 0) {
+                postList.innerHTML = '<p>등록된 메모가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
                 return;
             }
 
             // 최신순 정렬
-            const sortedDiaries = diaries
-                .map((diary, index) => ({ ...diary, originalIndex: index }))
+            const sortedQnAs = qnas
+                .map((qna, index) => ({ ...qna, originalIndex: index }))
                 .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-            // 현재 페이지에 맞는 다이어리 데이터 가져오기
+            // 현재 페이지에 맞는 Q&A 데이터 가져오기
             const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedDiaries.length);
-            const currentDiaries = sortedDiaries.slice(startIndex, endIndex);
+            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedQnAs.length);
+            const currentQnAs = sortedQnAs.slice(startIndex, endIndex);
 
-            // 다이어리 목록 렌더링
-            currentDiaries.forEach((diary) => {
+            // Q&A 목록 렌더링
+            currentQnAs.forEach((qna) => {
                 const postItem = document.createElement('div');
                 postItem.className = 'post-item';
                 postItem.innerHTML = `
                 <div>
-                    <div class="post-title" onclick="goToDetail(${diary.originalIndex})">${diary.title}</div>
-                    <div class="post-meta">작성자: ${diary.author} | ${new Date(diary.timestamp).toLocaleString()}</div>
+                    <div class="post-title" onclick="goToDetail(${qna.originalIndex})">${qna.title}</div>
+                    <div class="post-meta">작성자: ${qna.author} | ${new Date(qna.timestamp).toLocaleString()}</div>
                 </div>
                 <div class="post-actions">
-                    <button onclick="deleteDiary(${diary.originalIndex})">삭제</button>
+                    <button onclick="deleteQnA(${qna.originalIndex})">삭제</button>
                 </div>
             `;
                 postList.appendChild(postItem);
             });
 
             // 페이지네이션 렌더링
-            renderPagination(sortedDiaries.length);
+            renderPagination(sortedQnAs.length);
         }
 
         function renderPagination(totalItems) {
@@ -299,14 +319,14 @@
 
         function changePage(page) {
             currentPage = page;
-            renderDiaries();
+            renderQnAs();
         }
 
-        function deleteDiary(index) {
-            if (confirm("이 다이어리를 삭제하시겠습니까?")) {
-                diaries.splice(index, 1);
-                localStorage.setItem(teamKey, JSON.stringify(diaries)); // localStorage 업데이트
-                renderDiaries();
+        function deleteQnA(index) {
+            if (confirm("이 메모를 삭제하시겠습니까?")) {
+                qnas.splice(index, 1);
+                localStorage.setItem(teamKey, JSON.stringify(qnas)); // localStorage 업데이트
+                renderQnAs();
             }
         }
 
@@ -316,15 +336,14 @@
             }
         }
 
+        // 팀별 질문 작성 링크 업데이트
         const qnaLink = document.getElementById('qna-link');
         if (team) {
-            qnaLink.href = `community2.html?team=${team}`;
+            qnaLink.href = `community3.html?team=${team}`;
         } else {
             qnaLink.href = '#';
             alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
         }
-
-
         const comLink = document.getElementById('com-link');
         if (team) {
             comLink.href = `community1.html?team=${team}`;
@@ -332,15 +351,23 @@
             comLink.href = '#';
             alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
         }
+        const diaryLink = document.getElementById('diary-link');
+        if (team) {
+            diaryLink.href = `community_diary.html?team=${team}`;
+        } else {
+            diaryLink.href = '#';
+            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+        }
 
         // 초기 렌더링
         if (teamKey) {
-            renderDiaries();
+            renderQnAs();
         } else {
             postList.innerHTML = '<p>유효하지 않은 팀입니다. URL에 team 파라미터를 추가하세요.</p>';
         }
     </script>
 
+
 </body>
 
-</html> 
+</html>
