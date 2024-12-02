@@ -192,181 +192,161 @@
         <a id="qna-link" href="#">메모 작성</a> <!-- 질문 작성 페이지 이동 -->
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+
     <script>
-        const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Q&A 개수
-        let currentPage = 1; // 현재 페이지 번호
-
-        // URL에서 team 파라미터 추출
-        const urlParams = new URLSearchParams(window.location.search);
-        const team = urlParams.get('team');
-
-        const teamColors = {
-            kia: '#EA0029',      // KIA
-            samsung: '#074CA1',  // 삼성
-            lg: '#C30452',       // LG
-            doosan: '#131230',    // 두산
-            kt: '#EB1C24',       // KT
-            ssg: '#CE0E2D',      // SSG
-            lotte: '#041E42',    // 롯데
-            hanwha: '#F73600',    // 한화
-            nc: '#315288',       // NC
-            kiwoom: '#570514'    // 키움
-        };
-
-        // 구단별 색상 적용
-        if (team && teamColors[team]) {
-            document.documentElement.style.setProperty('--hover-color', teamColors[team]);
-        } else {
-            document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
-        }
-
-
-
-        // 팀별 localStorage 키
-        const teamKey = team ? `qnas_${team}` : null;
-
-        // localStorage에서 Q&A 데이터 로드
-        let qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
-        const postList = document.getElementById('post-list');
-        // 팀별 헤더 이름 설정
-        const headerTitle = document.getElementById('header-title');
-        if (team) {
-            const teamNames = {
-                kia: 'KIA 메모장',
-                samsung: '삼성 메모장',
-                lg: 'LG 메모장',
-                doosan: '두산 메모장',
-                kt: 'KT 메모장',
-                ssg: 'SSG 메모장',
-                lotte: '롯데 메모장',
-                hanwha: '한화 메모장',
-                nc: 'NC 메모장',
-                kiwoom: '키움 메모장'
-            };
-
-            headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
-        } else {
-            headerTitle.textContent = '커뮤니티';
-        }
-
-        function renderQnAs() {
-            postList.innerHTML = ''; // 기존 Q&A 목록 초기화
-
-            if (qnas.length === 0) {
-                postList.innerHTML = '<p>등록된 메모가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
-                return;
-            }
-
-            // 최신순 정렬
-            const sortedQnAs = qnas
-                .map((qna, index) => ({ ...qna, originalIndex: index }))
-                .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
-            // 현재 페이지에 맞는 Q&A 데이터 가져오기
-            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, sortedQnAs.length);
-            const currentQnAs = sortedQnAs.slice(startIndex, endIndex);
-
-            // Q&A 목록 렌더링
-            currentQnAs.forEach((qna) => {
-                const postItem = document.createElement('div');
-                postItem.className = 'post-item';
-                postItem.innerHTML = `
-                <div>
-                    <div class="post-title" onclick="goToDetail(${qna.originalIndex})">${qna.title}</div>
-                    <div class="post-meta">작성자: ${qna.author} | ${new Date(qna.timestamp).toLocaleString()}</div>
-                </div>
-                <div class="post-actions">
-                    <button onclick="deleteQnA(${qna.originalIndex})">삭제</button>
-                </div>
-            `;
-                postList.appendChild(postItem);
-            });
-
-            // 페이지네이션 렌더링
-            renderPagination(sortedQnAs.length);
-        }
-
-        function renderPagination(totalItems) {
-            const paginationContainer = document.getElementById('pagination');
-            paginationContainer.innerHTML = '';
-
-            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-            // 이전 페이지 버튼
-            const prevButton = document.createElement('button');
-            prevButton.innerHTML = '<';
-            prevButton.disabled = currentPage === 1;
-            prevButton.onclick = () => changePage(currentPage - 1);
-            paginationContainer.appendChild(prevButton);
-
-            // 페이지 번호 버튼
-            for (let i = 1; i <= totalPages; i++) {
-                const pageButton = document.createElement('button');
-                pageButton.innerHTML = i;
-                pageButton.className = i === currentPage ? 'active' : '';
-                pageButton.onclick = () => changePage(i);
-                paginationContainer.appendChild(pageButton);
-            }
-
-            // 다음 페이지 버튼
-            const nextButton = document.createElement('button');
-            nextButton.innerHTML = '>';
-            nextButton.disabled = currentPage === totalPages;
-            nextButton.onclick = () => changePage(currentPage + 1);
-            paginationContainer.appendChild(nextButton);
-        }
-
-        function changePage(page) {
-            currentPage = page;
-            renderQnAs();
-        }
-
-        function deleteQnA(index) {
-            if (confirm("이 메모를 삭제하시겠습니까?")) {
-                qnas.splice(index, 1);
-                localStorage.setItem(teamKey, JSON.stringify(qnas)); // localStorage 업데이트
-                renderQnAs();
-            }
-        }
-
-        function goToDetail(originalIndex) {
-            if (team) {
-                window.location.href = `community4.html?id=${originalIndex}&team=${team}`;
-            }
-        }
-
-        // 팀별 질문 작성 링크 업데이트
-        const qnaLink = document.getElementById('qna-link');
-        if (team) {
-            qnaLink.href = `community3.html?team=${team}`;
-        } else {
-            qnaLink.href = '#';
-            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
-        }
-        const comLink = document.getElementById('com-link');
-        if (team) {
-            comLink.href = `community1.html?team=${team}`;
-        } else {
-            comLink.href = '#';
-            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
-        }
-        const diaryLink = document.getElementById('diary-link');
-        if (team) {
-            diaryLink.href = `community_diary.html?team=${team}`;
-        } else {
-            diaryLink.href = '#';
-            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
-        }
-
-        // 초기 렌더링
-        if (teamKey) {
-            renderQnAs();
-        } else {
-            postList.innerHTML = '<p>유효하지 않은 팀입니다. URL에 team 파라미터를 추가하세요.</p>';
-        }
-    </script>
-
+      const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Q&A 개수
+      let currentPage = 1; // 현재 페이지 번호
+  
+      // URL에서 team 파라미터 추출
+      const urlParams = new URLSearchParams(window.location.search);
+      const team = urlParams.get('team');
+  
+      const postList = document.getElementById('post-list');
+      const headerTitle = document.getElementById('header-title');
+  
+      
+      // Firestore 초기화
+      var firebaseConfig = {
+          apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+          authDomain: "yyjdb-1e121.firebaseapp.com",
+          databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
+          projectId: "yyjdb-1e121",
+          storageBucket: "yyjdb-1e121.firebasestorage.app",
+          messagingSenderId: "455353963754",
+          appId: "1:455353963754:web:2a64f5411a4061e9143393"
+      };
+  
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+  
+      // Firestore에서 데이터를 로드
+      function loadQnAs() {
+          if (!team) {
+              postList.innerHTML = '<p>유효하지 않은 팀입니다. URL에 team 파라미터를 추가하세요.</p>';
+              return;
+          }
+  
+          db.collection("Memo")
+              .where("team", "==", team) // 선택된 팀의 데이터만 가져오기
+              .orderBy("timestamp", "desc") // 최신순으로 정렬
+              .get()
+              .then((querySnapshot) => {
+                  const qnas = [];
+                  querySnapshot.forEach((doc) => {
+                      const data = doc.data();
+                      qnas.push({ ...data, id: doc.id });
+                  });
+  
+                  console.log("Loaded QnAs:", qnas); // 콘솔에 데이터를 출력하여 확인
+                  renderQnAs(qnas);
+              })
+              .catch((error) => {
+                  console.error("Error loading data: ", error);
+                  postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+              });
+      }
+  
+      function renderQnAs(qnas) {
+          postList.innerHTML = ''; // 기존 Q&A 목록 초기화
+  
+          if (qnas.length === 0) {
+              postList.innerHTML = '<p>등록된 메모가 없습니다.</p>'; // Q&A가 없을 경우 메시지 표시
+              return;
+          }
+  
+          // 현재 페이지에 맞는 Q&A 데이터 가져오기
+          const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+          const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, qnas.length);
+          const currentQnAs = qnas.slice(startIndex, endIndex);
+  
+          // Q&A 목록 렌더링
+          currentQnAs.forEach((qna) => {
+              const postItem = document.createElement('div');
+              postItem.className = 'post-item';
+              postItem.innerHTML = `
+                  <div>
+                      <div class="post-title" onclick="goToDetail('${qna.id}')">${qna.title}</div>
+                      <div class="post-meta">작성자: ${qna.author || '알 수 없음'} | ${new Date(qna.timestamp).toLocaleString()}</div>
+                  </div>
+                  <div class="post-actions">
+                      <button onclick="deleteQnA('${qna.id}')">삭제</button>
+                  </div>
+              `;
+              postList.appendChild(postItem);
+          });
+  
+          console.log("Rendered QnAs:", currentQnAs); // 렌더링된 데이터를 콘솔에 출력
+          renderPagination(qnas.length);
+      }
+  
+      function renderPagination(totalItems) {
+          const paginationContainer = document.getElementById('pagination');
+          paginationContainer.innerHTML = '';
+  
+          const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+  
+          // 이전 페이지 버튼
+          const prevButton = document.createElement('button');
+          prevButton.innerHTML = '<';
+          prevButton.disabled = currentPage === 1;
+          prevButton.onclick = () => changePage(currentPage - 1);
+          paginationContainer.appendChild(prevButton);
+  
+          // 페이지 번호 버튼
+          for (let i = 1; i <= totalPages; i++) {
+              const pageButton = document.createElement('button');
+              pageButton.innerHTML = i;
+              pageButton.className = i === currentPage ? 'active' : '';
+              pageButton.onclick = () => changePage(i);
+              paginationContainer.appendChild(pageButton);
+          }
+  
+          // 다음 페이지 버튼
+          const nextButton = document.createElement('button');
+          nextButton.innerHTML = '>';
+          nextButton.disabled = currentPage === totalPages;
+          nextButton.onclick = () => changePage(currentPage + 1);
+          paginationContainer.appendChild(nextButton);
+      }
+  
+      function changePage(page) {
+          currentPage = page;
+          loadQnAs();
+      }
+  
+      function deleteQnA(id) {
+          if (confirm("이 메모를 삭제하시겠습니까?")) {
+              db.collection("Memo").doc(id).delete()
+                  .then(() => {
+                      alert("메모가 삭제되었습니다.");
+                      loadQnAs(); // 삭제 후 목록 갱신
+                  })
+                  .catch((error) => {
+                      console.error("Error deleting document: ", error);
+                  });
+          }
+      }
+  
+      function goToDetail(id) {
+          if (team) {
+              window.location.href = `community4.html?id=${id}&team=${team}`;
+          }
+      }
+  
+      // 팀별 질문 작성 링크 업데이트
+      const qnaLink = document.getElementById('qna-link');
+      if (team) {
+          qnaLink.href = `community3.html?team=${team}`;
+      } else {
+          qnaLink.href = '#';
+          alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+      }
+  
+      // 초기 Firestore 데이터 로드
+      loadQnAs();
+  </script>
 
 </body>
 
