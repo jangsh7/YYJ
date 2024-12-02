@@ -206,6 +206,45 @@
       const postList = document.getElementById('post-list');
       const headerTitle = document.getElementById('header-title');
   
+      const teamColors = {
+            kia: '#EA0029',      // KIA
+            samsung: '#074CA1',  // 삼성
+            lg: '#C30452',       // LG
+            doosan: '#131230',    // 두산
+            kt: '#EB1C24',       // KT
+            ssg: '#CE0E2D',      // SSG
+            lotte: '#041E42',    // 롯데
+            hanwha: '#F73600',    // 한화
+            nc: '#315288',       // NC
+            kiwoom: '#570514'    // 키움
+        };
+
+        // 구단별 색상 적용
+        if (team && teamColors[team]) {
+            document.documentElement.style.setProperty('--hover-color', teamColors[team]);
+        } else {
+            document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
+        }
+        
+        if (team) {
+            const teamNames = {
+                kia: 'KIA 메모장',
+                samsung: '삼성 메모장',
+                lg: 'LG 메모장',
+                doosan: '두산 메모장',
+                kt: 'KT 메모장',
+                ssg: 'SSG 메모장',
+                lotte: '롯데 메모장',
+                hanwha: '한화 메모장',
+                nc: 'NC 메모장',
+                kiwoom: '키움 메모장'
+            };
+
+            headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
+        } else {
+            headerTitle.textContent = '커뮤니티';
+        }
+
       
       // Firestore 초기화
       var firebaseConfig = {
