@@ -298,168 +298,140 @@
 
     <script>
        
-    
-        var firebaseConfig = {
-            apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-            authDomain: "yyjdb-1e121.firebaseapp.com",
-            databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
-            projectId: "yyjdb-1e121",
-            storageBucket: "yyjdb-1e121.firebasestorage.app",
-            messagingSenderId: "455353963754",
-            appId: "1:455353963754:web:2a64f5411a4061e9143393"
-        };
+       const urlParams = new URLSearchParams(window.location.search);
+const qnaIndex = urlParams.get('id');
+const team = urlParams.get('team');
 
-
-        // Firebase 초기화
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-} else {
-    firebase.app(); // 이미 초기화된 앱이 있으면 해당 앱 사용
+// 팀과 Q&A ID 유효성 검증
+if (!team || !qnaIndex) {
+    alert("유효하지 않은 팀 또는 Q&A ID입니다. 목록으로 돌아갑니다.");
+    window.location.href = 'calendar.html';
 }
 
+// Firestore 초기화
+const firebaseConfig = {
+    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+    authDomain: "yyjdb-1e121.firebaseapp.com",
+    projectId: "yyjdb-1e121",
+    storageBucket: "yyjdb-1e121.firebasestorage.app",
+    messagingSenderId: "455353963754",
+    appId: "1:455353963754:web:2a64f5411a4061e9143393"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 const db = firebase.firestore();
 
-        // URL에서 Q&A의 id와 team을 가져오기
-        const urlParams = new URLSearchParams(window.location.search);
-        const qnaIndex = urlParams.get('id');
-        const team = urlParams.get('team');
-    
-        // HTML 요소 가져오기
-        const qnaDetail = document.getElementById('qna-detail');
-        const commentsList = document.getElementById('comments-list');
-        const commentInput = document.getElementById('comment-input');
-        const submitCommentButton = document.getElementById('submit-comment');
-        const backLink = document.getElementById('back-link');
-    
-        // Q&A 데이터 가져오기
-        if (!team || !qnaIndex) {
-            alert("팀 또는 Q&A ID가 유효하지 않습니다. 목록으로 돌아갑니다.");
-            window.location.href = 'calendar.html';
+// HTML 요소 가져오기
+const qnaDetail = document.getElementById('qna-detail');
+const commentsList = document.getElementById('comments-list');
+const commentInput = document.getElementById('comment-input');
+const submitCommentButton = document.getElementById('submit-comment');
+const backLink = document.getElementById('back-link');
+
+// 로그인 사용자 확인
+let userID = sessionStorage.getItem('userID');
+if (!userID) {
+    console.warn('로그인된 사용자 이름을 찾을 수 없습니다. 기본값 "익명"으로 설정합니다.');
+    userID = '익명';
+}
+
+// 뒤로가기 링크 설정
+backLink.href = `community2.html?team=${team}`;
+
+// Q&A 데이터 가져오기
+async function fetchQnA() {
+    try {
+        const qnaDoc = await db.collection('Memo').doc(qnaIndex).get();
+        if (!qnaDoc.exists) {
+            alert("해당 Q&A를 찾을 수 없습니다. 목록으로 돌아갑니다.");
+            window.location.href = `community2.html?team=${team}`;
         }
-    
-        let comments = [];
-    
-        async function fetchQnA() {
-            try {
-                const qnaDoc = await db.collection('Memo').doc(qnaIndex).get();
-                if (!qnaDoc.exists) {
-                    alert("해당 Q&A를 찾을 수 없습니다. 목록으로 돌아갑니다.");
-                    window.location.href = `community2.html?team=${team}`;
-                }
-                const qna = qnaDoc.data();
-    
-                // Q&A 데이터 표시
-                qnaDetail.innerHTML = `
-                    <div class="qna-title">${qna.title || "제목 없음"}</div>
-                    <div class="qna-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
-                    <div class="qna-content">${qna.description || "내용이 없습니다."}</div>
-                `;
-            } catch (error) {
-                console.error("Q&A 데이터를 가져오는 중 오류가 발생했습니다: ", error);
+        const qna = qnaDoc.data();
+        qnaDetail.innerHTML = `
+            <div class="qna-title">${qna.title || "제목 없음"}</div>
+            <div class="qna-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
+            <div class="qna-content">${qna.description || "내용이 없습니다."}</div>
+        `;
+    } catch (error) {
+        console.error("Q&A 데이터를 가져오는 중 오류 발생:", error);
+    }
+}
+
+// 댓글 데이터 가져오기
+async function fetchComments() {
+    try {
+        const commentsSnapshot = await db
+            .collection('Memo')
+            .doc(qnaIndex)
+            .collection('Comments')
+            .orderBy('date', 'asc')
+            .get();
+
+        comments = commentsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        renderComments();
+    } catch (error) {
+        console.error("댓글 데이터를 가져오는 중 오류 발생:", error);
+    }
+}
+
+// 댓글 렌더링
+function renderComments() {
+    commentsList.innerHTML = '';
+    comments.forEach((comment, index) => {
+        const isCurrentUser = comment.author === userID;
+
+        const commentElement = document.createElement('div');
+        commentElement.className = 'comment-item';
+        commentElement.innerHTML = `
+            <p>${comment.text}</p>
+            <small>${comment.author || "익명"} | ${new Date(comment.date.toDate()).toLocaleString()}</small>
+            ${isCurrentUser
+                ? `<div class="comment-actions">
+                       <button onclick="editComment('${comment.id}', ${index})">수정</button>
+                       <button onclick="deleteComment('${comment.id}', ${index})">삭제</button>
+                   </div>`
+                : ''
             }
-        }
-    
-        async function fetchComments() {
-            try {
-                const commentsSnapshot = await db
-                    .collection('Memo')
-                    .doc(qnaIndex)
-                    .collection('Comments')
-                    .orderBy('date', 'asc')
-                    .get();
-    
-                comments = commentsSnapshot.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-    
-                renderComments();
-            } catch (error) {
-                console.error("댓글 데이터를 가져오는 중 오류가 발생했습니다: ", error);
-            }
-        }
-    
-        // 댓글 렌더링
-        function renderComments() {
-            commentsList.innerHTML = '';
-            comments.forEach((comment, index) => {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment-item';
-                commentElement.innerHTML = `
-                    <p>${comment.text}</p>
-                    <small>${new Date(comment.date.toDate()).toLocaleString()}</small>
-                    <div class="comment-actions">
-                        <button onclick="editComment('${comment.id}', ${index})">수정</button>
-                        <button onclick="deleteComment('${comment.id}', ${index})">삭제</button>
-                    </div>
-                `;
-                commentsList.appendChild(commentElement);
-            });
-        }
-    
-        // 댓글 수정
-        async function editComment(commentId, index) {
-            const newText = prompt("댓글을 수정하세요:", comments[index].text);
-            if (newText && newText.trim() !== '') {
-                try {
-                    await db.collection('Memo')
-                        .doc(qnaIndex)
-                        .collection('Comments')
-                        .doc(commentId)
-                        .update({ text: newText.trim() });
-                    comments[index].text = newText.trim();
-                    renderComments();
-                } catch (error) {
-                    console.error("댓글 수정 중 오류가 발생했습니다: ", error);
-                }
-            }
-        }
-    
-        // 댓글 삭제
-        async function deleteComment(commentId, index) {
-            if (confirm("이 댓글을 삭제하시겠습니까?")) {
-                try {
-                    await db.collection('Memo')
-                        .doc(qnaIndex)
-                        .collection('Comments')
-                        .doc(commentId)
-                        .delete();
-                    comments.splice(index, 1);
-                    renderComments();
-                } catch (error) {
-                    console.error("댓글 삭제 중 오류가 발생했습니다: ", error);
-                }
-            }
-        }
-    
-        // 댓글 작성
-        submitCommentButton.onclick = async function () {
-            const commentText = commentInput.value;
-            if (commentText.trim()) {
-                try {
-                    const newComment = {
-                        text: commentText.trim(),
-                        date: firebase.firestore.Timestamp.now()
-                    };
-                    const docRef = await db.collection('Memo')
-                        .doc(qnaIndex)
-                        .collection('Comments')
-                        .add(newComment);
-                    comments.push({ id: docRef.id, ...newComment });
-                    commentInput.value = '';
-                    renderComments();
-                } catch (error) {
-                    console.error("댓글 저장 중 오류가 발생했습니다: ", error);
-                }
-            }
+        `;
+        commentsList.appendChild(commentElement);
+    });
+}
+
+// 댓글 작성
+submitCommentButton.onclick = async function () {
+    const commentText = commentInput.value.trim();
+    if (!commentText) {
+        alert("댓글 내용을 입력하세요.");
+        return;
+    }
+
+    try {
+        const author = sessionStorage.getItem("userID") || "익명"; // 기본값: 익명
+
+console.log("Author being saved:", author); // Firestore 저장 전에 출력
+        const newComment = {
+            text: commentText,
+            date: firebase.firestore.Timestamp.now(),
+            author: sessionStorage.getItem('userID')
         };
-    
-        // 뒤로가기 링크 설정
-        backLink.href = `community2.html?team=${team}`;
-    
-        // 초기 데이터 가져오기
-        fetchQnA();
-        fetchComments();
+        const docRef = await db.collection('Memo').doc(qnaIndex).collection('Comments').add(newComment);
+        comments.push({ id: docRef.id, ...newComment });
+        commentInput.value = '';
+        renderComments();
+    } catch (error) {
+        console.error("댓글 저장 중 오류 발생:", error);
+        alert("댓글 작성 중 오류가 발생했습니다.");
+    }
+};
+
+// 초기 데이터 로드
+fetchQnA();
+fetchComments();
     </script>
 
 </body>

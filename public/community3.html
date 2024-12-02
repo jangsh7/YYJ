@@ -192,6 +192,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
 
     <script>
+
+
         var firebaseConfig = {
             apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
             authDomain: "yyjdb-1e121.firebaseapp.com",
@@ -201,57 +203,67 @@
             messagingSenderId: "455353963754",
             appId: "1:455353963754:web:2a64f5411a4061e9143393"
         };
-    
+
+
+
         firebase.initializeApp(firebaseConfig);
         var db = firebase.firestore();
-    
+
+
         document.getElementById('qna-form').addEventListener('submit', function (event) {
             event.preventDefault();
-    
+
             // 입력값 가져오기
             const title = document.getElementById('title').value.trim();
             const description = document.getElementById('description').value.trim();
-    
+            const userID = sessionStorage.getItem("userID");
+
             // URL에서 team 파라미터 추출
             const urlParams = new URLSearchParams(window.location.search);
             const team = urlParams.get('team');
-    
+
+            // 현재 로그인한 사용자 이름 가져오기
+            const author = sessionStorage.getItem("userID") || "익명"; // 기본값: 익명
+
+            console.log("Author being saved:", author); // Firestore 저장 전에 출력
+
             // 입력값 검증
             if (!team) {
                 alert("올바른 팀 정보를 찾을 수 없습니다. URL에 team 파라미터를 추가하세요.");
                 return;
             }
-    
+
             if (title === '' || description === '') {
                 alert("제목과 내용을 모두 입력해 주세요.");
                 return; // 값이 비어 있으면 저장하지 않음
             }
-    
+
             const timestamp = new Date().toISOString(); // ISO 형식의 타임스탬프 생성
-    
+
             // Firestore에 저장
             db.collection("Memo").add({
                 title: title,
                 description: description,
                 team: team,
+                author: sessionStorage.getItem("userID") || "익명", // 작성자 추가
                 timestamp: timestamp
             })
-            .then(() => {
-                document.getElementById('qna-form').reset(); // 폼 초기화
-                const popup = document.getElementById('popup');
-                popup.style.display = 'block';
-    
-                document.getElementById('popup-close').addEventListener('click', function () {
-                    popup.style.display = 'none';
-                    window.location.href = `community2.html?team=${team}`; // 저장 후 목록 페이지로 이동
+                .then(() => {
+                    document.getElementById('qna-form').reset(); // 폼 초기화
+                    const popup = document.getElementById('popup');
+                    popup.style.display = 'block';
+
+                    document.getElementById('popup-close').addEventListener('click', function () {
+                        popup.style.display = 'none';
+                        window.location.href = `community2.html?team=${team}`; // 저장 후 목록 페이지로 이동
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error adding document: ", error);
+                    alert("메모 저장 중 오류가 발생했습니다.");
                 });
-            })
-            .catch((error) => {
-                console.error("Error adding document: ", error);
-                alert("메모 저장 중 오류가 발생했습니다.");
-            });
         });
-    
+
         // 취소 링크에 URL 설정
         const cancelLink = document.getElementById('cancel-link');
         const urlParams = new URLSearchParams(window.location.search);
@@ -263,7 +275,8 @@
             alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
         }
     </script>
-    
+
+
 </body>
 
 </html>
