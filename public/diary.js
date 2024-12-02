@@ -168,7 +168,12 @@ const storage = firebase.storage();
 
 
 
+let isSaving = false; // 저장 중인지 확인하는 변수
+
 async function saveDiary() {
+    if (isSaving) return; // 이미 저장 중이면 함수 종료
+    isSaving = true; // 저장 중 상태로 변경
+
     try {
         // 라인업 데이터 수집
         const homeTeamLineup = Array.from(document.querySelectorAll('.home-team .lineup-input input'))
@@ -208,6 +213,8 @@ async function saveDiary() {
     } catch (error) {
         console.error("Error saving diary:", error);
         alert("저장 중 문제가 발생했습니다.");
+    } finally {
+        isSaving = false; // 저장 완료 후 상태 초기화
     }
 }
 
