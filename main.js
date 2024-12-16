@@ -18,9 +18,9 @@ app.use(bodyParser.json());
 // 정적 파일 제공 설정
 app.use(express.static('public'));
 
-// 기본 경로로 요청 시 login.html 제공
+// 기본 경로로 요청 시 index.html 제공
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "login.html"));
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 // API 라우트
