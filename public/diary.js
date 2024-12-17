@@ -152,8 +152,19 @@ async function loadDiaryData() {
 loadDiaryData(); // 페이지 로드 시 실행
 
 
+//다이어리 내용-DB연동부분
+const firebaseConfig = {
+    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+    authDomain: "yyjdb-1e121.firebaseapp.com",
+    projectId: "yyjdb-1e121",
+    storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
+    messagingSenderId: "455353963754",
+    appId: "1:455353963754:web:2a64f5411a4061e9143393"
+};
 
-
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
 
 
 let isSaving = false; // 저장 중인지 확인하는 변수
@@ -190,32 +201,33 @@ awayTeamLineup,
 createdAt: firebase.firestore.FieldValue.serverTimestamp()
 };
 
-// 이미지 업로드
-const fileInput = document.getElementById("fieldImage");
-if (fileInput.files.length > 0) {
-const file = fileInput.files[0]; // 선택된 파일
-const metadata = {
-    contentType: file.type // Content-Type 설정
-};
-
-// Storage에 저장될 경로와 파일명 설정
-const storageRef = firebase.storage().ref(`dairyImages/${Date.now()}_${file.name}`);
-
-try {
-    // 파일 업로드
-    const snapshot = await storageRef.put(file, metadata);
-    // 업로드 완료 후 URL 획득
-    const downloadURL = await snapshot.ref.getDownloadURL();
-    console.log("Uploaded file available at:", downloadURL);
-
-    // Firestore 데이터에 URL 추가
-    diaryData.imageURL = downloadURL;
-} catch (error) {
-    console.error("Error uploading file:", error);
-    alert("이미지 업로드 중 문제가 발생했습니다.");
-    return;
-}
-}
+        // 이미지 업로드
+        const fileInput = document.getElementById("fieldImage");
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0]; // 선택된 파일
+            const metadata = {
+                contentType: file.type // Content-Type 설정
+            };
+        
+            // Storage에 저장될 경로와 파일명 설정
+            const storageRef = firebase.storage().ref(`dairyImages/${Date.now()}_${file.name}`);
+        
+            try {
+                // 파일 업로드
+                const snapshot = await storageRef.put(file, metadata);
+                // 업로드 완료 후 URL 획득
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                console.log("Uploaded file available at:", downloadURL);
+        
+                // Firestore 데이터에 URL 추가
+                diaryData.imageURL = downloadURL;
+            } catch (error) {
+                console.error("Error uploading file:", error);
+                alert("이미지 업로드 중 문제가 발생했습니다.");
+                return;
+            }
+        }
+        
 
         // Firestore 저장
         await db.collection("Diaries").add({diaryData, author: author});
