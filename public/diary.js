@@ -1,6 +1,80 @@
+src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js";
+src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js";
+src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js";
+
+const loggedInUser = sessionStorage.getItem("userID") || "익명";
+
+// URL에서 날짜 파라미터 추출
+const urlParams = new URLSearchParams(window.location.search);
+const gameDate = urlParams.get("date").replace(/\./g, "-"); // 2024.07.10 → 2024-07-10
+
+// 일기 데이터 로드 및 출력
+async function loadOrInitializeDiary() {
+    try {
+        const snapshot = await db.collection("Diaries")
+            .where("author", "==", loggedInUser)
+            .where("diaryData.gameDate", "==", gameDate)
+            .get();
+
+        if (snapshot.empty) {
+            console.log("기존 일기가 존재하지 않습니다. 새 일기를 작성하세요.");
+            return; // 기존 로직 유지
+        }
+
+        // 일기 데이터 출력
+        snapshot.forEach(doc => {
+            const data = doc.data().diaryData;
+
+            // 각 필드에 값 설정
+            setValueIfExists("game-date", gameDate);
+            setValueIfExists("game-time", data.gameTime);
+            setValueIfExists("game-weather", data.weather);
+            setValueIfExists("stadium", data.stadium);
+            setValueIfExists("result", data.result);
+            setValueIfExists("mvp", data.mvp);
+            setValueIfExists("diary-entry", data.diary);
+
+            // 홈/원정 라인업 설정
+            setLineupIfExists("home-team", data.homeTeamLineup);
+            setLineupIfExists("away-team", data.awayTeamLineup);
+
+            // 이미지 출력
+            if (data.imageURL) {
+                const imageElement = document.getElementById("fieldDisplay");
+                const container = document.getElementById("imageDisplayContainer");
+                imageElement.src = data.imageURL;
+                container.style.display = "block";
+            }
+        });
+    } catch (error) {
+        console.error("일기 데이터를 불러오는 중 오류 발생:", error);
+    }
+}
+
+// 필드 값 설정 함수
+function setValueIfExists(elementId, value) {
+    const element = document.getElementById(elementId);
+    if (element && value) {
+        element.value = value;
+    }
+}
+
+// 라인업 설정 함수
+function setLineupIfExists(teamClass, lineupArray) {
+    if (!lineupArray || lineupArray.length === 0) return;
+
+    const teamElements = document.querySelectorAll(`.${teamClass} .lineup-input input`);
+    teamElements.forEach((input, index) => {
+        if (lineupArray[index]) {
+            input.value = lineupArray[index];
+        }
+    });
+}
+
+// 페이지 로드 시 실행
+window.addEventListener("load", loadOrInitializeDiary);
+
 async function loadDiaryData() {
-    // URL에서 날짜 가져오기
-    const urlParams = new URLSearchParams(window.location.search);
     const selectedDate = urlParams.get('date');
     const selectedGameContent = urlParams.get('game');
 
