@@ -181,6 +181,10 @@ async function saveDiary() {
         const awayTeamLineup = Array.from(document.querySelectorAll('.away-team .lineup-input input'))
             .map(input => input.value.trim());
 
+        // 로그인된 사용자 아이디 가져오기 (없을 경우 익명)
+        const author = sessionStorage.getItem("userID") || "익명";
+        console.log("Saving diary for author:", author);
+
         // 기타 데이터 수집
         const diaryData = {
             gameDate: document.getElementById("game-date").value,
@@ -207,7 +211,7 @@ async function saveDiary() {
         }
 
         // Firestore 저장
-        await db.collection("Diaries").add(diaryData);
+        await db.collection("Diaries").add({diaryData, author: author});
         alert("일기가 저장되었습니다!");
         window.location.href = "calendar.html";
     } catch (error) {
