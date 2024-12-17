@@ -181,7 +181,7 @@
             <input type="submit" value="회원가입" class="btn" id="submit-btn">
         </form>
         <div class="links">
-            <a href="login.html">로그인 페이지로 돌아가기</a>
+            <a href="index.html">로그인 페이지로 돌아가기</a>
         </div>
     </div>
 
@@ -270,7 +270,7 @@
                     PW: PW,  // 비밀번호
                     email: email,  // 이메일
                     name: name,  // 이름
-                    selected_team: selected_team || "미정", //선택 구단
+                    selected_team: selectedTeamValue || "미정", //선택 구단
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()  // Firestore 서버 타임스탬프
                 })
                     .then(function (docRef) {
@@ -292,6 +292,8 @@
             const email = document.getElementById("email").value;
             const id = document.getElementById("username").value;
             const pw = document.getElementById("password").value;
+            const selected_team = document.getElementById("selected_team").value;
+            console.log("폼 제출 시 selected_team 값:", selectedTeamValue);
 
             try {
                 const response = await fetch("https://api-htauzstwia-uc.a.run.app/api/user", { // 서버의 API 경로
@@ -302,12 +304,14 @@
                         email: email,
                         ID: id,
                         PW: pw,
+                        selected_team: selectedTeamValue || "미정",
                         createdAt: new Date().toISOString(),
                     }),
                 });
 
                 if (response.ok) {
-                    window.location.href = "login.html"; // 성공 후 로그인 페이지로 이동
+                    alert("회원가입 성공!");
+                    window.location.href = "index.html"; // 성공 후 로그인 페이지로 이동
                 } else {
                     const errorMessage = await response.text();
                     document.getElementById("response-message").innerText = "실패: " + errorMessage;
@@ -322,10 +326,17 @@
             document.getElementById("popupOverlay").style.display = "flex";
         }
 
+        let selectedTeamValue = ""; // 전역 변수로 선택된 팀 저장
+
         function confirmTeamSelection() {
-            const selectedTeam = document.querySelector('input[name="team"]:checked').value;
-            document.getElementById("selected_team").textContent = "선택된 구단: " + selectedTeam;
-            document.getElementById("popupOverlay").style.display = "none";
+            const selectedTeam = document.querySelector('input[name="team"]:checked');
+            if (selectedTeam) {
+                selectedTeamValue = selectedTeam.value; // 전역 변수에 저장
+                document.getElementById("selected_team").textContent = "선택된 구단: " + selectedTeamValue;
+                document.getElementById("popupOverlay").style.display = "none";
+            } else {
+                alert("구단을 선택해주세요.");
+            }
         }
 
         function checkDuplicateId() {
@@ -433,7 +444,7 @@
         }
 
         function goToLogin() {
-            window.location.href = 'login.html'; // 로그인 페이지로 이동
+            window.location.href = 'index.html'; // 로그인 페이지로 이동
         }
     </script>
 </body>
