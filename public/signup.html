@@ -292,6 +292,7 @@
             const email = document.getElementById("email").value;
             const id = document.getElementById("username").value;
             const pw = document.getElementById("password").value;
+            const selected_team = document.getElementById("selected_team").value;
 
             try {
                 const response = await fetch("https://api-htauzstwia-uc.a.run.app/api/user", { // 서버의 API 경로
@@ -303,6 +304,7 @@
                         ID: id,
                         PW: pw,
                         createdAt: new Date().toISOString(),
+                        selected_team: selected_team || "미정",
                     }),
                 });
 

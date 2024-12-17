@@ -1,36 +1,3 @@
-// Firebase 초기화
-const firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "yyjdb-1e121.appspot.com",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-// 전역에서 사용할 db와 storage 선언
-let db, storage;
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    // 인증 상태 확인
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log("로그인된 사용자:", user.email);
-            loadDiaryData();
-        } else {
-            alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-            window.location.href = "login.html";
-        }
-    });
-});
-
-
-
 async function loadDiaryData() {
     // URL에서 날짜 가져오기
     const urlParams = new URLSearchParams(window.location.search);
@@ -196,45 +163,59 @@ async function saveDiary() {
     isSaving = true; // 저장 중 상태로 변경
 
     try {
-        // 라인업 데이터 수집
-        const homeTeamLineup = Array.from(document.querySelectorAll('.home-team .lineup-input input'))
-            .map(input => input.value.trim());
-        const awayTeamLineup = Array.from(document.querySelectorAll('.away-team .lineup-input input'))
-            .map(input => input.value.trim());
 
         // 로그인된 사용자 아이디 가져오기 (없을 경우 익명)
         const author = sessionStorage.getItem("userID") || "익명";
         console.log("Saving diary for author:", author);
 
-        // 기타 데이터 수집
-        const diaryData = {
-            gameDate: document.getElementById("game-date").value,
-            gameTime: document.getElementById("game-time").value,
-            weather: document.getElementById("game-weather").value,
-            stadium: document.getElementById("stadium").value,
-            result: document.getElementById("result").value,
-            homeTeamScore: parseInt(document.querySelector("[data-score='home']").value) || 0,
-            awayTeamScore: parseInt(document.querySelector("[data-score='away']").value) || 0,
-            mvp: document.getElementById("mvp").value,
-            diary: document.getElementById("diary-entry").value,
-            homeTeamLineup,
-            awayTeamLineup,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
+// 라인업 데이터 수집
+const homeTeamLineup = Array.from(document.querySelectorAll('.home-team .lineup-input input'))
+.map(input => input.value.trim());
+const awayTeamLineup = Array.from(document.querySelectorAll('.away-team .lineup-input input'))
+.map(input => input.value.trim());
 
-        // 이미지 업로드
-        const fileInput = document.getElementById("fieldImage");
-        if (fileInput.files.length > 0) {
-          const file = fileInput.files[0];
-          const storageRef = storage.ref(`diaryImages/${Date.now()}_${file.name}`);
-          try {
-            const snapshot = await storageRef.put(file);
-            const downloadURL = await snapshot.ref.getDownloadURL();
-            console.log("Image uploaded successfully:", downloadURL);
-          } catch (error) {
-            console.error("Error uploading image:", error);
-          }
-        }
+// 기타 데이터 수집
+const diaryData = {
+gameDate: document.getElementById("game-date").value,
+gameTime: document.getElementById("game-time").value,
+weather: document.getElementById("game-weather").value,
+stadium: document.getElementById("stadium").value,
+result: document.getElementById("result").value,
+homeTeamScore: parseInt(document.querySelector("[data-score='home']").value) || 0,
+awayTeamScore: parseInt(document.querySelector("[data-score='away']").value) || 0,
+mvp: document.getElementById("mvp").value,
+diary: document.getElementById("diary-entry").value,
+homeTeamLineup,
+awayTeamLineup,
+createdAt: firebase.firestore.FieldValue.serverTimestamp()
+};
+
+// 이미지 업로드
+const fileInput = document.getElementById("fieldImage");
+if (fileInput.files.length > 0) {
+const file = fileInput.files[0]; // 선택된 파일
+const metadata = {
+    contentType: file.type // Content-Type 설정
+};
+
+// Storage에 저장될 경로와 파일명 설정
+const storageRef = firebase.storage().ref(`dairyImages/${Date.now()}_${file.name}`);
+
+try {
+    // 파일 업로드
+    const snapshot = await storageRef.put(file, metadata);
+    // 업로드 완료 후 URL 획득
+    const downloadURL = await snapshot.ref.getDownloadURL();
+    console.log("Uploaded file available at:", downloadURL);
+
+    // Firestore 데이터에 URL 추가
+    diaryData.imageURL = downloadURL;
+} catch (error) {
+    console.error("Error uploading file:", error);
+    alert("이미지 업로드 중 문제가 발생했습니다.");
+    return;
+}
+}
 
         // Firestore 저장
         await db.collection("Diaries").add({diaryData, author: author});
