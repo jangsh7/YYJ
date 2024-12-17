@@ -3,12 +3,18 @@ const express = require("express");
 const app = express();
 const nodemailer = require("nodemailer");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const userRoutes = require("./model/user-routes.js");
 
 app.get("/", (req, res) => {
   res.send("Hello from Firebase Functions!");
 });
 
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors());
 app.use(cors({ origin: "https://yyjdb-1e121.web.app" }));
+app.use("/api", userRoutes.routes);
 
 // Nodemailer 설정
 const transporter = nodemailer.createTransport({
