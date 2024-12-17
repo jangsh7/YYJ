@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>나의 직관 일기</title>
-    
-
-
-
-
     <style>
         @font-face { 
             font-family: "SCDream4";
@@ -415,85 +409,13 @@
         </div>
     </div>
 
-<!-- Firebase Compat Libraries -->
-<!-- Firebase SDKs -->
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-storage-compat.js"></script>
+<!-- Firebase App (기본 Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
 
-    <!-- Firebase 초기화 -->
-    <script>
-    const firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "yyjdb-1e121.appspot.com",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
-    };  
-
-    if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-  }
-
-    let db = firebase.firestore();
-    let storage = firebase.storage();
-
-// 인증 상태 확인
-firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-        console.log("로그인된 사용자:", user.email);
-        loadDiaryData(); // 인증 완료 시 데이터 로드
-    } else {
-        alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-        window.location.href = "login.html";
-    }
-});
-
-</script>
-
-<script>
-    async function loadDiaryData() {
-        console.log("데이터 로드 시작");
     
-        const urlParams = new URLSearchParams(window.location.search);
-        const selectedDate = urlParams.get('date');
-        const selectedGameContent = urlParams.get('game');
-    
-        if (!selectedDate || !selectedGameContent) {
-            alert("잘못된 요청입니다. 날짜와 경기를 선택해주세요.");
-            window.location.href = "calendar.html";
-            return;
-        }
-    
-        try {
-            const response = await fetch("schedule.json");
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-    
-            const schedule = await response.json();
-            const game = schedule.find((g) => g.gameContent === selectedGameContent);
-    
-            if (!game) {
-                alert("해당 경기를 찾을 수 없습니다.");
-                window.location.href = "calendar.html";
-                return;
-            }
-    
-            document.getElementById("game-date").value = selectedDate.replace(/\./g, '-');
-            document.getElementById("game-time").value = game.time;
-            console.log("데이터 로드 완료");
-        } catch (error) {
-            console.error("Error loading diary data:", error);
-            alert("데이터를 불러오는 중 문제가 발생했습니다.");
-        }
-    }
-    </script>
-
-<!-- diary.js 로드 -->
-<script src="diary.js"></script>
+    <script src="diary.js"></script>
     <script>
         document.getElementById('addImageButton').addEventListener('click', function() {
             document.getElementById('fieldImage').click();

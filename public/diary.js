@@ -1,36 +1,3 @@
-// Firebase 초기화
-const firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "yyjdb-1e121.appspot.com",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-
-// 전역에서 사용할 db와 storage 선언
-let db, storage;
-
-
-document.addEventListener("DOMContentLoaded", () => {
-    // 인증 상태 확인
-    firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log("로그인된 사용자:", user.email);
-            loadDiaryData();
-        } else {
-            alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
-            window.location.href = "login.html";
-        }
-    });
-});
-
-
-
 async function loadDiaryData() {
     // URL에서 날짜 가져오기
     const urlParams = new URLSearchParams(window.location.search);
@@ -185,8 +152,19 @@ async function loadDiaryData() {
 loadDiaryData(); // 페이지 로드 시 실행
 
 
+//다이어리 내용-DB연동부분
+const firebaseConfig = {
+    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+    authDomain: "yyjdb-1e121.firebaseapp.com",
+    projectId: "yyjdb-1e121",
+    storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
+    messagingSenderId: "455353963754",
+    appId: "1:455353963754:web:2a64f5411a4061e9143393"
+};
 
-
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const storage = firebase.storage();
 
 
 let isSaving = false; // 저장 중인지 확인하는 변수
@@ -221,16 +199,30 @@ async function saveDiary() {
         // 이미지 업로드
         const fileInput = document.getElementById("fieldImage");
         if (fileInput.files.length > 0) {
-          const file = fileInput.files[0];
-          const storageRef = storage.ref(`diaryImages/${Date.now()}_${file.name}`);
-          try {
-            const snapshot = await storageRef.put(file);
-            const downloadURL = await snapshot.ref.getDownloadURL();
-            console.log("Image uploaded successfully:", downloadURL);
-          } catch (error) {
-            console.error("Error uploading image:", error);
-          }
+            const file = fileInput.files[0]; // 선택된 파일
+            const metadata = {
+                contentType: file.type // Content-Type 설정
+            };
+        
+            // Storage에 저장될 경로와 파일명 설정
+            const storageRef = firebase.storage().ref(`dairyImages/${Date.now()}_${file.name}`);
+        
+            try {
+                // 파일 업로드
+                const snapshot = await storageRef.put(file, metadata);
+                // 업로드 완료 후 URL 획득
+                const downloadURL = await snapshot.ref.getDownloadURL();
+                console.log("Uploaded file available at:", downloadURL);
+        
+                // Firestore 데이터에 URL 추가
+                diaryData.imageURL = downloadURL;
+            } catch (error) {
+                console.error("Error uploading file:", error);
+                alert("이미지 업로드 중 문제가 발생했습니다.");
+                return;
+            }
         }
+        
 
         // Firestore 저장
         await db.collection("Diaries").add(diaryData);
