@@ -1,18 +1,3 @@
-// Firestore 초기화
-const firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
-console.log("Firebase initialized.");
-
 // 로그인된 사용자 ID 가져오기
 const loggedInUser = sessionStorage.getItem("userID")|| "익명";
 console.log("Logged-in user ID:", loggedInUser);
