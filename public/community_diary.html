@@ -2,247 +2,247 @@
 <html lang="ko">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Node.phl Diary List</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        @font-face {
-            font-family: "SCDream4";
-            src: url("font/SCDream4.otf") format("truetype");
-            font-weight: normal;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node.phl Diary List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "SCDream4";
+      src: url("font/SCDream4.otf") format("truetype");
+      font-weight: normal;
+    }
 
-        * {
-            font-family: 'SCDream4';
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+      font-family: 'SCDream4';
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            overflow-x: hidden;
-        }
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      overflow-x: hidden;
+    }
 
-        header {
-            background-color: #333333;
-            color: white;
-            width: 100%;
-            height: 100px;
-            text-align: center;
-            position: relative;
-        }
+    header {
+      background-color: #333333;
+      color: white;
+      width: 100%;
+      height: 100px;
+      text-align: center;
+      position: relative;
+    }
 
-        header h1 {
-            font-size: 32px;
-            line-height: 100px;
-            margin: 0;
-            font-weight: bold;
-        }
+    header h1 {
+      font-size: 32px;
+      line-height: 100px;
+      margin: 0;
+      font-weight: bold;
+    }
 
-        .nav-links {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
+    .nav-links {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 20px;
+      display: flex;
+      gap: 10px;
+    }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            background-color: #333333;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
-        }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      background-color: #333333;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
 
-        .nav-links a:hover {
-            color: var(--hover-color, #d32f2f);
-        }
+    .nav-links a:hover {
+      color: var(--hover-color, #d32f2f);
+    }
 
-        .post-list {
-            width: 800px;
-            margin: 20px auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    .post-list {
+      width: 800px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .post-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
+    .post-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
 
-        .post-item:last-child {
-            border-bottom: none;
-        }
+    .post-item:last-child {
+      border-bottom: none;
+    }
 
-        .post-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #000000;
-            cursor: pointer;
-        }
+    .post-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000000;
+      cursor: pointer;
+    }
 
-        .post-meta {
-            font-size: 12px;
-            color: #777;
-        }
+    .post-meta {
+      font-size: 12px;
+      color: #777;
+    }
 
-        .post-actions button {
-            background-color: #d9534f;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: background-color 0.3s ease;
-        }
+    .post-actions button {
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background-color 0.3s ease;
+    }
 
-        .post-actions button:hover {
-            background-color: #a07271;
-        }
+    .post-actions button:hover {
+      background-color: #a07271;
+    }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            gap: 5px;
-        }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 5px;
+    }
 
-        .pagination button {
-            background-color: #f5f5f5;
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .pagination button {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        .pagination button:hover {
-            background-color: #ddd;
-        }
+    .pagination button:hover {
+      background-color: #ddd;
+    }
 
-        .pagination button.active {
-            background-color: #333333;
-            color: white;
-        }
+    .pagination button.active {
+      background-color: #333333;
+      color: white;
+    }
 
-        .pagination button:disabled {
-            cursor: not-allowed;
-            background-color: #eee;
-        }
+    .pagination button:disabled {
+      cursor: not-allowed;
+      background-color: #eee;
+    }
 
-        .add-post {
-            text-align: right;
-            margin: 20px auto;
-            width: 800px;
-        }
-    </style>
+    .add-post {
+      text-align: right;
+      margin: 20px auto;
+      width: 800px;
+    }
+  </style>
 </head>
 
 <body>
 
-    <header>
-        <h1 id="header-title"></h1>
-        <div class="nav-links">
-            <a id="com-link" href="#">커뮤니티</a>
-            <a id="qna-link" href="#"> 메모장 </a>
-            <a href="calendar.html">메인</a>
-        </div>
-    </header>
-
-    <div class="post-list" id="post-list">
+  <header>
+    <h1 id="header-title"></h1>
+    <div class="nav-links">
+      <a id="com-link" href="#">커뮤니티</a>
+      <a id="qna-link" href="#"> 메모장 </a>
+      <a href="calendar.html">메인</a>
     </div>
+  </header>
 
-    <div class="pagination" id="pagination">
-    </div>
+  <div class="post-list" id="post-list">
+  </div>
 
-    <div class="add-post">
-    </div>
+  <div class="pagination" id="pagination">
+  </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <div class="add-post">
+  </div>
 
-    <script>
-        const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Diaries 개수
-        let currentPage = 1; // 현재 페이지 번호
-    
-        // URL에서 team 파라미터 추출
-        const urlParams = new URLSearchParams(window.location.search);
-        const team = urlParams.get('team');
-    
-        const postList = document.getElementById('post-list');
-        const headerTitle = document.getElementById('header-title');
-    
-        // Firestore 초기화
-        const firebaseConfig = {
-          apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-          authDomain: "yyjdb-1e121.firebaseapp.com",
-          databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
-          projectId: "yyjdb-1e121",
-          storageBucket: "yyjdb-1e121.firebasestorage.app",
-          messagingSenderId: "455353963754",
-          appId: "1:455353963754:web:2a64f5411a4061e9143393"
-        };
-    
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-    
-        // 팀별 색상 적용
-        const teamColors = {
-          kia: '#EA0029',      // KIA
-          samsung: '#074CA1',  // 삼성
-          lg: '#C30452',       // LG
-          doosan: '#131230',    // 두산
-          kt: '#EB1C24',       // KT
-          ssg: '#CE0E2D',      // SSG
-          lotte: '#041E42',    // 롯데
-          hanwha: '#F73600',    // 한화
-          nc: '#315288',       // NC
-          kiwoom: '#570514'    // 키움
-        };
-    
-        // 구단별 색상 적용
-        if (team && teamColors[team]) {
-          document.documentElement.style.setProperty('--hover-color', teamColors[team]);
-        } else {
-          document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
-        }
-    
-        // 팀별 제목 설정
-        const teamNames = {
-          kia: 'KIA 다이어리',
-          samsung: '삼성 다이어리',
-          lg: 'LG 다이어리',
-          doosan: '두산 다이어리',
-          kt: 'KT 다이어리',
-          ssg: 'SSG 다이어리',
-          lotte: '롯데 다이어리',
-          hanwha: '한화 다이어리',
-          nc: 'NC 다이어리',
-          kiwoom: '키움 다이어리'
-        };
-    
-        if (team) {
-          headerTitle.textContent = teamNames[team] || '다이어리';
-        } else {
-          headerTitle.textContent = '다이어리';
-        }
-        
-        const comLink = document.getElementById('com-link');
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+
+  <script>
+    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Diaries 개수
+    let currentPage = 1; // 현재 페이지 번호
+
+    // URL에서 team 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const team = urlParams.get('team');
+
+    const postList = document.getElementById('post-list');
+    const headerTitle = document.getElementById('header-title');
+
+    // Firestore 초기화
+    const firebaseConfig = {
+      apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+      authDomain: "yyjdb-1e121.firebaseapp.com",
+      databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
+      projectId: "yyjdb-1e121",
+      storageBucket: "yyjdb-1e121.firebasestorage.app",
+      messagingSenderId: "455353963754",
+      appId: "1:455353963754:web:2a64f5411a4061e9143393"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // 팀별 색상 적용
+    const teamColors = {
+      kia: '#EA0029',      // KIA
+      samsung: '#074CA1',  // 삼성
+      lg: '#C30452',       // LG
+      doosan: '#131230',    // 두산
+      kt: '#EB1C24',       // KT
+      ssg: '#CE0E2D',      // SSG
+      lotte: '#041E42',    // 롯데
+      hanwha: '#F73600',    // 한화
+      nc: '#315288',       // NC
+      kiwoom: '#570514'    // 키움
+    };
+
+    // 구단별 색상 적용
+    if (team && teamColors[team]) {
+      document.documentElement.style.setProperty('--hover-color', teamColors[team]);
+    } else {
+      document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
+    }
+
+    // 팀별 제목 설정
+    const teamNames = {
+      kia: 'KIA 다이어리',
+      samsung: '삼성 다이어리',
+      lg: 'LG 다이어리',
+      doosan: '두산 다이어리',
+      kt: 'KT 다이어리',
+      ssg: 'SSG 다이어리',
+      lotte: '롯데 다이어리',
+      hanwha: '한화 다이어리',
+      nc: 'NC 다이어리',
+      kiwoom: '키움 다이어리'
+    };
+
+    if (team) {
+      headerTitle.textContent = teamNames[team] || '다이어리';
+    } else {
+      headerTitle.textContent = '다이어리';
+    }
+
+    const comLink = document.getElementById('com-link');
     if (team) {
       comLink.href = `community1.html?team=${team}`;
     } else {
@@ -258,116 +258,143 @@
       alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
     }
 
-        // Firestore에서 데이터를 로드
-        function loadDiaries() {
-          db.collection("Diaries")
-            .orderBy("createdAt", "desc") // createdAt 시간순으로 정렬
-            .get()
-            .then((querySnapshot) => {
-              const diaries = [];
-              querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                diaries.push({ ...data, id: doc.id });
-              });
-    
-              console.log("Loaded Diaries:", diaries); // 콘솔에 데이터를 출력하여 확인
-              renderDiaries(diaries);
-            })
-            .catch((error) => {
-              console.error("Error loading data: ", error);
-              postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
-            });
-        }
-    
-        // Diaries 목록 렌더링
-        function renderDiaries(diaries) {
-          postList.innerHTML = ''; // 기존 Diaries 목록 초기화
-    
-          if (diaries.length === 0) {
-            postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // Diaries가 없을 경우 메시지 표시
-            return;
-          }
-    
-          const currentUserID = sessionStorage.getItem("userID");
-    
-          const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-          const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
-          const currentDiaries = diaries.slice(startIndex, endIndex);
-    
-          currentDiaries.forEach((diary) => {
-            const postItem = document.createElement('div');
-            postItem.className = 'post-item';
-            postItem.innerHTML = `
-              <div>
-                <div class="post-title" onclick="goToDetail('${diary.id}')">${diary.gameDate}</div>
-                <div class="post-meta">작성자: ${diary.author || '익명'} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
-              </div>
-              ${diary.author === currentUserID ? `<div class="post-actions"><button onclick="deleteDiary('${diary.id}')">삭제</button></div>` : ''}
-            `;
-            postList.appendChild(postItem);
+    // Firestore에서 데이터를 로드
+    function loadDiaries() {
+      db.collection("Diaries")
+        .orderBy("createdAt", "desc") // createdAt 시간순으로 정렬
+        .onSnapshot((querySnapshot) => { // onSnapshot() 사용
+          const diaries = [];
+          querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            diaries.push({ ...data, id: doc.id });
           });
-    
-          renderPagination(diaries.length);
-        }
-    
-        // Diaries 삭제 함수
-        function deleteDiary(id) {
-          if (confirm("이 다이어리를 삭제하시겠습니까?")) {
-            db.collection("Diaries").doc(id).delete()
-              .then(() => {
-                alert("다이어리가 삭제되었습니다.");
-                loadDiaries(); // 삭제 후 목록 갱신
-              })
-              .catch((error) => {
-                console.error("Error deleting document: ", error);
-              });
-          }
-        }
-    
-        // Diaries 상세 페이지로 이동
-        // Diaries 상세 페이지로 이동
-function goToDetail(id) {
-    window.location.href = `community_diary2.html?id=${id}&team=${team}`;
-}
 
-    
-        // 페이지네이션 렌더링
-        function renderPagination(totalItems) {
-          const paginationContainer = document.getElementById('pagination');
-          paginationContainer.innerHTML = '';
-    
-          const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-    
-          const prevButton = document.createElement('button');
-          prevButton.innerHTML = '<';
-          prevButton.disabled = currentPage === 1;
-          prevButton.onclick = () => changePage(currentPage - 1);
-          paginationContainer.appendChild(prevButton);
-    
-          for (let i = 1; i <= totalPages; i++) {
-            const pageButton = document.createElement('button');
-            pageButton.innerHTML = i;
-            pageButton.className = i === currentPage ? 'active' : '';
-            pageButton.onclick = () => changePage(i);
-            paginationContainer.appendChild(pageButton);
-          }
-    
-          const nextButton = document.createElement('button');
-          nextButton.innerHTML = '>';
-          nextButton.disabled = currentPage === totalPages;
-          nextButton.onclick = () => changePage(currentPage + 1);
-          paginationContainer.appendChild(nextButton);
-        }
-    
-        function changePage(page) {
-          currentPage = page;
-          loadDiaries();
-        }
-    
-        // 초기 Firestore 데이터 로드
-        loadDiaries();
-      </script>
-    
-    </body>
-    
-    </html>
+          console.log("Loaded Diaries:", diaries); // 콘솔에 데이터를 출력하여 확인
+          renderDiaries(diaries);
+        }, (error) => {
+          console.error("Error loading data: ", error);
+          postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+        });
+    }
+
+    // Diaries 목록 렌더링
+    function renderDiaries(diaries) {
+      postList.innerHTML = ''; // 기존 Diaries 목록 초기화
+
+      if (diaries.length === 0) {
+        postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // Diaries가 없을 경우 메시지 표시
+        return;
+      }
+
+      const currentUserID = sessionStorage.getItem("userID");
+
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
+      const currentDiaries = diaries.slice(startIndex, endIndex);
+
+      currentDiaries.forEach((diary) => {
+        const postItem = document.createElement('div');
+        postItem.className = 'post-item';
+
+        // diaryData 안에 있는 데이터들 가져오기
+        const diaryData = diary.diaryData || {};
+        const awayTeamLineup = diaryData.awayTeamLineup || [];
+        const homeTeamLineup = diaryData.homeTeamLineup || [];
+        const awayTeamScore = diaryData.awayTeamScore || '정보 없음';
+        const homeTeamScore = diaryData.homeTeamScore || '정보 없음';
+        const gameDate = diaryData.gameDate || '게임 날짜 없음';
+        const gameTime = diaryData.gameTime || '시간 미제공';
+        const mvp = diaryData.mvp || 'MVP 미제공';
+        const result = diaryData.result || '결과 미제공';
+        const stadium = diaryData.stadium || '경기장 미제공';
+
+        postItem.innerHTML = `
+      <div>
+        <div class="post-title" onclick="goToDetail('${diary.id}')">${gameDate} ${gameTime}</div>
+        <div class="post-meta">작성자: ${diary.author || '익명'} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
+        <div><strong>MVP:</strong> ${mvp}</div>
+        <div><strong>결과:</strong> ${result}</div>
+        <div><strong>경기장:</strong> ${stadium}</div>
+        
+        <div><strong>Away Team Lineup:</strong></div>
+        <ul>
+          ${awayTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
+        </ul>
+        <div><strong>Away Team Score:</strong> ${awayTeamScore}</div>
+
+        <div><strong>Home Team Lineup:</strong></div>
+        <ul>
+          ${homeTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
+        </ul>
+        <div><strong>Home Team Score:</strong> ${homeTeamScore}</div>
+      </div>
+
+      ${diary.author === currentUserID ? `<div class="post-actions"><button onclick="deleteDiary('${diary.id}')">삭제</button></div>` : ''}
+    `;
+
+        postList.appendChild(postItem);
+      });
+
+      renderPagination(diaries.length);
+    }
+
+    // Diaries 삭제 함수
+    function deleteDiary(id) {
+      if (confirm("이 다이어리를 삭제하시겠습니까?")) {
+        db.collection("Diaries").doc(id).delete()
+          .then(() => {
+            alert("다이어리가 삭제되었습니다.");
+            loadDiaries(); // 삭제 후 목록 갱신
+          })
+          .catch((error) => {
+            console.error("Error deleting document: ", error);
+          });
+      }
+    }
+
+    // Diaries 상세 페이지로 이동
+    function goToDetail(id) {
+      window.location.href = `community_diary2.html?id=${id}&team=${team}`;
+    }
+
+
+    // 페이지네이션 렌더링
+    function renderPagination(totalItems) {
+      const paginationContainer = document.getElementById('pagination');
+      paginationContainer.innerHTML = '';
+
+      const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+      const prevButton = document.createElement('button');
+      prevButton.innerHTML = '<';
+      prevButton.disabled = currentPage === 1;
+      prevButton.onclick = () => changePage(currentPage - 1);
+      paginationContainer.appendChild(prevButton);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerHTML = i;
+        pageButton.className = i === currentPage ? 'active' : '';
+        pageButton.onclick = () => changePage(i);
+        paginationContainer.appendChild(pageButton);
+      }
+
+      const nextButton = document.createElement('button');
+      nextButton.innerHTML = '>';
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.onclick = () => changePage(currentPage + 1);
+      paginationContainer.appendChild(nextButton);
+    }
+
+    function changePage(page) {
+      currentPage = page;
+      loadDiaries();
+    }
+
+    // 초기 Firestore 데이터 로드
+    loadDiaries();
+  </script>
+
+</body>
+
+</html>

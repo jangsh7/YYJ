@@ -323,23 +323,6 @@
         }
         const db = firebase.firestore();
 
-        const comLink = document.getElementById('com-link');
-        if (team) {
-            comLink.href = `community1.html?team=${team}`;
-        } else {
-            comLink.href = '#';
-            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
-        }
-
-        const qnaLink = document.getElementById('qna-link');
-        if (team) {
-            qnaLink.href = `community2.html?team=${team}`;
-        } else {
-            qnaLink.href = '#';
-            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
-        }
-
-
         // HTML 요소 가져오기
         const qnaDetail = document.getElementById('qna-detail');
         const commentsList = document.getElementById('comments-list');
@@ -354,6 +337,22 @@
             userID = '익명';
         }
 
+        const comLink = document.getElementById('com-link');
+        if (team) {
+            comLink.href = `community1.html?team=${team}`;
+        } else {
+            comLink.href = '#';
+            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+        }
+
+        const diaryLink = document.getElementById('qna-link'); // 잘못된 부분 수정
+        if (team) {
+            diaryLink.href = `community2.html?team=${team}`;
+        } else {
+            diaryLink.href = '#';
+            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+        }
+
         // 뒤로가기 링크 설정
         backLink.href = `community2.html?team=${team}`;
 
@@ -366,13 +365,39 @@
                     window.location.href = `community2.html?team=${team}`;
                 }
                 const diary = diaryDoc.data();
+
+                // diaryData 내부 정보를 가져오기
+                const diaryData = diary.diaryData || {};
+                const gameDate = diaryData.gameDate || '날짜 없음';
+                const gameTime = diaryData.gameTime || '시간 없음';
+                const mvp = diaryData.mvp || 'MVP 미제공';
+                const result = diaryData.result || '결과 미제공';
+                const stadium = diaryData.stadium || '경기장 미제공';
+                const awayTeamLineup = diaryData.awayTeamLineup || [];
+                const homeTeamLineup = diaryData.homeTeamLineup || [];
+                const awayTeamScore = diaryData.awayTeamScore || '점수 미제공';
+                const homeTeamScore = diaryData.homeTeamScore || '점수 미제공';
+
                 qnaDetail.innerHTML = `
-            <div class="qna-title">${diary.gameDate || "날짜 없음"}</div>
-            <div class="qna-meta">작성자: ${diary.author || "익명"} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
-            <div class="qna-content">게임 시간: ${diary.gameTime || "시간 없음"}</div>
-            <div class="qna-diary">나만의 일기: ${diary.diary || "내용 없음"}</div>
-            <div class="qna-mvp">나만의 MVP: ${diary.mvp || "내용 없음"}</div>
-        `;
+                    <div class="qna-title">${gameDate} ${gameTime}</div>
+                    <div class="qna-meta">작성자: ${diary.author || '익명'} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
+                    <div class="qna-content">
+                        <p><strong>게임 시간:</strong> ${gameTime}</p>
+                        <p><strong>경기 결과:</strong> ${result}</p>
+                        <p><strong>경기장:</strong> ${stadium}</p>
+                        <p><strong>MVP:</strong> ${mvp}</p>
+                        <p><strong>Away 팀 점수:</strong> ${awayTeamScore}</p>
+                        <p><strong>Home 팀 점수:</strong> ${homeTeamScore}</p>
+                        <div><strong>Away 팀 선수 라인업:</strong></div>
+                        <ul>
+                            ${awayTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
+                        </ul>
+                        <div><strong>Home 팀 선수 라인업:</strong></div>
+                        <ul>
+                            ${homeTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
             } catch (error) {
                 console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
             }
@@ -388,18 +413,18 @@
                     .orderBy('date', 'asc')
                     .get();
 
-                comments = commentsSnapshot.docs.map(doc => ({
+                const comments = commentsSnapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
                 }));
-                renderComments();
+                renderComments(comments);
             } catch (error) {
                 console.error("댓글 데이터를 가져오는 중 오류 발생:", error);
             }
         }
 
         // 댓글 렌더링
-        function renderComments() {
+        function renderComments(comments) {
             commentsList.innerHTML = '';
             comments.forEach((comment, index) => {
                 const isCurrentUser = comment.author === userID; // 현재 사용자가 작성한 댓글인지 확인
@@ -407,16 +432,16 @@
                 const commentElement = document.createElement('div');
                 commentElement.className = 'comment-item';
                 commentElement.innerHTML = `
-            <p>${comment.text}</p>
-            <small>${comment.author || "익명"} | ${new Date(comment.date.toDate()).toLocaleString()}</small>
-            ${isCurrentUser
+                    <p>${comment.text}</p>
+                    <small>${comment.author || "익명"} | ${new Date(comment.date.toDate()).toLocaleString()}</small>
+                    ${isCurrentUser
                         ? `<div class="comment-actions">
-                    <button onclick="editComment('${comment.id}', ${index})">수정</button>
-                    <button onclick="deleteComment('${comment.id}', ${index})">삭제</button>
-                </div>`
+                            <button onclick="editComment('${comment.id}', ${index})">수정</button>
+                            <button onclick="deleteComment('${comment.id}', ${index})">삭제</button>
+                        </div>`
                         : ''
                     }
-        `;
+                `;
                 commentsList.appendChild(commentElement);
             });
         }
@@ -438,7 +463,7 @@
                 const docRef = await db.collection('Diaries').doc(diaryId).collection('Comments').add(newComment);
                 comments.push({ id: docRef.id, ...newComment });
                 commentInput.value = '';
-                renderComments();
+                renderComments(comments);
             } catch (error) {
                 console.error("댓글 저장 중 오류 발생:", error);
                 alert("댓글 작성 중 오류가 발생했습니다.");
@@ -448,16 +473,14 @@
         // 댓글 삭제 함수
         async function deleteComment(commentId, index) {
             try {
-                // 해당 댓글 삭제
                 await db.collection('Diaries')
                     .doc(diaryId)
                     .collection('Comments')
                     .doc(commentId)
                     .delete();
 
-                // 댓글 목록에서 해당 댓글 삭제
                 comments.splice(index, 1);
-                renderComments(); // 삭제된 후 댓글 목록 새로 렌더링
+                renderComments(comments); // 삭제된 후 댓글 목록 새로 렌더링
             } catch (error) {
                 console.error("댓글 삭제 중 오류 발생:", error);
                 alert("댓글 삭제 중 오류가 발생했습니다.");
@@ -472,7 +495,6 @@
             }
 
             try {
-                // Firestore에서 해당 댓글 수정
                 await db.collection('Diaries')
                     .doc(diaryId)
                     .collection('Comments')
@@ -482,9 +504,8 @@
                         date: firebase.firestore.Timestamp.now() // 수정 시간 업데이트
                     });
 
-                // 댓글 목록에서 수정된 텍스트 반영
                 comments[index].text = newCommentText;
-                renderComments(); // 수정 후 댓글 목록 새로 렌더링
+                renderComments(comments); // 수정 후 댓글 목록 새로 렌더링
             } catch (error) {
                 console.error("댓글 수정 중 오류 발생:", error);
                 alert("댓글 수정 중 오류가 발생했습니다.");
@@ -494,7 +515,4 @@
         // 초기 데이터 로드
         fetchDiary();
         fetchComments();
-
     </script>
-
-</body>

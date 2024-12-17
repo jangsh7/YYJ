@@ -806,61 +806,88 @@
         }
 
         // Firestore에서 최신 Q&A 가져오기
-        fetchQnAsFromFirestore();
+        f
         async function fetchDiariesFromFirestore() {
-    try {
-        const diariesSnapshot = await db
-            .collection("Diaries")
-            //.where("team", "==", team) // 팀 필터링
-            .orderBy("createdAt", "desc") // 최신 순으로 정렬
-            .limit(5) // 최신 5개만 가져오기
-            .get();
+            try {
+                const diariesSnapshot = await db
+                    .collection("Diaries")
+                    .orderBy("createdAt", "desc")  // 최신순으로 정렬
+                    .limit(5)  // 최신 5개만 가져옵니다.
+                    .onSnapshot((diariesSnapshot) => {
+                        if (diariesSnapshot.empty) {
+                            diarySection.innerHTML = "<p>등록된 다이어리가 없습니다.</p>";
+                            return;
+                        }
 
-        if (diariesSnapshot.empty) {
-            diarySection.innerHTML = "<p>등록된 다이어리가 없습니다.</p>";
-            return;
+                        diarySection.innerHTML = "";  // 기존 내용 초기화
+                        diariesSnapshot.forEach((doc) => {
+                            const diary = doc.data();  // 다이어리 데이터를 가져옵니다.
+                            const diaryData = diary.diaryData || {};  // diaryData 내부 정보를 가져옵니다.
+                            const gameDate = diaryData.gameDate || "게임 날짜 없음";
+                            const gameTime = diaryData.gameTime || "게임 시간 없음";
+                            const mvp = diaryData.mvp || "MVP 미제공";
+                            const result = diaryData.result || "결과 미제공";
+                            const stadium = diaryData.stadium || "경기장 미제공";
+                            const awayTeamLineup = diaryData.awayTeamLineup || [];
+                            const homeTeamLineup = diaryData.homeTeamLineup || [];
+                            const awayTeamScore = diaryData.awayTeamScore || "점수 미제공";
+                            const homeTeamScore = diaryData.homeTeamScore || "점수 미제공";
+
+                            const postItem = document.createElement("div");
+                            postItem.className = "post-item";
+                            postItem.innerHTML = `
+                            <div>
+                                <div class="post-title" onclick="goToDiaryDetail('${doc.id}', '${diary.author || '익명'}')">
+                                    ${gameDate} ${gameTime}
+                                </div>
+                                <div class="post-meta">
+                                    작성자: ${diary.author || "익명"} |
+                                    ${new Date(diary.createdAt.toDate()).toLocaleString()}
+                                </div>
+                            </div>
+                            <div class="post-content">
+                                <p><strong>게임 시간:</strong> ${gameTime}</p>
+                                <p><strong>경기 결과:</strong> ${result}</p>
+                                <p><strong>경기장:</strong> ${stadium}</p>
+                                <p><strong>MVP:</strong> ${mvp}</p>
+                                <p><strong>Away 팀 점수:</strong> ${awayTeamScore}</p>
+                                <p><strong>Home 팀 점수:</strong> ${homeTeamScore}</p>
+                                <div><strong>Away 팀 선수 라인업:</strong></div>
+                                <ul>
+                                    ${awayTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
+                                </ul>
+                                <div><strong>Home 팀 선수 라인업:</strong></div>
+                                <ul>
+                                    ${homeTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `;
+                            diarySection.appendChild(postItem);
+                        });
+                    }, (error) => {
+                        console.error("다이어리 데이터를 실시간으로 가져오는 중 오류 발생: ", error);
+                        diarySection.innerHTML = "<p>데이터를 불러오는 중 오류가 발생했습니다.</p>";
+                    });
+            } catch (error) {
+                console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
+            }
         }
 
-        diarySection.innerHTML = ""; // 기존 내용 초기화
-        diariesSnapshot.forEach((doc) => {
-            const diary = doc.data();
-            const postItem = document.createElement("div");
-            postItem.className = "post-item";
-            postItem.innerHTML = `
-                <div>
-                    <!-- gameDate를 제목으로 사용 -->
-                    <div class="post-title" onclick="goToDiaryDetail('${doc.id}', '${diary.author || '익명'}')">
-                        ${diary.gameDate || "게임 날짜 없음"}
-                    </div>
-                    <div class="post-meta">
-                        작성자: ${diary.author || "익명"} | 
-                        ${new Date(diary.createdAt.toDate()).toLocaleString()} <!-- createdAt을 변환 -->
-                    </div>
-                </div>
-            `;
-            diarySection.appendChild(postItem);
-        });
-    } catch (error) {
-        console.error("다이어리 데이터를 가져오는 중 오류 발생: ", error);
-        diarySection.innerHTML = "<p>데이터를 불러오는 중 오류가 발생했습니다.</p>";
-    }
-}
+        // 다이어리 상세 페이지로 이동하는 함수
+        function goToDiaryDetail(id, author) {
+            if (team) {
+                const url = `community_diary2.html?id=${id}&team=${team}&author=${encodeURIComponent(author)}`;
+                window.location.href = url;
+            } else {
+                console.error("팀 정보가 누락되었습니다.");
+            }
+        }
 
-// 다이어리 상세 페이지로 이동하는 함수
-function goToDiaryDetail(id, author) {
-    if (team) {
-        const url = `community_diary2.html?id=${id}&team=${team}&author=${encodeURIComponent(author)}`;
-        window.location.href = url;
-    } else {
-        console.error("팀 정보가 누락되었습니다.");
-    }
-}
+        // 다이어리 섹션 가져오기
+        const diarySection = document.getElementById('diary-section');
 
-// 다이어리 섹션 가져오기
-const diarySection = document.getElementById('diary-section');
-
-// Firestore에서 다이어리 데이터를 가져오기
-fetchDiariesFromFirestore();
+        // Firestore에서 다이어리 데이터를 가져오기
+        fetchDiariesFromFirestore();
 
         function updateContent(team) {
             if (teamContent[team]) {
