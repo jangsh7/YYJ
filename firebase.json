@@ -27,6 +27,14 @@
       {
         "source": "**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/send-id",
+        "function": "api"
+      },
+      {
+        "source": "/send-password",
+        "function": "api"
       }
     ]
   }
