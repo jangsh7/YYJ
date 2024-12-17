@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메모 내용</title>
+    <title>다이어리 내용</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -264,10 +264,10 @@
     <header>
         <div class="header-container">
         </div>
-        <h1>메모 내용</h1>
+        <h1>다이어리리 내용</h1>
         <div class="nav-links">
             <a id="com-link" href="#">커뮤니티</a>
-            <a href="">다이어리</a>
+            <a id="qna-link" href="#"> 메모장 </a>
             <a href="calendar.html">메인</a>
         </div>
         </div>
@@ -297,186 +297,203 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
 
     <script>
-// URL 파라미터에서 다이어리 ID와 팀 정보를 가져오기
-const urlParams = new URLSearchParams(window.location.search);
-const diaryId = urlParams.get('id');
-const team = urlParams.get('team');
+        // URL 파라미터에서 다이어리 ID와 팀 정보를 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const diaryId = urlParams.get('id');
+        const team = urlParams.get('team');
 
-// 팀 및 다이어리 ID 유효성 검사
-if (!team || !diaryId) {
-    alert("유효하지 않은 팀 또는 다이어리 ID입니다. 목록으로 돌아갑니다.");
-    window.location.href = 'calendar.html';
-}
-
-// Firebase 초기화
-const firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "yyjdb-1e121.firebasestorage.app",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
-};
-
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
-}
-const db = firebase.firestore();
-
-// HTML 요소 가져오기
-const qnaDetail = document.getElementById('qna-detail');
-const commentsList = document.getElementById('comments-list');
-const commentInput = document.getElementById('comment-input');
-const submitCommentButton = document.getElementById('submit-comment');
-const backLink = document.getElementById('back-link');
-
-// 로그인 사용자 확인
-let userID = sessionStorage.getItem('userID');
-if (!userID) {
-    console.warn('로그인된 사용자 이름을 찾을 수 없습니다. 기본값 "익명"으로 설정합니다.');
-    userID = '익명';
-}
-
-// 뒤로가기 링크 설정
-backLink.href = `community2.html?team=${team}`;
-
-// 다이어리 데이터를 가져오기
-async function fetchDiary() {
-    try {
-        const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
-        if (!diaryDoc.exists) {
-            alert("해당 다이어리를 찾을 수 없습니다. 목록으로 돌아갑니다.");
-            window.location.href = `community2.html?team=${team}`;
+        // 팀 및 다이어리 ID 유효성 검사
+        if (!team || !diaryId) {
+            alert("유효하지 않은 팀 또는 다이어리 ID입니다. 목록으로 돌아갑니다.");
+            window.location.href = 'calendar.html';
         }
-        const diary = diaryDoc.data();
-        qnaDetail.innerHTML = `
+
+        // Firebase 초기화
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+            authDomain: "yyjdb-1e121.firebaseapp.com",
+            projectId: "yyjdb-1e121",
+            storageBucket: "yyjdb-1e121.firebasestorage.app",
+            messagingSenderId: "455353963754",
+            appId: "1:455353963754:web:2a64f5411a4061e9143393"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        const comLink = document.getElementById('com-link');
+        if (team) {
+            comLink.href = `community1.html?team=${team}`;
+        } else {
+            comLink.href = '#';
+            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+        }
+
+        const qnaLink = document.getElementById('qna-link');
+        if (team) {
+            qnaLink.href = `community2.html?team=${team}`;
+        } else {
+            qnaLink.href = '#';
+            alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+        }
+
+
+        // HTML 요소 가져오기
+        const qnaDetail = document.getElementById('qna-detail');
+        const commentsList = document.getElementById('comments-list');
+        const commentInput = document.getElementById('comment-input');
+        const submitCommentButton = document.getElementById('submit-comment');
+        const backLink = document.getElementById('back-link');
+
+        // 로그인 사용자 확인
+        let userID = sessionStorage.getItem('userID');
+        if (!userID) {
+            console.warn('로그인된 사용자 이름을 찾을 수 없습니다. 기본값 "익명"으로 설정합니다.');
+            userID = '익명';
+        }
+
+        // 뒤로가기 링크 설정
+        backLink.href = `community2.html?team=${team}`;
+
+        // 다이어리 데이터를 가져오기
+        async function fetchDiary() {
+            try {
+                const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
+                if (!diaryDoc.exists) {
+                    alert("해당 다이어리를 찾을 수 없습니다. 목록으로 돌아갑니다.");
+                    window.location.href = `community2.html?team=${team}`;
+                }
+                const diary = diaryDoc.data();
+                qnaDetail.innerHTML = `
             <div class="qna-title">${diary.gameDate || "날짜 없음"}</div>
             <div class="qna-meta">작성자: ${diary.author || "익명"} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
             <div class="qna-content">게임 시간: ${diary.gameTime || "시간 없음"}</div>
             <div class="qna-diary">나만의 일기: ${diary.diary || "내용 없음"}</div>
             <div class="qna-mvp">나만의 MVP: ${diary.mvp || "내용 없음"}</div>
         `;
-    } catch (error) {
-        console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
-    }
-}
+            } catch (error) {
+                console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
+            }
+        }
 
-// 댓글 데이터를 가져오기
-async function fetchComments() {
-    try {
-        const commentsSnapshot = await db
-            .collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .orderBy('date', 'asc')
-            .get();
+        // 댓글 데이터를 가져오기
+        async function fetchComments() {
+            try {
+                const commentsSnapshot = await db
+                    .collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .orderBy('date', 'asc')
+                    .get();
 
-        comments = commentsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        renderComments();
-    } catch (error) {
-        console.error("댓글 데이터를 가져오는 중 오류 발생:", error);
-    }
-}
+                comments = commentsSnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                renderComments();
+            } catch (error) {
+                console.error("댓글 데이터를 가져오는 중 오류 발생:", error);
+            }
+        }
 
-// 댓글 렌더링
-function renderComments() {
-    commentsList.innerHTML = '';
-    comments.forEach((comment, index) => {
-        const isCurrentUser = comment.author === userID; // 현재 사용자가 작성한 댓글인지 확인
+        // 댓글 렌더링
+        function renderComments() {
+            commentsList.innerHTML = '';
+            comments.forEach((comment, index) => {
+                const isCurrentUser = comment.author === userID; // 현재 사용자가 작성한 댓글인지 확인
 
-        const commentElement = document.createElement('div');
-        commentElement.className = 'comment-item';
-        commentElement.innerHTML = `
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item';
+                commentElement.innerHTML = `
             <p>${comment.text}</p>
             <small>${comment.author || "익명"} | ${new Date(comment.date.toDate()).toLocaleString()}</small>
             ${isCurrentUser
-                ? `<div class="comment-actions">
+                        ? `<div class="comment-actions">
                     <button onclick="editComment('${comment.id}', ${index})">수정</button>
                     <button onclick="deleteComment('${comment.id}', ${index})">삭제</button>
                 </div>`
-                : ''
-            }
+                        : ''
+                    }
         `;
-        commentsList.appendChild(commentElement);
-    });
-}
-
-// 댓글 작성
-submitCommentButton.onclick = async function () {
-    const commentText = commentInput.value.trim();
-    if (!commentText) {
-        alert("댓글 내용을 입력하세요.");
-        return;
-    }
-
-    try {
-        const newComment = {
-            text: commentText,
-            date: firebase.firestore.Timestamp.now(),
-            author: userID
-        };
-        const docRef = await db.collection('Diaries').doc(diaryId).collection('Comments').add(newComment);
-        comments.push({ id: docRef.id, ...newComment });
-        commentInput.value = '';
-        renderComments();
-    } catch (error) {
-        console.error("댓글 저장 중 오류 발생:", error);
-        alert("댓글 작성 중 오류가 발생했습니다.");
-    }
-};
-
-// 댓글 삭제 함수
-async function deleteComment(commentId, index) {
-    try {
-        // 해당 댓글 삭제
-        await db.collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .doc(commentId)
-            .delete();
-
-        // 댓글 목록에서 해당 댓글 삭제
-        comments.splice(index, 1);
-        renderComments(); // 삭제된 후 댓글 목록 새로 렌더링
-    } catch (error) {
-        console.error("댓글 삭제 중 오류 발생:", error);
-        alert("댓글 삭제 중 오류가 발생했습니다.");
-    }
-}
-
-// 댓글 수정 함수
-async function editComment(commentId, index) {
-    const newCommentText = prompt("수정할 댓글을 입력하세요:", comments[index].text);
-    if (newCommentText === null || newCommentText.trim() === "") {
-        return; // 빈 댓글은 수정할 수 없음
-    }
-
-    try {
-        // Firestore에서 해당 댓글 수정
-        await db.collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .doc(commentId)
-            .update({
-                text: newCommentText,
-                date: firebase.firestore.Timestamp.now() // 수정 시간 업데이트
+                commentsList.appendChild(commentElement);
             });
+        }
 
-        // 댓글 목록에서 수정된 텍스트 반영
-        comments[index].text = newCommentText;
-        renderComments(); // 수정 후 댓글 목록 새로 렌더링
-    } catch (error) {
-        console.error("댓글 수정 중 오류 발생:", error);
-        alert("댓글 수정 중 오류가 발생했습니다.");
-    }
-}
+        // 댓글 작성
+        submitCommentButton.onclick = async function () {
+            const commentText = commentInput.value.trim();
+            if (!commentText) {
+                alert("댓글 내용을 입력하세요.");
+                return;
+            }
 
-// 초기 데이터 로드
-fetchDiary();
-fetchComments();
+            try {
+                const newComment = {
+                    text: commentText,
+                    date: firebase.firestore.Timestamp.now(),
+                    author: userID
+                };
+                const docRef = await db.collection('Diaries').doc(diaryId).collection('Comments').add(newComment);
+                comments.push({ id: docRef.id, ...newComment });
+                commentInput.value = '';
+                renderComments();
+            } catch (error) {
+                console.error("댓글 저장 중 오류 발생:", error);
+                alert("댓글 작성 중 오류가 발생했습니다.");
+            }
+        };
+
+        // 댓글 삭제 함수
+        async function deleteComment(commentId, index) {
+            try {
+                // 해당 댓글 삭제
+                await db.collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .doc(commentId)
+                    .delete();
+
+                // 댓글 목록에서 해당 댓글 삭제
+                comments.splice(index, 1);
+                renderComments(); // 삭제된 후 댓글 목록 새로 렌더링
+            } catch (error) {
+                console.error("댓글 삭제 중 오류 발생:", error);
+                alert("댓글 삭제 중 오류가 발생했습니다.");
+            }
+        }
+
+        // 댓글 수정 함수
+        async function editComment(commentId, index) {
+            const newCommentText = prompt("수정할 댓글을 입력하세요:", comments[index].text);
+            if (newCommentText === null || newCommentText.trim() === "") {
+                return; // 빈 댓글은 수정할 수 없음
+            }
+
+            try {
+                // Firestore에서 해당 댓글 수정
+                await db.collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .doc(commentId)
+                    .update({
+                        text: newCommentText,
+                        date: firebase.firestore.Timestamp.now() // 수정 시간 업데이트
+                    });
+
+                // 댓글 목록에서 수정된 텍스트 반영
+                comments[index].text = newCommentText;
+                renderComments(); // 수정 후 댓글 목록 새로 렌더링
+            } catch (error) {
+                console.error("댓글 수정 중 오류 발생:", error);
+                alert("댓글 수정 중 오류가 발생했습니다.");
+            }
+        }
+
+        // 초기 데이터 로드
+        fetchDiary();
+        fetchComments();
 
     </script>
 

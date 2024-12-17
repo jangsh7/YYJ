@@ -807,14 +807,13 @@
 
         // Firestore에서 최신 Q&A 가져오기
         fetchQnAsFromFirestore();
-
-async function fetchDiariesFromFirestore() {
+        async function fetchDiariesFromFirestore() {
     try {
         const diariesSnapshot = await db
             .collection("Diaries")
-            .where("team", "==", team)
-            .orderBy("createdAt", "desc")
-            .limit(5)
+            //.where("team", "==", team) // 팀 필터링
+            .orderBy("createdAt", "desc") // 최신 순으로 정렬
+            .limit(5) // 최신 5개만 가져오기
             .get();
 
         if (diariesSnapshot.empty) {
@@ -829,10 +828,14 @@ async function fetchDiariesFromFirestore() {
             postItem.className = "post-item";
             postItem.innerHTML = `
                 <div>
+                    <!-- gameDate를 제목으로 사용 -->
                     <div class="post-title" onclick="goToDiaryDetail('${doc.id}', '${diary.author || '익명'}')">
                         ${diary.gameDate || "게임 날짜 없음"}
                     </div>
-                    <div class="post-meta">작성자: ${diary.author || "익명"} | ${new Date(diary.createdAt).toLocaleString()}</div>
+                    <div class="post-meta">
+                        작성자: ${diary.author || "익명"} | 
+                        ${new Date(diary.createdAt.toDate()).toLocaleString()} <!-- createdAt을 변환 -->
+                    </div>
                 </div>
             `;
             diarySection.appendChild(postItem);

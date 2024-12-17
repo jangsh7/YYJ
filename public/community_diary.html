@@ -250,7 +250,7 @@
       alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
     }
 
-    const diaryLink = document.getElementById('qna-link');
+    const diaryLink = document.getElementById('qna-link'); // 잘못된 부분 수정
     if (team) {
       diaryLink.href = `community2.html?team=${team}`;
     } else {
