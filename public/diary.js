@@ -1,3 +1,36 @@
+// Firebase 초기화
+const firebaseConfig = {
+    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+    authDomain: "yyjdb-1e121.firebaseapp.com",
+    projectId: "yyjdb-1e121",
+    storageBucket: "yyjdb-1e121.appspot.com",
+    messagingSenderId: "455353963754",
+    appId: "1:455353963754:web:2a64f5411a4061e9143393"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+// 전역에서 사용할 db와 storage 선언
+let db, storage;
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    // 인증 상태 확인
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            console.log("로그인된 사용자:", user.email);
+            loadDiaryData();
+        } else {
+            alert("로그인이 필요합니다. 로그인 페이지로 이동합니다.");
+            window.location.href = "login.html";
+        }
+    });
+});
+
+
+
 async function loadDiaryData() {
     // URL에서 날짜 가져오기
     const urlParams = new URLSearchParams(window.location.search);
@@ -152,19 +185,7 @@ async function loadDiaryData() {
 loadDiaryData(); // 페이지 로드 시 실행
 
 
-//다이어리 내용-DB연동부분
-const firebaseConfig = {
-    apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-    authDomain: "yyjdb-1e121.firebaseapp.com",
-    projectId: "yyjdb-1e121",
-    storageBucket: "yyjdb-1e121.appspot.com",
-    messagingSenderId: "455353963754",
-    appId: "1:455353963754:web:2a64f5411a4061e9143393"
-};
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const storage = firebase.storage();
 
 
 
@@ -204,10 +225,15 @@ async function saveDiary() {
         // 이미지 업로드
         const fileInput = document.getElementById("fieldImage");
         if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-            const storageRef = storage.ref(`diaryImages/${Date.now()}_${file.name}`);
+          const file = fileInput.files[0];
+          const storageRef = storage.ref(`diaryImages/${Date.now()}_${file.name}`);
+          try {
             const snapshot = await storageRef.put(file);
-            diaryData.imageURL = await snapshot.ref.getDownloadURL();
+            const downloadURL = await snapshot.ref.getDownloadURL();
+            console.log("Image uploaded successfully:", downloadURL);
+          } catch (error) {
+            console.error("Error uploading image:", error);
+          }
         }
 
         // Firestore 저장
