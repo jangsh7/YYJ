@@ -264,7 +264,7 @@
     <header>
         <div class="header-container">
         </div>
-        <h1>다이어리리 내용</h1>
+        <h1>다이어리 내용</h1>
         <div class="nav-links">
             <a id="com-link" href="#">커뮤니티</a>
             <a id="qna-link" href="#"> 메모장 </a>
@@ -367,21 +367,21 @@
 
         // 다이어리 데이터를 가져오기
         async function fetchDiary() {
-    try {
-        const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
-        
-        if (!diaryDoc.exists) {
-            alert("해당 다이어리를 찾을 수 없습니다. 목록으로 돌아갑니다.");
-            window.location.href = `community2.html?team=${team}`;
-        }
-        
-        const diary = diaryDoc.data();
+            try {
+                const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
 
-        // createdAt 필드를 안전하게 처리 (Timestamp 형식일 경우)
-        const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
+                if (!diaryDoc.exists) {
+                    alert("해당 다이어리를 찾을 수 없습니다. 목록으로 돌아갑니다.");
+                    window.location.href = `community2.html?team=${team}`;
+                }
 
-        // 작성자와 날짜를 같이 표시
-        document.getElementById('qna-detail').innerHTML = `
+                const diary = diaryDoc.data();
+
+                // createdAt 필드를 안전하게 처리 (Timestamp 형식일 경우)
+                const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
+
+                // 작성자와 날짜를 같이 표시
+                document.getElementById('qna-detail').innerHTML = `
             <div class="qna-title">${diary.gameDate || "날짜 없음"}</div>
             <div class="qna-meta">
                 작성자: ${diary.author || "익명"}
@@ -390,10 +390,10 @@
             <div class="qna-diary">나만의 일기: ${diary.diary || "내용 없음"}</div>
             <div class="qna-mvp">나만의 MVP: ${diary.mvp || "내용 없음"}</div>
         `;
-    } catch (error) {
-        console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
-    }
-}
+            } catch (error) {
+                console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
+            }
+        }
 
         // 댓글 데이터를 가져오기
         // 다이어리 데이터를 가져오기

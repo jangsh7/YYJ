@@ -283,7 +283,8 @@
             <!--<img src="images/KTwiz.jpg" alt="달력 이미지" width="150">-->
             <div style="position: relative; width: 300px; height: 300px; border: 1px solid white;">
                 <!-- 배경 이미지 -->
-                <img id="calendarBackground" src="images/KTwiz.jpg" alt="달력 배경 이미지" style="width: 300px; height: 300px; object-fit: contain;">
+                <img id="calendarBackground" src="images/KTwiz.jpg" alt="달력 배경 이미지"
+                    style="width: 300px; height: 300px; object-fit: contain;">
 
                 <!-- 월 숫자 텍스트 -->
                 <div class="calendar-text">
@@ -334,19 +335,19 @@
     <script src="calendar.js"></script>
     <script>
         // Firestore 초기화
-    const firebaseConfig = {
-        apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-        authDomain: "yyjdb-1e121.firebaseapp.com",
-        projectId: "yyjdb-1e121",
-        storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
-        messagingSenderId: "455353963754",
-        appId: "1:455353963754:web:2a64f5411a4061e9143393"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+            authDomain: "yyjdb-1e121.firebaseapp.com",
+            projectId: "yyjdb-1e121",
+            storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
+            messagingSenderId: "455353963754",
+            appId: "1:455353963754:web:2a64f5411a4061e9143393"
+        };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-    console.log("Firebase initialized.");
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        console.log("Firebase initialized.");
 
         const teamImages = {
             "두산 베어스": "DOOSANbears.jpg",

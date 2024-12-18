@@ -197,8 +197,8 @@
       messagingSenderId: "455353963754",
       appId: "1:455353963754:web:2a64f5411a4061e9143393"
     };
-    
-firebase.initializeApp(firebaseConfig);
+
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const storage = firebase.storage();
     console.log("Firebase initialized.");
@@ -261,11 +261,11 @@ firebase.initializeApp(firebaseConfig);
       alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
     }
 
-   // 다이어리 데이터를 가져오기
-async function loadDiaries() {
-    try {
+    // 다이어리 데이터를 가져오기
+    async function loadDiaries() {
+      try {
         const diariesSnapshot = await db.collection("Diaries")
-            .get();
+          .get();
 
         console.log("Diaries Query Result:", diariesSnapshot); // 결과 확인
         console.log("Number of documents:", diariesSnapshot.size); // 문서 개수 확인
@@ -273,99 +273,85 @@ async function loadDiaries() {
         const diaries = [];
 
         diariesSnapshot.forEach((doc) => {
-            const data = doc.data();
-            console.log("다이어리 데이터:", data);
+          const data = doc.data();
+          console.log("다이어리 데이터:", data);
 
-            // diaryData가 존재하는지 확인 후, 없으면 빈 객체로 처리
-            const diaryData = data.diaryData || {};
+          // diaryData가 존재하는지 확인 후, 없으면 빈 객체로 처리
+          const diaryData = data.diaryData || {};
 
-            if (!diaryData) {
-                console.warn(`No diaryData for document ${doc.id}`); // diaryData가 없으면 경고
-                return; // diaryData가 없으면 해당 다이어리는 건너뛰기
-            }
+          if (!diaryData) {
+            console.warn(`No diaryData for document ${doc.id}`); // diaryData가 없으면 경고
+            return; // diaryData가 없으면 해당 다이어리는 건너뛰기
+          }
 
-            // awayTeamLineup과 homeTeamLineup을 제외한 데이터만 가져오기
-            const { awayTeamLineup, homeTeamLineup, ...restOfDiaryData } = diaryData;
+          // awayTeamLineup과 homeTeamLineup을 제외한 데이터만 가져오기
+          const { awayTeamLineup, homeTeamLineup, ...restOfDiaryData } = diaryData;
 
-            // createdAt 필드가 Timestamp 형식일 경우, toDate()를 호출하여 JavaScript Date 객체로 변환
-            const createdAt = data.createdAt ? new Date(data.createdAt.seconds * 1000 + data.createdAt.nanoseconds / 1000000).toLocaleString() : '날짜 없음';
+          // createdAt 필드가 Timestamp 형식일 경우, toDate()를 호출하여 JavaScript Date 객체로 변환
+          const createdAt = data.createdAt ? new Date(data.createdAt.seconds * 1000 + data.createdAt.nanoseconds / 1000000).toLocaleString() : '날짜 없음';
 
-            const author = data.author || '익명'; // author가 없으면 '익명'으로 처리
+          const author = data.author || '익명'; // author가 없으면 '익명'으로 처리
 
-            diaries.push({
-                id: doc.id,
-                author: author, // '익명' 또는 실제 author
-                createdAt: createdAt, // '날짜 없음' 또는 생성일시
-                ...restOfDiaryData,  // awayTeamLineup과 homeTeamLineup을 제외한 나머지 데이터
-            });
+          diaries.push({
+            id: doc.id,
+            author: author, // '익명' 또는 실제 author
+            createdAt: createdAt, // '날짜 없음' 또는 생성일시
+            ...restOfDiaryData,  // awayTeamLineup과 homeTeamLineup을 제외한 나머지 데이터
+          });
         });
 
         // 데이터가 없으면 메시지 출력
         if (diaries.length === 0) {
-            console.log("No diaries found.");
-            postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>';
-            return;
+          console.log("No diaries found.");
+          postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>';
+          return;
         }
 
         console.log("Loaded Diaries:", diaries); // 콘솔에 데이터를 출력하여 확인
         renderDiaries(diaries);  // renderDiaries 함수 호출
 
-    } catch (error) {
+      } catch (error) {
         console.error("Error loading data: ", error);
         postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+      }
     }
-}
 
-// Diaries 목록 렌더링
-function renderDiaries(diaries) {
-    postList.innerHTML = ''; // 기존 Diaries 목록 초기화
+    // Diaries 목록 렌더링
+    function renderDiaries(diaries) {
+      postList.innerHTML = ''; // 기존 Diaries 목록 초기화
 
-    if (diaries.length === 0) {
+      if (diaries.length === 0) {
         postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // Diaries가 없을 경우 메시지 표시
         return;
-    }
+      }
 
-    const currentUserID = sessionStorage.getItem("userID");
+      const currentUserID = sessionStorage.getItem("userID");
 
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
-    const currentDiaries = diaries.slice(startIndex, endIndex);
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
+      const currentDiaries = diaries.slice(startIndex, endIndex);
 
-    currentDiaries.forEach((diary) => {
+      currentDiaries.forEach((diary) => {
         const postItem = document.createElement('div');
         postItem.className = 'post-item';
 
         // createdAt이 Timestamp 형식일 때, toDate() 메서드를 사용하여 Date로 변환
         const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
-        
+
         postItem.innerHTML = `
             <div>
                 <div class="post-title" onclick="goToDetail('${diary.id}')">${diary.gameDate || "게임 날짜 없음"}</div>
                 <div class="post-meta">작성자: ${diary.author || '익명'} | ${createdAt}</div>
             </div>
-            ${diary.author === currentUserID ? `<div class="post-actions"><button onclick="deleteDiary('${diary.id}')">삭제</button></div>` : ''}
         `;
         postList.appendChild(postItem);
-    });
+      });
 
-    renderPagination(diaries.length);
-}
-
-
-    
-    // Diaries 삭제 함수
-    function deleteDiary(id) {
-      if (confirm("이 다이어리를 삭제하시겠습니까?")) {
-        db.collection("Diaries").doc(id).delete()
-          .then(() => {
-            alert("다이어리가 삭제되었습니다.");
-            loadDiaries(); // 삭제 후 목록 갱신
-          })
-          .catch((error) => {
-            console.error("Error deleting document: ", error);
-          });
-      }
+      renderPagination(diaries.length);
     }
+
+
+
 
     // Diaries 상세 페이지로 이동
     // Diaries 상세 페이지로 이동
