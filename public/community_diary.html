@@ -175,6 +175,7 @@
 
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
 
   <script>
     const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Diaries 개수
@@ -191,15 +192,17 @@
     const firebaseConfig = {
       apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
       authDomain: "yyjdb-1e121.firebaseapp.com",
-      databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
       projectId: "yyjdb-1e121",
-      storageBucket: "yyjdb-1e121.firebasestorage.app",
+      storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
       messagingSenderId: "455353963754",
       appId: "1:455353963754:web:2a64f5411a4061e9143393"
     };
-
-    firebase.initializeApp(firebaseConfig);
+    
+firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
+    const storage = firebase.storage();
+    console.log("Firebase initialized.");
+
 
     // 팀별 색상 적용
     const teamColors = {
@@ -259,85 +262,84 @@
     }
 
     // Firestore에서 데이터를 로드
-    function loadDiaries() {
-      db.collection("Diaries")
-        .orderBy("createdAt", "desc") // createdAt 시간순으로 정렬
-        .onSnapshot((querySnapshot) => { // onSnapshot() 사용
-          const diaries = [];
-          querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            diaries.push({ ...data, id: doc.id });
-          });
+    async function loadDiaries() {
+  try {
+    const diariesSnapshot = await db.collection("Diaries")
+      //.orderBy("createdAt", "desc") // createdAt 시간순으로 정렬
+      .get();
 
-          console.log("Loaded Diaries:", diaries); // 콘솔에 데이터를 출력하여 확인
-          renderDiaries(diaries);
-        }, (error) => {
-          console.error("Error loading data: ", error);
-          postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
-        });
-    }
+    console.log("Diaries Query Result:", diariesSnapshot); // 결과 확인
+    console.log("Number of documents:", diariesSnapshot.size); // 문서 개수 확인
 
-    // Diaries 목록 렌더링
-    function renderDiaries(diaries) {
-      postList.innerHTML = ''; // 기존 Diaries 목록 초기화
+    const diaries = [];
 
-      if (diaries.length === 0) {
-        postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // Diaries가 없을 경우 메시지 표시
-        return;
+    diariesSnapshot.forEach((doc) => {
+      const data = doc.data();
+      console.log("다이어리 데이터:", data);
+
+      // diaryData가 존재하는지 확인 후, 없으면 빈 객체로 처리
+      const diaryData = data.diaryData || {};
+
+      if (!diaryData) {
+        console.warn(`No diaryData for document ${doc.id}`); // diaryData가 없으면 경고
+        return; // diaryData가 없으면 해당 다이어리는 건너뛰기
       }
 
-      const currentUserID = sessionStorage.getItem("userID");
+      // awayTeamLineup과 homeTeamLineup을 제외한 데이터만 가져오기
+      const { awayTeamLineup, homeTeamLineup, ...restOfDiaryData } = diaryData;
 
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
-      const currentDiaries = diaries.slice(startIndex, endIndex);
-
-      currentDiaries.forEach((diary) => {
-        const postItem = document.createElement('div');
-        postItem.className = 'post-item';
-
-        // diaryData 안에 있는 데이터들 가져오기
-        const diaryData = diary.diaryData || {};
-        const awayTeamLineup = diaryData.awayTeamLineup || [];
-        const homeTeamLineup = diaryData.homeTeamLineup || [];
-        const awayTeamScore = diaryData.awayTeamScore || '정보 없음';
-        const homeTeamScore = diaryData.homeTeamScore || '정보 없음';
-        const gameDate = diaryData.gameDate || '게임 날짜 없음';
-        const gameTime = diaryData.gameTime || '시간 미제공';
-        const mvp = diaryData.mvp || 'MVP 미제공';
-        const result = diaryData.result || '결과 미제공';
-        const stadium = diaryData.stadium || '경기장 미제공';
-
-        postItem.innerHTML = `
-      <div>
-        <div class="post-title" onclick="goToDetail('${diary.id}')">${gameDate} ${gameTime}</div>
-        <div class="post-meta">작성자: ${diary.author || '익명'} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
-        <div><strong>MVP:</strong> ${mvp}</div>
-        <div><strong>결과:</strong> ${result}</div>
-        <div><strong>경기장:</strong> ${stadium}</div>
-        
-        <div><strong>Away Team Lineup:</strong></div>
-        <ul>
-          ${awayTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
-        </ul>
-        <div><strong>Away Team Score:</strong> ${awayTeamScore}</div>
-
-        <div><strong>Home Team Lineup:</strong></div>
-        <ul>
-          ${homeTeamLineup.map(player => `<li>${player || '선수 정보 없음'}</li>`).join('')}
-        </ul>
-        <div><strong>Home Team Score:</strong> ${homeTeamScore}</div>
-      </div>
-
-      ${diary.author === currentUserID ? `<div class="post-actions"><button onclick="deleteDiary('${diary.id}')">삭제</button></div>` : ''}
-    `;
-
-        postList.appendChild(postItem);
+      diaries.push({
+        id: doc.id,
+        ...restOfDiaryData,  // awayTeamLineup과 homeTeamLineup을 제외한 데이터만 추가
       });
+    });
 
-      renderPagination(diaries.length);
+    // 데이터가 없으면 메시지 출력
+    if (diaries.length === 0) {
+      console.log("No diaries found.");
+      postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>';
+      return;
     }
 
+    console.log("Loaded Diaries:", diaries); // 콘솔에 데이터를 출력하여 확인
+    renderDiaries(diaries);  // renderDiaries 함수 호출
+
+  } catch (error) {
+    console.error("Error loading data: ", error);
+    postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+  }
+}
+        // Diaries 목록 렌더링
+        function renderDiaries(diaries) {
+          postList.innerHTML = ''; // 기존 Diaries 목록 초기화
+    
+          if (diaries.length === 0) {
+            postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // Diaries가 없을 경우 메시지 표시
+            return;
+          }
+    
+          const currentUserID = sessionStorage.getItem("userID");
+    
+          const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+          const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
+          const currentDiaries = diaries.slice(startIndex, endIndex);
+    
+          currentDiaries.forEach((diary) => {
+            const postItem = document.createElement('div');
+            postItem.className = 'post-item';
+            postItem.innerHTML = `
+              <div>
+                <div class="post-title" onclick="goToDetail('${diary.id}')">${diary.gameDate}</div>
+                <div class="post-meta">작성자: ${diary.author || '익명'} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
+              </div>
+              ${diary.author === currentUserID ? `<div class="post-actions"><button onclick="deleteDiary('${diary.id}')">삭제</button></div>` : ''}
+            `;
+            postList.appendChild(postItem);
+          });
+    
+          renderPagination(diaries.length);
+        }
+    
     // Diaries 삭제 함수
     function deleteDiary(id) {
       if (confirm("이 다이어리를 삭제하시겠습니까?")) {
@@ -352,6 +354,7 @@
       }
     }
 
+    // Diaries 상세 페이지로 이동
     // Diaries 상세 페이지로 이동
     function goToDetail(id) {
       window.location.href = `community_diary2.html?id=${id}&team=${team}`;
