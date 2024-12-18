@@ -1,3 +1,62 @@
+// 로그인된 사용자 ID 가져오기
+const loggedInUser = sessionStorage.getItem("userID")|| "익명";
+console.log("Logged-in user ID:", loggedInUser);
+
+// 승률 계산 함수
+async function calculateWinRate() {
+    try {
+        if (!loggedInUser) {
+            console.error("로그인한 사용자 정보가 없습니다.");
+            return;
+        }
+
+        // Diaries 컬렉션에서 로그인한 사용자(author)가 작성한 다이어리 가져오기
+        const diariesSnapshot = await db.collection("Diaries").where("author", "==", loggedInUser).get();
+
+        console.log("Diaries Query Result:", diariesSnapshot); // 결과 확인
+        console.log("Number of documents:", diariesSnapshot.size); // 문서 개수 확인
+
+        if (diariesSnapshot.empty) {
+            console.warn("해당 사용자의 다이어리가 존재하지 않습니다.");
+            document.getElementById("winRate").value = "0.0%";
+            document.getElementById("winsInput").value = 0;
+            document.getElementById("lossesInput").value = 0;
+            document.getElementById("drawsInput").value = 0;
+            return;
+        }
+
+        let wins = 0;
+        let losses = 0;
+        let draws = 0;
+
+        // result 필드를 기반으로 승/패/무 계산
+        diariesSnapshot.forEach((doc) => {
+            const data = doc.data();
+            console.log("다이어리 데이터:", data);
+            if (data.diaryData.result === "win") wins++;
+            else if (data.diaryData.result === "lose") losses++;
+            else if (data.diaryData.result === "draw") draws++;
+        });
+        
+        const totalGames = wins + losses + draws;
+        const winRate = totalGames > 0 ? ((wins / totalGames) * 100).toFixed(1) : 0.0;
+
+        console.log(`승: ${wins}, 패: ${losses}, 무: ${draws}, 승률: ${winRate}%`);
+
+        // 각 입력 필드에 값 출력
+        document.getElementById("winsInput").value = wins;
+        document.getElementById("lossesInput").value = losses;
+        document.getElementById("drawsInput").value = draws;
+        document.getElementById("winRate").value = `${winRate}%`;
+
+    } catch (error) {
+        console.error("승률 계산 중 오류 발생:", error);
+    }
+}
+
+// 페이지 로드 시 승률 계산 실행
+window.addEventListener('load', calculateWinRate);
+
 function checkForAlert() {
     const urlParams = new URLSearchParams(window.location.search);
     const alertMessage = urlParams.get('alert'); // 'alert' 키 값 확인
@@ -7,7 +66,7 @@ function checkForAlert() {
         history.replaceState({}, document.title, window.location.pathname);
     }
 }
-window.onload = checkForAlert;
+window.addEventListener('load', checkForAlert);
 
 // 특정 날짜의 경기를 select로 표시
 async function showGameOptions(date, event) {
@@ -94,27 +153,3 @@ async function showGameOptions(date, event) {
         console.error("Error loading game data:", error);
     }
 }
-
-// 캔버스에 월 숫자 표시
-function drawMonth() {
-    const canvas = document.getElementById("monthCanvas");
-    const ctx = canvas.getContext("2d");
-
-    // 캔버스 초기화
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 현재 월 가져오기
-    const currentMonth = new Date().getMonth() + 1;
-
-    // 텍스트 스타일 설정
-    ctx.font = "bold 40px Arial"; // 글꼴 크기와 스타일
-    ctx.fillStyle = "black"; // 텍스트 색상
-    ctx.textAlign = "center"; // 텍스트 정렬
-    ctx.textBaseline = "middle"; // 텍스트 기준선
-
-    // 텍스트를 캔버스 중앙에 그리기
-    ctx.fillText(`${currentMonth}`, canvas.width / 2, canvas.height / 2);
-}
-
-// 페이지 로드 후 실행
-window.onload = drawMonth;

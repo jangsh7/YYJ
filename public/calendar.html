@@ -274,7 +274,7 @@
             <a href="community1.html?team=nc">NC</a>
             <a href="community1.html?team=kiwoom">키움</a>
             <a href="https://www.koreabaseball.com/Default.aspx">KBO 사이트</a>
-            <a href="login.html">로그아웃</a>
+            <a href="index.html">로그아웃</a>
         </div>
     </div>
 
@@ -295,11 +295,12 @@
 
             <div class="stats-section">
                 <div>
-                    승률: <input type="text" id="winRate" value="0.0%" readonly>
+                    나의 승률: <input type="text" id="winRate" value="0.0%" readonly>
                 </div>
                 <div>
-                    <input type="number" id="winsInput" placeholder="0" oninput="calculateWinRate()" min="0"> 승
-                    <input type="number" id="lossesInput" placeholder="0" oninput="calculateWinRate()" min="0"> 패
+                    <input type="number" id="winsInput" placeholder="0" readonly> 승
+                    <input type="number" id="lossesInput" placeholder="0" readonly> 패
+                    <input type="number" id="drawsInput" placeholder="0" readonly> 무
                 </div>
             </div>
         </div>
@@ -322,12 +323,31 @@
             </div>
         </div>
     </div>
-
     <!--파일 업로드 input 태그 추가-->
     <input type="file" id="imageUpload" style="display: none;" accept="image/*">
 
+    <!-- Firebase App (기본 Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
+
     <script src="calendar.js"></script>
     <script>
+        // Firestore 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+        authDomain: "yyjdb-1e121.firebaseapp.com",
+        projectId: "yyjdb-1e121",
+        storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
+        messagingSenderId: "455353963754",
+        appId: "1:455353963754:web:2a64f5411a4061e9143393"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    console.log("Firebase initialized.");
+
         const teamImages = {
             "두산 베어스": "DOOSANbears.jpg",
             "한화 이글스": "HANHWAeagles.jpg",
@@ -407,17 +427,28 @@
             for (let day = 1; day <= lastDay.getDate(); day++) {
                 const dateDiv = document.createElement("div");
                 dateDiv.classList.add("calendar-day");
-                dateDiv.textContent = day;
+                //dateDiv.textContent = day;
 
                 // dateDiv.innerHTML = `
                 // <img src="" alt="이미지" class="day-image" style="display: none;">
                 // <span class="day-text">${day}</span>
                 // `;
 
+                // 날짜를 YYYY-MM-DD 형식으로 data-date에 저장
+                const formattedDate = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+                dateDiv.setAttribute("data-date", formattedDate);
+
+                // 날짜 텍스트 추가
+                const dayText = document.createElement("div");
+                dayText.classList.add("day-text");
+                dayText.textContent = day;
+
+                dateDiv.appendChild(dayText);
+
                 // 클릭 이벤트
                 dateDiv.addEventListener("click", (event) => {
-                    const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
-                    showGameOptions(formattedDate, event); // 마우스 위치를 함께 전달
+                    const formattedDate_click = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
+                    showGameOptions(formattedDate_click, event); // 마우스 위치를 함께 전달
                 });
 
                 if (
@@ -438,6 +469,8 @@
             renderCalendar();
 
             updateMonthText();
+            // 이미지 다시 로드
+            loadDiaryImagesToCalendar();
         }
 
         function changeYearMonth() {
@@ -447,6 +480,8 @@
             renderCalendar();
 
             updateMonthText();
+            // 이미지 다시 로드
+            loadDiaryImagesToCalendar();
         }
 
         // 월 숫자 텍스트를 업데이트하는 함수
@@ -498,9 +533,49 @@
         //         reader.readAsDataURL(file);
         //     }
         // });
+        // Diary 이미지 캘린더에 추가하는 함수
+        async function loadDiaryImagesToCalendar() {
+            try {
+                const diariesSnapshot = await db.collection("Diaries").where("author", "==", loggedInUser).get();
 
-        initYearMonthSelectors();
-        renderCalendar();
+                if (diariesSnapshot.empty) {
+                    console.warn("해당 사용자의 다이어리가 존재하지 않습니다.");
+                    return;
+                }
+
+                diariesSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const gameDate = data.diaryData.gameDate; // YYYY-MM-DD 형식
+                    const imageURL = data.diaryData.imageURL;
+
+                    if (gameDate && imageURL) {
+                        const calendarDayElement = document.querySelector(`[data-date="${gameDate}"]`);
+
+                        if (calendarDayElement) {
+                            // 이미지 엘리먼트 추가
+                            const img = document.createElement("img");
+                            img.src = imageURL;
+                            img.classList.add("day-image");
+                            img.alt = "Diary Image";
+
+                            // 중복 추가 방지
+                            if (!calendarDayElement.querySelector("img")) {
+                                calendarDayElement.appendChild(img);
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("다이어리 이미지 불러오기 중 오류 발생:", error);
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.addEventListener("load", async () => {
+            initYearMonthSelectors();
+            renderCalendar();
+            await loadDiaryImagesToCalendar(); // 날짜에 이미지 추가
+        });
     </script>
 </body>
 
