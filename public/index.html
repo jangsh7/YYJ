@@ -175,9 +175,10 @@ firebase.initializeApp(firebaseConfig);
                 errorMessage.style.display = "none";
                 alert("로그인 성공!");
                 // 세션 스토리지에 userID 저장
-sessionStorage.setItem("userID", username); 
-console.log("userName in sessionStorage:", sessionStorage.getItem("userID"));
-
+                sessionStorage.setItem("userID", username); 
+                console.log("userName in sessionStorage:", sessionStorage.getItem("userID"));
+                sessionStorage.setItem("selectedTeam", userData.selected_team || "미정");
+                console.log("selectedTeam in sessionStorage:", sessionStorage.getItem("selectedTeam"));
 
                 window.location.href = "calendar.html"; // 메인 페이지로 이동
             } else {
