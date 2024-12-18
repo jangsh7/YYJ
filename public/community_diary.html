@@ -2,956 +2,400 @@
 <html lang="ko">
 
 <head>
-    <title>Community Board with Links</title>
-    <style>
-        @font-face {
-            font-family: "SCDream4";
-            src: url("font/SCDream4.otf") format("truetype");
-            font-weight: normal;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node.phl Diary List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    @font-face {
+      font-family: "SCDream4";
+      src: url("font/SCDream4.otf") format("truetype");
+      font-weight: normal;
+    }
 
-        * {
-            font-family: 'SCDream4';
-        }
+    * {
+      font-family: 'SCDream4';
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        header {
-            background-color: #333333;
-            color: white;
-            padding: 30px 50px;
-            text-align: center;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      overflow-x: hidden;
+    }
 
-            border-bottom: 4px solid #fff;
-        }
+    header {
+      background-color: #333333;
+      color: white;
+      width: 100%;
+      height: 100px;
+      text-align: center;
+      position: relative;
+    }
 
-        header h1 {
-            margin: 0;
-            font-size: 48px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-        }
+    header h1 {
+      font-size: 32px;
+      line-height: 100px;
+      margin: 0;
+      font-weight: bold;
+    }
 
-        header div {
-            margin-top: 15px;
-            font-size: 20px;
-        }
+    .nav-links {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 20px;
+      display: flex;
+      gap: 10px;
+    }
 
-        header a {
-            color: #ffffff;
-            text-decoration: none;
-            margin: 0 15px;
-            font-weight: bold;
-        }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      background-color: #333333;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
 
-        header a:hover {
-            color: var(--hover-color, #d32f2f);
-            /* 기본 색상: 빨간색 */
-        }
+    .nav-links a:hover {
+      color: var(--hover-color, #d32f2f);
+    }
 
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            width: 100%;
-        }
+    .post-list {
+      width: 800px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .section-container {
-            display: flex;
-            gap: 20px;
-            justify-content: space-between;
-            width: 1200px;
-            /* px로 고정 */
-        }
+    .post-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #ddd;
+    }
 
-        .post-section {
-            flex: 1;
-            background-color: #f0f0f0;
-            border-radius: 8px;
-            padding: 20px;
-            width: 575px;
-            /* 고정 너비 */
-            height: 420px;
-            /* 고정 높이 */
-            overflow-y: 0;
-        }
+    .post-item:last-child {
+      border-bottom: none;
+    }
 
-        .post-section h2 {
-            margin-bottom: 10px;
-        }
+    .post-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #000000;
+      cursor: pointer;
+    }
 
-        .post-list {
-            display: flex;
-            flex-direction: column;
-        }
+    .post-meta {
+      font-size: 12px;
+      color: #777;
+    }
 
-        .post-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #ddd;
-        }
+    .post-actions button {
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: background-color 0.3s ease;
+    }
 
-        .post-item:last-child {
-            border-bottom: none;
-        }
+    .post-actions button:hover {
+      background-color: #a07271;
+    }
 
-        .post-title {
-            font-size: 18px;
-            color: #333;
-            cursor: pointer;
-        }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+      gap: 5px;
+    }
 
-        .post-title:hover {
-            color: #d9534f;
-        }
+    .pagination button {
+      background-color: #f5f5f5;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
 
-        .post-meta {
-            font-size: 14px;
-            color: #777;
-        }
+    .pagination button:hover {
+      background-color: #ddd;
+    }
 
-        footer {
-            background-color: #333333;
-            color: white;
-            padding: 20px 30px;
-            text-align: center;
-            position: relative;
-        }
+    .pagination button.active {
+      background-color: #333333;
+      color: white;
+    }
 
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
+    .pagination button:disabled {
+      cursor: not-allowed;
+      background-color: #eee;
+    }
 
-        .link-button {
-            display: inline-block;
-            background-color: #333333;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-
-        .link-button:hover {
-            background-color: #333333;
-        }
-
-        /* 고정 크기 및 중앙 정렬 */
-        .horizontal-box-container {
-            width: 1200px;
-            max-width: 1200px;
-            margin: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .horizontal-box {
-            width: 100%;
-            max-width: 1200px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            padding: 40px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 40px;
-            box-sizing: border-box;
-            text-align: left;
-            height: 500px;
-            /* 모든 페이지가 같은 높이 유지 */
-            margin-bottom: 20px;
-        }
-
-        .horizontal-box img {
-            width: 420px;
-            /* 고정 너비 */
-            height: 300px;
-            /* 고정 높이 */
-            border-radius: 10px;
-        }
-
-        .horizontal-box-content {
-            max-width: 600px;
-            font-size: 24px;
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            align-self: center;
-            /* 부모 요소 기준으로 중앙 정렬 */
-        }
-
-        .pagination-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
-            background-color: transparent;
-            background-image: url('ball/ball.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        .pagination-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .pagination-btn.active {
-            background-image: url('ball/bat.png');
-            transform: scale(1.2);
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+    .add-post {
+      text-align: right;
+      margin: 20px auto;
+      width: 800px;
+    }
+  </style>
 </head>
 
 <body>
-    <header>
-        <h1 id="header-title"></h1>
-        <div>
-            <a id="qna-link" href="#">메모장</a> |
-            <a id="diary-link" href="#">다이어리</a> |
-            <a href="calendar.html">메인</a>
-        </div>
-    </header>
 
-    <div class="main-content">
-        <div class="section-container">
-            <div class="post-section">
-                <h2>나만의 메모장</h2>
-                <div class="post-list" id="qna-section"></div>
-            </div>
-            <div class="post-section">
-                <h2>다이어리</h2>
-                <div class="post-list" id="diary-section"></div>
-            </div>
-        </div>
-
-        <div class="horizontal-box-container" data-section-index="0">
-            <!-- 페이지 1 -->
-            <div class="horizontal-box page-1" data-page-index="1">
-                <img id="event1-image" src="" alt="Event Image">
-                <div class="horizontal-box-content">
-                    <h3>구단 소개</h3>
-                    <ul id="event1-texts"></ul>
-                </div>
-            </div>
-            <!-- 페이지 2 -->
-            <div class="horizontal-box page-2 hidden" data-page-index="2">
-                <img id="event2-image" src="" alt="Event Image">
-                <div class="horizontal-box-content">
-                    <h3>먹거리</h3>
-                    <ul id="event2-texts"></ul>
-                </div>
-            </div>
-            <div class="horizontal-box page-3 hidden" data-page-index="3">
-                <img id="event3-image" src="" alt="Event Image">
-                <div class="horizontal-box-content">
-                    <h3>우승 년도</h3>
-                    <ul id="event3-texts"></ul>
-                </div>
-            </div>
-            <div class="pagination">
-                <button class="pagination-btn" data-page="1" data-section="0"></button>
-                <button class="pagination-btn" data-page="2" data-section="0"></button>
-                <button class="pagination-btn" data-page="3" data-section="0"></button>
-            </div>
-        </div>
-        <div class="video-section" id="video-section" style="margin-top: 50px;"></div>
+  <header>
+    <h1 id="header-title"></h1>
+    <div class="nav-links">
+      <a id="com-link" href="#">커뮤니티</a>
+      <a id="qna-link" href="#"> 메모장 </a>
+      <a href="calendar.html">메인</a>
     </div>
+  </header>
 
-    <footer>
-        <div class="button-container" id="footer-links">
+  <div class="post-list" id="post-list">
+  </div>
 
-        </div>
-        <p>&copy; 요아정 - 요즘 야구 정보</p>
-    </footer>
+  <div class="pagination" id="pagination">
+  </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <div class="add-post">
+  </div>
 
-    <script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
 
-        var firebaseConfig = {
-            apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
-            authDomain: "yyjdb-1e121.firebaseapp.com",
-            databaseURL: "https://yyjdb-1e121-default-rtdb.firebaseio.com",
-            projectId: "yyjdb-1e121",
-            storageBucket: "yyjdb-1e121.firebasestorage.app",
-            messagingSenderId: "455353963754",
-            appId: "1:455353963754:web:2a64f5411a4061e9143393"
-        };
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
+  <script>
+    const ITEMS_PER_PAGE = 15; // 한 페이지에 표시할 Diaries 개수
+    let currentPage = 1; // 현재 페이지 번호
 
-        // URL에서 team 파라미터 추출
-        const urlParams = new URLSearchParams(window.location.search);
-        const team = urlParams.get('team');
+    // URL에서 team 파라미터 추출
+    const urlParams = new URLSearchParams(window.location.search);
+    const team = urlParams.get('team');
 
-        const footerLinks = document.getElementById('footer-links');
-        // 구단별 색상 정의
-        const teamColors = {
-            kia: '#EA0029',      // KIA
-            samsung: '#074CA1',  // 삼성
-            lg: '#C30452',       // LG
-            doosan: '#131230',    // 두산
-            kt: '#EB1C24',       // KT
-            ssg: '#CE0E2D',      // SSG
-            lotte: '#041E42',    // 롯데
-            hanwha: '#F73600',    // 한화
-            nc: '#315288',       // NC
-            kiwoom: '#570514'    // 키움
-        };
+    const postList = document.getElementById('post-list');
+    const headerTitle = document.getElementById('header-title');
 
-        // 구단별 색상 적용
-        if (team && teamColors[team]) {
-            document.documentElement.style.setProperty('--hover-color', teamColors[team]);
-        } else {
-            document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
-        }
+    // Firestore 초기화
+    const firebaseConfig = {
+      apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+      authDomain: "yyjdb-1e121.firebaseapp.com",
+      projectId: "yyjdb-1e121",
+      storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
+      messagingSenderId: "455353963754",
+      appId: "1:455353963754:web:2a64f5411a4061e9143393"
+    };
 
-        const teamContent = {
-            kia: {
-                event1: {
-                    texts: [
-                        "2001년 기아 타이거즈 설립",
-                        "홈구장 : 광주 - 기아 챔피언스 필드 ( 2014년 ~ 현재 )",
-                        "감독 : 이범호"
-                    ],
-                    image: "logos/kia.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🍹🍤크림새우🍤🍹",
-                        "🍺🍗광주원샷 치킨🍗🍺",
-                        "🍢🌶️마성떡볶이🌶️🍢"
-                    ],
-                    image: "eat/kia.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2024👑✨",
-                        "1983 | 1986 | 1987 | 1988 | 1989",
-                        "1991 | 1993 | 1996 | 1997 | 2009 | 2017"
-                    ],
-                    image: "ball/kia.png"
-                }
-            },
-            samsung: {
-                event1: {
-                    texts: [
-                        "1982년 삼성 라이온즈 설립",
-                        "홈구장 : 대구 - 삼성라이온즈파크 ( 2016년 ~ 현재 ) ",
-                        "감독 :  박진만"
-                    ],
-                    image: "logos/samsung.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🍹🍤크림새우🍤🍹",
-                        "🥗🐟물회🐟🥗",
-                        "🔥🌶️떡볶이🔥🌶️"
-                    ],
-                    image: "eat/samsung.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2014👑✨",
-                        "1985 | 2002 | 2005 ",
-                        "2006 | 2011 | 2012 | 2013"
-                    ],
-                    image: "ball/samsung.png"
-                }
-            },
-            lg: {
-                event1: {
-                    texts: [
-                        "1990년 LG 트윈스 설립",
-                        "홈구장 : 서울 - 종합운동장 야구장 ( 1985년 ~ 현재 ) ",
-                        "감독 :  염경엽"
-                    ],
-                    image: "logos/lg.png"
-                },
-                event2: {
-                    texts: [
-                        "🥢🍜김치말이국수🍜🥢",
-                        "🍺🍗원샷치킨🍗🍺",
-                        "🍱🥩삼겹살 도시락🥩🍱"
-                    ],
-                    image: "eat/seoul.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2023👑✨",
-                        "1990 | 1994 ",
-                    ],
-                    image: "ball/lg.png"
-                }
-            },
-            doosan: {
-                event1: {
-                    texts: [
-                        "1982년 두산 베어스 설립",
-                        "홈구장 : 서울 - 종합운동장 야구장 ( 1985년 ~ 현재 ) ",
-                        "감독 :  이승엽"
-                    ],
-                    image: "logos/doosan.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🥢🍜김치말이국수🍜🥢",
-                        "🍺🍗원샷치킨🍗🍺",
-                        "🍱🥩삼겹살 도시락🥩🍱"
-                    ],
-                    image: "eat/seoul.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2019👑✨",
-                        "1982 | 1995 ",
-                        "2001 | 2015 | 2016 "
-                    ],
-                    image: "ball/doosan.png"
-                }
-            },
-            kt: {
-                event1: {
-                    texts: [
-                        "2013년 KT wiz 설립",
-                        "홈구장 : 수원 - KT위즈 파크 ( 2015년 ~ 현재 ) ",
-                        "감독 :  이강철"
-                    ],
-                    image: "logos/kt.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🍺🍗진미통닭🍗🍺",
-                        "🥟🥟보영만두🥟🥟",
-                        "🍱🥩통삼겹살 도시락🥩🍱"
-                    ],
-                    image: "eat/kt.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2021👑✨",
-                    ],
-                    image: "ball/kt.png"
-                }
-            },
-            ssg: {
-                event1: {
-                    texts: [
-                        "2021년 SSG 랜더스 설립",
-                        "홈구장 : 인천 - SSG랜더스 필드 ( 2021년 ~ 현재 ) ",
-                        "감독 :  이숭용"
-                    ],
-                    image: "logos/ssg.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🍹🍤크림새우🍤🍹",
-                        "🧀🍟치즈푸틴🍟🧀",
-                        "🍫🍩오레오 츄러스🍩🍫"
-                    ],
-                    image: "eat/ssg.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2022👑✨",
-                        "2007 | 2008  ",
-                        "2010 | 2018"
-                    ],
-                    image: "ball/ssg.png"
-                }
-            },
-            lotte: {
-                event1: {
-                    texts: [
-                        "1982년 롯데 자이언츠 설립 (프로화 기준)",
-                        "홈구장 : 부산 - 사직 야구장 ( 1986년 ~ 현재 ) ",
-                        "감독 :  김태형"
-                    ],
-                    image: "logos/lotte.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🥟🥟보영만두🥟🥟",
-                        "🍢🌶️33떡볶이🌶️🍢",
-                        "🍗🍯아리아리 닭강정🍯🍗"
-                    ],
-                    image: "eat/lotte.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑1992👑✨",
-                        "1984 "
-                    ],
-                    image: "ball/lotte.png"
-                }
-            },
-            hanwha: {
-                event1: {
-                    texts: [
-                        "1986년 한화 이글스 설립",
-                        "홈구장 : 대전 - 이글스 파크 ( 1986년 ~ 2024년 ) ",
-                        "감독 :  김경문"
-                    ],
-                    image: "logos/hanhwa.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🍶🦅독수리 막걸리🦅🍶",
-                        "🍜🥗열무국수🥗🍜",
-                        "🍢🌶️떡볶이🌶️🍢"
-                    ],
-                    image: "eat/hanwha.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑1999👑✨",
-                    ],
-                    image: "ball/hanwha.png"
-                }
-            },
-            nc: {
-                event1: {
-                    texts: [
-                        "2011년 NC 다이노스 설립",
-                        "홈구장 : 창원 - 창원 NC파크 ( 2019년 ~ 현재 ) ",
-                        "감독 :  이호준"
-                    ],
-                    image: "logos/nc.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🥤🍪다이노스 쿠키 밀크쉐이크🍪🥤",
-                        "🍟🍔제일버거 수제버거🍔🍟",
-                        "🍺⚾비어배트⚾🍺"
-                    ],
-                    image: "eat/nc.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑2020👑✨",
-                    ],
-                    image: "ball/nc.png"
-                }
-            },
-            kiwoom: {
-                event1: {
-                    texts: [
-                        "2008년 키움 히어로즈 설립",
-                        "홈구장 : 서울 - 고척 스카이돔 ( 2016년 ~ 현재 ) ",
-                        "감독 :  홍원기"
-                    ],
-                    image: "logos/kiwoom.png" // 비율 조절 예정
-                },
-                event2: {
-                    texts: [
-                        "🍹🍤크림새우🍤",
-                        "🔥🐙타코야끼🐙🔥",
-                        "🔥🥓대왕곱창🥓🔥🔥"
-                    ],
-                    image: "eat/kiwoom.png"
-                },
-                event3: {
-                    texts: [
-                        "✨👑예정👑✨",
-                    ],
-                    image: "logos/kiwoom.png"
-                }
-            },
-        };
-        const qnaSection = document.getElementById('qna-section');
-        const footerLinkData = {
-            kia: [
-                { text: "갸티비", url: "https://www.youtube.com/@kiatigerstv" },
-                { text: "기아 타이거즈", url: "https://www.tigers.co.kr/" },
-                { text: "팀스토어", url: "https://teamstore.tigers.co.kr/" }
-            ],
-            samsung: [
-                { text: "Lions TV", url: "https://www.youtube.com/@lionstv1982" },
-                { text: "삼성 라이온즈", url: "https://www.samsunglions.com/index.asp" },
-                { text: "라이온즈몰", url: "https://samsunglionsmall.com/" }
-            ],
-            lg: [
-                { text: "LGTWINS TV", url: "https://www.youtube.com/@LGTwinsTV" },
-                { text: "LG 트윈스", url: "https://www.lgtwins.com/service/html.ncd?view=/pc_twins/twins_main/twins_main" },
-                { text: "LG 온라인몰", url: "https://www.lgtwins.com/service/html.ncd?baRq=&baRs=OUT_DS&view=%2Fpc_twins%2Ftwins%2Ftwins_shop&actID=BR_DetailShopMall" }
-            ],
-            doosan: [
-                { text: "BEARS TV", url: "https://www.youtube.com/@bearstv1982" },
-                { text: "두산 베어스", url: "https://www.doosanbears.com/" },
-                { text: "위팬", url: "https://www.doosanbearswefan.shop/" }
-            ],
-            kt: [
-                { text: "위즈 TV", url: "https://www.youtube.com/@ktwiztv" },
-                { text: "KT", url: "hhttps://www.ktwiz.co.kr/" },
-                { text: "KT위즈 스토어", url: "https://ktwizstore.co.kr/" }
-            ],
-            ssg: [
-                { text: "SSG 랜더스", url: "https://www.youtube.com/@SSGLANDERS" },
-                { text: "SSG", url: "https://www.ssglanders.com/main" },
-                { text: "SSG 온라인샵", url: "https://store.ssglanders.com/" }
-            ],
-            lotte: [
-                { text: "Giants TV", url: "https://www.youtube.com/@giantstv" },
-                { text: "롯데", url: "https://www.giantsclub.com/html/" },
-                { text: "GIANTS SHOP", url: "https://www.lottegiantsshop.com/" }
-            ],
-            hanwha: [
-                { text: "Eagles TV", url: "https://www.youtube.com/@HanwhaEagles_official" },
-                { text: "한화", url: "https://www.hanwhaeagles.co.kr/index.do" },
-                { text: "이글스 샵", url: "https://eaglesshop.kr/" }
-            ],
-            nc: [
-                { text: "NC 다이노스", url: "https://www.youtube.com/@ncdinos" },
-                { text: "NC", url: "https://www.ncdinos.com/" },
-                { text: "NC 팀스토어", url: "https://shop.ncdinos.com/" }
-            ],
-            kiwoom: [
-                { text: "키움 히어로즈", url: "https://www.youtube.com/@heroesbaseballclub/videos" },
-                { text: "키움", url: "https://heroesbaseball.co.kr/index.do" },
-                { text: "히어로즈샵", url: "https://interparkmdshop.com/category/%ED%82%A4%EC%9B%80%ED%9E%88%EC%96%B4%EB%A1%9C%EC%A6%88/29/" }
-            ]
-        };
-
-        if (team && footerLinkData[team]) {
-            footerLinkData[team].forEach(link => {
-                const anchor = document.createElement('a');
-                anchor.className = 'link-button';
-                anchor.href = link.url;
-                anchor.target = '_blank';
-                anchor.textContent = link.text;
-                footerLinks.appendChild(anchor);
-            });
-        } else {
-            const defaultLinks = [
-
-            ];
-            defaultLinks.forEach(link => {
-                const anchor = document.createElement('a');
-                anchor.className = 'link-button';
-                anchor.href = link.url;
-                anchor.target = '_blank';
-                anchor.textContent = link.text;
-                footerLinks.appendChild(anchor);
-            });
-        }
-        // 팀별 헤더 이름 설정
-        const headerTitle = document.getElementById('header-title');
-        if (team) {
-            const teamNames = {
-                kia: 'KIA 커뮤니티',
-                samsung: '삼성 커뮤니티',
-                lg: 'LG 커뮤니티',
-                doosan: '두산 커뮤니티',
-                kt: 'KT 커뮤니티',
-                ssg: 'SSG 커뮤니티',
-                lotte: '롯데 커뮤니티',
-                hanwha: '한화 커뮤니티',
-                nc: 'NC 커뮤니티',
-                kiwoom: '키움 커뮤니티'
-            };
-
-            headerTitle.textContent = teamNames[team] || '커뮤니티'; // 팀 이름이 없을 경우 기본값
-        } else {
-            headerTitle.textContent = '커뮤니티';
-        }
-
-        const videoSection = document.getElementById('video-section');
-
-        // 구단별 동영상 URL 설정
-        const teamVideos = {
-            kia: [
-                "https://www.youtube.com/embed/ZEPS5Bm3iqc?si=raaX1YVsDEWp9eJY",
-                "https://www.youtube.com/embed/Hac_l6kFO6M?si=AscsMiv8vTrXCnn4"
-            ],
-            samsung: [
-                "https://www.youtube.com/embed/n5OxYkfnNqE?si=KR-Hti0a_zh2q0QY",
-                "https://www.youtube.com/embed/RUsKpzR98Z4?si=CKw3MhkzOxI3IrrX"
-            ],
-            lg: [
-                "https://www.youtube.com/embed/QDOl5kmOPXA?si=I4weeI651CdN1E45",
-                "https://www.youtube.com/embed/wBYboQtmPRU?si=OP3fW3hAGIoHCYUt"
-            ],
-            doosan: [
-                "https://www.youtube.com/embed/lMhDirLYvVo?si=dIux4XXhBpanT_lY",
-                "https://www.youtube.com/embed/igPggbPRMac?si=lAOeEYfFdaKvRLbQ"
-            ],
-            kt: [
-                "https://www.youtube.com/embed/WDZzXQlfTK8?si=_GZnH5yqLkRjPtwX",
-                "https://www.youtube.com/embed/uUoFdZrzt9M?si=LWK9FP7q0C3o7iku"
-            ],
-            ssg: [
-                "https://www.youtube.com/embed/fP6vg1M7l6s?si=V2EvpHDbhOlXGfmc",
-                "https://www.youtube.com/embed/8CcqT6UVo-8?si=bqHlkKlz72wMhyZY"
-            ],
-            lotte: [
-                "https://www.youtube.com/embed/bvbomd5CLh0?si=IQ3sRkO4k89jRqtO",
-                "https://www.youtube.com/embed/rX9JivgYYt4?si=P6iOFgU0DI5gNoi9"
-            ],
-            hanwha: [
-                "https://www.youtube.com/embed/CiOBbj-6-gA?si=q2Hm0upQzpAnED9I",
-                "https://www.youtube.com/embed/K9RkIveMUH8?si=1lTv9Fa1misxVMF_"
-            ],
-            nc: [
-                "https://www.youtube.com/embed/6SKuiZtk17E?si=CpcmDBsXcIVmBMhZ",
-                "https://www.youtube.com/embed/Rv4od-Wo7X4?si=50mzYktulizYZWCI"
-            ],
-            kiwoom: [
-                "https://www.youtube.com/embed/OjoYnwcZMOI?si=gzlwsAESKi4iry4e",
-                "https://www.youtube.com/embed/GRTFEMXf_VQ?si=5msvCTa7EMwnO_g2"
-            ]
-        };
-
-        // 기본 동영상 설정s
-        const defaultVideos = [
-            "https://www.youtube.com/embed/ZEPS5Bm3iqc?si=raaX1YVsDEWp9eJY",
-            "https://www.youtube.com/embed/Hac_l6kFO6M?si=AscsMiv8vTrXCnn4"
-        ];
-
-        // 구단별 동영상 가져오기
-        const selectedVideos = team ? teamVideos[team] || defaultVideos : defaultVideos;
-
-        // 동영상 섹션 렌더링
-        videoSection.innerHTML = `
-    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-        ${selectedVideos.map(video => `
-            <iframe width="590" height="300" src="${video}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        `).join('')}
-    </div>
-`;
-
-        const qnaLink = document.getElementById('qna-link');
-        const diaryLink = document.getElementById('diary-link');
-
-        // Q&A와 커뮤니티 링크 업데이트
-        if (team) {
-            qnaLink.href = `community2.html?team=${team}`;
-            diaryLink.href = `community_diary.html?team=${team}`;
-        } else {
-            qnaLink.href = '#';
-            diaryLink.href = '#';
-            alert("Error");
-        }
-
-        // 로컬 스토리지에서 Q&A 데이터 가져오기
-        const teamKey = team ? `qnas_${team}` : null;
-        const qnas = teamKey ? JSON.parse(localStorage.getItem(teamKey)) || [] : [];
-
-        // Firestore에서 메모 데이터 가져오기
-        // Firestore에서 메모 데이터를 가져오기
-        async function fetchQnAsFromFirestore() {
-            try {
-                const qnasSnapshot = await db
-                    .collection("Memo")
-                    .where("team", "==", team)
-                    .orderBy("timestamp", "desc")
-                    .limit(5)
-                    .get();
-
-                if (qnasSnapshot.empty) {
-                    qnaSection.innerHTML = "<p>등록된 메모가 없습니다.</p>";
-                    return;
-                }
-
-                qnaSection.innerHTML = ""; // 기존 내용 초기화
-                qnasSnapshot.forEach((doc) => {
-                    const qna = doc.data();
-                    const postItem = document.createElement("div");
-                    postItem.className = "post-item";
-                    postItem.innerHTML = `
-                    <div>
-                        <div class="post-title" onclick="goToDetail('${doc.id}', '${qna.author || '익명'}')">
-                            ${qna.title || "제목 없음"}
-                        </div>
-                        <div class="post-meta">작성자: ${qna.author || "익명"} | ${new Date(qna.timestamp).toLocaleString()}</div>
-                    </div>
-                `;
-                    qnaSection.appendChild(postItem);
-                });
-            } catch (error) {
-                console.error("데이터를 불러오는 중 오류 발생: ", error);
-                qnaSection.innerHTML = "<p>데이터를 불러오는 중 오류가 발생했습니다.</p>";
-            }
-        }
-        // 상세 페이지로 이동하는 함수
-        function goToDetail(id, author) {
-            if (team) {
-                const url = `community4.html?id=${id}&team=${team}&author=${encodeURIComponent(author)}`;
-                window.location.href = url;
-            } else {
-                console.error("팀 정보가 누락되었습니다.");
-            }
-        }
-
-        // Firestore에서 최신 Q&A 가져오기
-        fetchQnAsFromFirestore();
-        async function fetchDiariesFromFirestore() {
-    try {
-        const diariesSnapshot = await db
-            .collection("Diaries") // "DiaryData" 컬렉션에서 데이터 가져오기
-            //.orderBy("createdAt", "desc") // 최신 순으로 정렬
-            .limit(5) // 최신 5개만 가져오기
-            .get();
-
-        if (diariesSnapshot.empty) {
-            diarySection.innerHTML = "<p>등록된 다이어리가 없습니다.</p>";
-            return;
-        }
-
-        diarySection.innerHTML = ""; // 기존 내용 초기화
-        diariesSnapshot.forEach((doc) => {
-            const diary = doc.data();
-            const postItem = document.createElement("div");
-            postItem.className = "post-item";
-            postItem.innerHTML = `
-                <div>
-                    <!-- gameDate를 제목으로 사용 -->
-                    <div class="post-title" onclick="goToDiaryDetail('${doc.id}', '${diary.author || '익명'}')">
-                        ${diary.diaryData.gameDate || "게임 날짜 없음"}
-                    </div>
-                    <div class="post-meta">
-                        작성자: ${diary.author || "익명"} 
-                    </div>
-                </div>
-            `;
-            diarySection.appendChild(postItem);
-        });
-    } catch (error) {
-        console.error("다이어리 데이터를 가져오는 중 오류 발생: ", error);
-        diarySection.innerHTML = "<p>데이터를 불러오는 중 오류가 발생했습니다.</p>";
-    }
-}
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    console.log("Firebase initialized.");
 
 
-// 다이어리 상세 페이지로 이동하는 함수
-function goToDiaryDetail(id, author) {
-    if (team) {
-        const url = `community_diary2.html?id=${id}&team=${team}&author=${encodeURIComponent(author)}`;
-        window.location.href = url;
+    // 팀별 색상 적용
+    const teamColors = {
+      kia: '#EA0029',      // KIA
+      samsung: '#074CA1',  // 삼성
+      lg: '#C30452',       // LG
+      doosan: '#131230',    // 두산
+      kt: '#EB1C24',       // KT
+      ssg: '#CE0E2D',      // SSG
+      lotte: '#041E42',    // 롯데
+      hanwha: '#F73600',    // 한화
+      nc: '#315288',       // NC
+      kiwoom: '#570514'    // 키움
+    };
+
+    // 구단별 색상 적용
+    if (team && teamColors[team]) {
+      document.documentElement.style.setProperty('--hover-color', teamColors[team]);
     } else {
-        console.error("팀 정보가 누락되었습니다.");
+      document.documentElement.style.setProperty('--hover-color', '#d32f2f'); // 기본 색상
     }
-}
 
-// 다이어리 섹션 가져오기
-const diarySection = document.getElementById('diary-section');
+    // 팀별 제목 설정
+    const teamNames = {
+      kia: 'KIA 다이어리',
+      samsung: '삼성 다이어리',
+      lg: 'LG 다이어리',
+      doosan: '두산 다이어리',
+      kt: 'KT 다이어리',
+      ssg: 'SSG 다이어리',
+      lotte: '롯데 다이어리',
+      hanwha: '한화 다이어리',
+      nc: 'NC 다이어리',
+      kiwoom: '키움 다이어리'
+    };
 
-// Firestore에서 다이어리 데이터를 가져오기
-fetchDiariesFromFirestore();
+    if (team) {
+      headerTitle.textContent = teamNames[team] || '다이어리';
+    } else {
+      headerTitle.textContent = '다이어리';
+    }
 
-        function updateContent(team) {
-            if (teamContent[team]) {
-                // 페이지 1
-                const event1Texts = document.getElementById("event1-texts");
-                event1Texts.innerHTML = "";
-                teamContent[team].event1.texts.forEach(text => {
-                    const li = document.createElement("li");
-                    li.textContent = text;
-                    event1Texts.appendChild(li);
-                });
-                document.getElementById("event1-image").src = teamContent[team].event1.image;
+    const comLink = document.getElementById('com-link');
+    if (team) {
+      comLink.href = `community1.html?team=${team}`;
+    } else {
+      comLink.href = '#';
+      alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
 
-                // 페이지 2
-                const event2Texts = document.getElementById("event2-texts");
-                event2Texts.innerHTML = "";
-                teamContent[team].event2.texts.forEach(text => {
-                    const li = document.createElement("li");
-                    li.textContent = text;
-                    event2Texts.appendChild(li);
-                });
-                document.getElementById("event2-image").src = teamContent[team].event2.image;
+    const diaryLink = document.getElementById('qna-link'); // 잘못된 부분 수정
+    if (team) {
+      diaryLink.href = `community2.html?team=${team}`;
+    } else {
+      diaryLink.href = '#';
+      alert("유효한 팀이 없습니다. URL에 team 파라미터를 추가하세요.");
+    }
 
-                // 페이지 3
-                const event3Texts = document.getElementById("event3-texts");$
-                event3Texts.innerHTML = "";
-                teamContent[team].event3.texts.forEach(text => {
-                    const li = document.createElement("li");
-                    li.textContent = text;
-                    event3Texts.appendChild(li);
-                });
-                document.getElementById("event3-image").src = teamContent[team].event3.image;
-            }
-        }
+    // 다이어리 데이터를 가져오기
+    async function loadDiaries() {
+      try {
+        const diariesSnapshot = await db.collection("Diaries")
+          .get();
 
-        updateContent(team);
-        // 페이지 변경 함수 수정: 섹션마다 독립적으로 페이지 전환을 처리하도록 개선
-        function changePage(pageNumber, sectionIndex) {
-            const section = document.querySelector(`.horizontal-box-container[data-section-index="${sectionIndex}"]`);
+        console.log("Diaries Query Result:", diariesSnapshot); // 결과 확인
+        console.log("Number of documents:", diariesSnapshot.size); // 문서 개수 확인
 
-            if (!section) {
-                console.error(`Section with index ${sectionIndex} not found.`);
-                return;
-            }
+        const diaries = [];
 
-            // 모든 페이지를 숨기고, 특정 페이지만 보이도록 설정
-            const pages = section.querySelectorAll(`.horizontal-box[data-page-index]`);
-            pages.forEach((page) => {
-                const pageIndex = parseInt(page.getAttribute("data-page-index"), 10);
-                if (pageIndex === pageNumber) {
-                    page.style.display = "flex"; // 페이지를 표시
-                    page.classList.remove("hidden");
-                } else {
-                    page.style.display = "none"; // 페이지를 숨김
-                    page.classList.add("hidden");
-                }
-            });
+        diariesSnapshot.forEach((doc) => {
+          const data = doc.data();
+          console.log("다이어리 데이터:", data);
 
-            // 버튼 활성화 상태 업데이트
-            const buttons = section.querySelectorAll(`.pagination-btn[data-section="${sectionIndex}"]`);
-            buttons.forEach((button) => {
-                const buttonPage = parseInt(button.getAttribute("data-page"), 10);
-                if (buttonPage === pageNumber) {
-                    button.classList.add("active");
-                } else {
-                    button.classList.remove("active");
-                }
-            });
-        }
+          // diaryData가 존재하는지 확인 후, 없으면 빈 객체로 처리
+          const diaryData = data.diaryData || {};
 
-        // 페이지 초기화 로직 수정: 첫 번째 페이지로 초기화
-        document.addEventListener("DOMContentLoaded", () => {
-            const sections = document.querySelectorAll(".horizontal-box-container");
+          if (!diaryData) {
+            console.warn(`No diaryData for document ${doc.id}`); // diaryData가 없으면 경고
+            return; // diaryData가 없으면 해당 다이어리는 건너뛰기
+          }
 
-            sections.forEach((section, sectionIndex) => {
-                const buttons = section.querySelectorAll(".pagination-btn");
+          // awayTeamLineup과 homeTeamLineup을 제외한 데이터만 가져오기
+          const { awayTeamLineup, homeTeamLineup, ...restOfDiaryData } = diaryData;
 
-                // 각 버튼에 클릭 이벤트 등록
-                buttons.forEach((button) => {
-                    const pageNumber = parseInt(button.getAttribute("data-page"), 10);
-                    button.addEventListener("click", () => {
-                        changePage(pageNumber, sectionIndex);
-                    });
-                });
+          // createdAt 필드가 Timestamp 형식일 경우, toDate()를 호출하여 JavaScript Date 객체로 변환
+          const createdAt = data.createdAt ? new Date(data.createdAt.seconds * 1000 + data.createdAt.nanoseconds / 1000000).toLocaleString() : '날짜 없음';
 
-                // 각 섹션의 첫 번째 페이지로 초기화
-                changePage(1, sectionIndex);
-            });
+          const author = data.author || '익명'; // author가 없으면 '익명'으로 처리
+
+          diaries.push({
+            id: doc.id,
+            author: author, // '익명' 또는 실제 author
+            createdAt: createdAt, // '날짜 없음' 또는 생성일시
+            ...restOfDiaryData,  // awayTeamLineup과 homeTeamLineup을 제외한 나머지 데이터
+          });
         });
-        changePage(1);
 
-    </script>
+        // 데이터가 없으면 메시지 출력
+        if (diaries.length === 0) {
+          console.log("No diaries found.");
+          postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>';
+          return;
+        }
+
+        console.log("Loaded Diaries:", diaries); // 콘솔에 데이터를 출력하여 확인
+        renderDiaries(diaries);  // renderDiaries 함수 호출
+
+      } catch (error) {
+        console.error("Error loading data: ", error);
+        postList.innerHTML = '<p>데이터를 불러오는 중 오류가 발생했습니다.</p>';
+      }
+    }
+
+    // Diaries 목록 렌더링
+    function renderDiaries(diaries) {
+      postList.innerHTML = ''; // 기존 Diaries 목록 초기화
+
+      if (diaries.length === 0) {
+        postList.innerHTML = '<p>등록된 다이어리가 없습니다.</p>'; // Diaries가 없을 경우 메시지 표시
+        return;
+      }
+
+      const currentUserID = sessionStorage.getItem("userID");
+
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, diaries.length);
+      const currentDiaries = diaries.slice(startIndex, endIndex);
+
+      currentDiaries.forEach((diary) => {
+        const postItem = document.createElement('div');
+        postItem.className = 'post-item';
+
+        // createdAt이 Timestamp 형식일 때, toDate() 메서드를 사용하여 Date로 변환
+        const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
+
+        postItem.innerHTML = `
+            <div>
+                <div class="post-title" onclick="goToDetail('${diary.id}')">${diary.gameDate || "게임 날짜 없음"}</div>
+                <div class="post-meta">작성자: ${diary.author || '익명'} | ${createdAt}</div>
+            </div>
+        `;
+        postList.appendChild(postItem);
+      });
+
+      renderPagination(diaries.length);
+    }
+
+
+
+
+    // Diaries 상세 페이지로 이동
+    // Diaries 상세 페이지로 이동
+    function goToDetail(id) {
+      window.location.href = `community_diary2.html?id=${id}&team=${team}`;
+    }
+
+
+    // 페이지네이션 렌더링
+    function renderPagination(totalItems) {
+      const paginationContainer = document.getElementById('pagination');
+      paginationContainer.innerHTML = '';
+
+      const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+      const prevButton = document.createElement('button');
+      prevButton.innerHTML = '<';
+      prevButton.disabled = currentPage === 1;
+      prevButton.onclick = () => changePage(currentPage - 1);
+      paginationContainer.appendChild(prevButton);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement('button');
+        pageButton.innerHTML = i;
+        pageButton.className = i === currentPage ? 'active' : '';
+        pageButton.onclick = () => changePage(i);
+        paginationContainer.appendChild(pageButton);
+      }
+
+      const nextButton = document.createElement('button');
+      nextButton.innerHTML = '>';
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.onclick = () => changePage(currentPage + 1);
+      paginationContainer.appendChild(nextButton);
+    }
+
+    function changePage(page) {
+      currentPage = page;
+      loadDiaries();
+    }
+
+    // 초기 Firestore 데이터 로드
+    loadDiaries();
+  </script>
 
 </body>
 
