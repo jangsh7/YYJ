@@ -38,7 +38,7 @@ async function calculateWinRate() {
             else if (data.diaryData.result === "draw") draws++;
         });
         
-        const totalGames = wins + losses + draws;
+        const totalGames = wins + losses;
         const winRate = totalGames > 0 ? ((wins / totalGames) * 100).toFixed(1) : 0.0;
 
         console.log(`승: ${wins}, 패: ${losses}, 무: ${draws}, 승률: ${winRate}%`);
