@@ -806,12 +806,10 @@
         }
 
         // Firestore에서 최신 Q&A 가져오기
-        fetchQnAsFromFirestore();
         async function fetchDiariesFromFirestore() {
     try {
         const diariesSnapshot = await db
-            .collection("Diaries") // "DiaryData" 컬렉션에서 데이터 가져오기
-            //.orderBy("createdAt", "desc") // 최신 순으로 정렬
+            .collection("Diaries") // "Diaries" 컬렉션에서 데이터 가져오기
             .limit(5) // 최신 5개만 가져오기
             .get();
 
@@ -823,6 +821,10 @@
         diarySection.innerHTML = ""; // 기존 내용 초기화
         diariesSnapshot.forEach((doc) => {
             const diary = doc.data();
+
+            // createdAt 처리: createdAt이 Timestamp 형식이라면 toDate() 사용하여 JavaScript Date로 변환
+            const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
+
             const postItem = document.createElement("div");
             postItem.className = "post-item";
             postItem.innerHTML = `
@@ -832,7 +834,7 @@
                         ${diary.diaryData.gameDate || "게임 날짜 없음"}
                     </div>
                     <div class="post-meta">
-                        작성자: ${diary.author || "익명"} 
+                        작성자: ${diary.author || "익명"} | ${createdAt}
                     </div>
                 </div>
             `;
@@ -843,7 +845,6 @@
         diarySection.innerHTML = "<p>데이터를 불러오는 중 오류가 발생했습니다.</p>";
     }
 }
-
 
 // 다이어리 상세 페이지로 이동하는 함수
 function goToDiaryDetail(id, author) {

@@ -367,6 +367,38 @@
 
         // 다이어리 데이터를 가져오기
         async function fetchDiary() {
+    try {
+        const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
+        
+        if (!diaryDoc.exists) {
+            alert("해당 다이어리를 찾을 수 없습니다. 목록으로 돌아갑니다.");
+            window.location.href = `community2.html?team=${team}`;
+        }
+        
+        const diary = diaryDoc.data();
+
+        // createdAt 필드를 안전하게 처리 (Timestamp 형식일 경우)
+        const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
+
+        // 작성자와 날짜를 같이 표시
+        document.getElementById('qna-detail').innerHTML = `
+            <div class="qna-title">${diary.gameDate || "날짜 없음"}</div>
+            <div class="qna-meta">
+                작성자: ${diary.author || "익명"}
+            </div>
+            <div class="qna-content">게임 시간: ${diary.gameTime || "시간 없음"}</div>
+            <div class="qna-diary">나만의 일기: ${diary.diary || "내용 없음"}</div>
+            <div class="qna-mvp">나만의 MVP: ${diary.mvp || "내용 없음"}</div>
+        `;
+    } catch (error) {
+        console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
+    }
+}
+
+        // 댓글 데이터를 가져오기
+        // 다이어리 데이터를 가져오기
+        // 다이어리 데이터를 가져오기
+        async function fetchDiary() {
             try {
                 const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
                 if (!diaryDoc.exists) {
@@ -374,170 +406,147 @@
                     window.location.href = `community2.html?team=${team}`;
                 }
                 const diary = diaryDoc.data();
-                document.getElementById('qna-detail').innerHTML = `
-          <div class="qna-title">${diary.gameDate || "날짜 없음"}</div>
-          <div class="qna-meta">작성자: ${diary.author || "익명"} | ${new Date(diary.createdAt.toDate()).toLocaleString()}</div>
-          <div class="qna-content">게임 시간: ${diary.gameTime || "시간 없음"}</div>
-          <div class="qna-diary">나만의 일기: ${diary.diary || "내용 없음"}</div>
-          <div class="qna-mvp">나만의 MVP: ${diary.mvp || "내용 없음"}</div>
-        `;
-            } catch (error) {
-                console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
-            }
-        }
+                const diaryData = diary.diaryData;  // diaryData 필드에서 데이터를 가져오기
 
-        // 댓글 데이터를 가져오기
-        // 다이어리 데이터를 가져오기
-       // 다이어리 데이터를 가져오기
-async function fetchDiary() {
-    try {
-        const diaryDoc = await db.collection('Diaries').doc(diaryId).get();
-        if (!diaryDoc.exists) {
-            alert("해당 다이어리를 찾을 수 없습니다. 목록으로 돌아갑니다.");
-            window.location.href = `community2.html?team=${team}`;
-        }
-        const diary = diaryDoc.data();
-        const diaryData = diary.diaryData;  // diaryData 필드에서 데이터를 가져오기
 
-               
-        // diaryData 내부의 값들을 처리
-        qnaDetail.innerHTML = `
+                // diaryData 내부의 값들을 처리
+                qnaDetail.innerHTML = `
             <div class="qna-title">${diaryData.gameDate || "날짜 없음"}</div>
             <div class="qna-meta">작성자: ${diary.author || "익명"} </div>
             <div class="qna-content">게임 시간: ${diaryData.gameTime || "시간 없음"}</div>
             <div class="qna-diary">나만의 일기: ${diaryData.diary || "내용 없음"}</div>
             <div class="qna-mvp">나만의 MVP: ${diaryData.mvp || "내용 없음"}</div>
         `;
-    } catch (error) {
-        console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
-    }
-}
+            } catch (error) {
+                console.error("다이어리 데이터를 가져오는 중 오류 발생:", error);
+            }
+        }
 
-let comments = [];
+        let comments = [];
 
-async function fetchComments() {
-    try {
-        const commentsSnapshot = await db.collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .orderBy('date', 'desc')
-            .get();
+        async function fetchComments() {
+            try {
+                const commentsSnapshot = await db.collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .orderBy('date', 'desc')
+                    .get();
 
-        comments = [];
-        commentsSnapshot.forEach((doc) => {
-            const comment = doc.data();
-            comment.id = doc.id; // 댓글 ID 추가
-            comments.push(comment);
-        });
-        renderComments(); // 댓글 렌더링
-    } catch (error) {
-        console.error("댓글을 가져오는 중 오류 발생:", error);
-    }
-}
+                comments = [];
+                commentsSnapshot.forEach((doc) => {
+                    const comment = doc.data();
+                    comment.id = doc.id; // 댓글 ID 추가
+                    comments.push(comment);
+                });
+                renderComments(); // 댓글 렌더링
+            } catch (error) {
+                console.error("댓글을 가져오는 중 오류 발생:", error);
+            }
+        }
 
-// 댓글 렌더링
-function renderComments() {
-    commentsList.innerHTML = ''; // 기존 댓글 초기화
-    comments.forEach((comment, index) => {
-        const isCurrentUser = comment.author === userID; // 현재 사용자가 작성한 댓글인지 확인
+        // 댓글 렌더링
+        function renderComments() {
+            commentsList.innerHTML = ''; // 기존 댓글 초기화
+            comments.forEach((comment, index) => {
+                const isCurrentUser = comment.author === userID; // 현재 사용자가 작성한 댓글인지 확인
 
-        const commentElement = document.createElement('div');
-        commentElement.className = 'comment-item';
-        commentElement.innerHTML = `
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item';
+                commentElement.innerHTML = `
             <p>${comment.text}</p>
             <small>${comment.author || "익명"} | ${new Date(comment.date.toDate()).toLocaleString()}</small>
             ${isCurrentUser
-            ? `<div class="comment-actions">
+                        ? `<div class="comment-actions">
                     <button onclick="editComment('${comment.id}', ${index})">수정</button>
                     <button onclick="deleteComment('${comment.id}', ${index})">삭제</button>
                 </div>`
-            : ''
-        }
+                        : ''
+                    }
         `;
-        commentsList.appendChild(commentElement);
-    });
-}
+                commentsList.appendChild(commentElement);
+            });
+        }
 
-// 댓글 작성
-submitCommentButton.onclick = async function () {
-    const commentText = commentInput.value.trim();
-    if (!commentText) {
-        alert("댓글 내용을 입력하세요.");
-        return;
-    }
+        // 댓글 작성
+        submitCommentButton.onclick = async function () {
+            const commentText = commentInput.value.trim();
+            if (!commentText) {
+                alert("댓글 내용을 입력하세요.");
+                return;
+            }
 
-    try {
-        const newComment = {
-            text: commentText,
-            date: firebase.firestore.Timestamp.now(),
-            author: userID
+            try {
+                const newComment = {
+                    text: commentText,
+                    date: firebase.firestore.Timestamp.now(),
+                    author: userID
+                };
+
+                // Firestore에 댓글 추가
+                const docRef = await db.collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .add(newComment);
+
+                // 댓글 배열에 새 댓글 추가
+                comments.push({ id: docRef.id, ...newComment });
+                commentInput.value = ''; // 입력창 초기화
+                renderComments(); // 댓글 목록 새로 렌더링
+            } catch (error) {
+                console.error("댓글 저장 중 오류 발생:", error);
+                alert("댓글 작성 중 오류가 발생했습니다.");
+            }
         };
 
-        // Firestore에 댓글 추가
-        const docRef = await db.collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .add(newComment);
+        // 댓글 삭제
+        async function deleteComment(commentId, index) {
+            try {
+                // 해당 댓글 삭제
+                await db.collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .doc(commentId)
+                    .delete();
 
-        // 댓글 배열에 새 댓글 추가
-        comments.push({ id: docRef.id, ...newComment });
-        commentInput.value = ''; // 입력창 초기화
-        renderComments(); // 댓글 목록 새로 렌더링
-    } catch (error) {
-        console.error("댓글 저장 중 오류 발생:", error);
-        alert("댓글 작성 중 오류가 발생했습니다.");
-    }
-};
+                // 댓글 목록에서 해당 댓글 삭제
+                comments.splice(index, 1);
+                renderComments(); // 삭제 후 댓글 목록 새로 렌더링
+            } catch (error) {
+                console.error("댓글 삭제 중 오류 발생:", error);
+                alert("댓글 삭제 중 오류가 발생했습니다.");
+            }
+        }
 
-// 댓글 삭제
-async function deleteComment(commentId, index) {
-    try {
-        // 해당 댓글 삭제
-        await db.collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .doc(commentId)
-            .delete();
+        // 댓글 수정
+        async function editComment(commentId, index) {
+            const newCommentText = prompt("수정할 댓글을 입력하세요:", comments[index].text);
+            if (newCommentText === null || newCommentText.trim() === "") {
+                return; // 빈 댓글은 수정할 수 없음
+            }
 
-        // 댓글 목록에서 해당 댓글 삭제
-        comments.splice(index, 1);
-        renderComments(); // 삭제 후 댓글 목록 새로 렌더링
-    } catch (error) {
-        console.error("댓글 삭제 중 오류 발생:", error);
-        alert("댓글 삭제 중 오류가 발생했습니다.");
-    }
-}
+            try {
+                // Firestore에서 해당 댓글 수정
+                await db.collection('Diaries')
+                    .doc(diaryId)
+                    .collection('Comments')
+                    .doc(commentId)
+                    .update({
+                        text: newCommentText,
+                        date: firebase.firestore.Timestamp.now() // 수정 시간 업데이트
+                    });
 
-// 댓글 수정
-async function editComment(commentId, index) {
-    const newCommentText = prompt("수정할 댓글을 입력하세요:", comments[index].text);
-    if (newCommentText === null || newCommentText.trim() === "") {
-        return; // 빈 댓글은 수정할 수 없음
-    }
+                // 댓글 목록에서 수정된 텍스트 반영
+                comments[index].text = newCommentText;
+                renderComments(); // 수정 후 댓글 목록 새로 렌더링
+            } catch (error) {
+                console.error("댓글 수정 중 오류 발생:", error);
+                alert("댓글 수정 중 오류가 발생했습니다.");
+            }
+        }
 
-    try {
-        // Firestore에서 해당 댓글 수정
-        await db.collection('Diaries')
-            .doc(diaryId)
-            .collection('Comments')
-            .doc(commentId)
-            .update({
-                text: newCommentText,
-                date: firebase.firestore.Timestamp.now() // 수정 시간 업데이트
-            });
-
-        // 댓글 목록에서 수정된 텍스트 반영
-        comments[index].text = newCommentText;
-        renderComments(); // 수정 후 댓글 목록 새로 렌더링
-    } catch (error) {
-        console.error("댓글 수정 중 오류 발생:", error);
-        alert("댓글 수정 중 오류가 발생했습니다.");
-    }
-}
-
-// 초기 데이터 로드
-fetchDiary();
-fetchComments();
+        // 초기 데이터 로드
+        fetchDiary();
+        fetchComments();
 
     </script>
 
