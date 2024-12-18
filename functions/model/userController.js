@@ -17,7 +17,7 @@ const addUser = async (req, res, next) => {
       ID: data.ID,
       PW: data.PW,
       createdAt: data.createdAt || new Date().toISOString(),
-      selected_team: data.selected_team,
+      selected_team: data.selected_team || "미정",
     });
 
     res.status(201).send("회원가입이 완료되었습니다.");

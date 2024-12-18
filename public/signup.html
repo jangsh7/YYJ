@@ -292,7 +292,7 @@
             const email = document.getElementById("email").value;
             const id = document.getElementById("username").value;
             const pw = document.getElementById("password").value;
-            const selected_team = document.getElementById("selected_team").value;
+            const selected_team = selectedTeamValue || "미정";
             console.log("폼 제출 시 selected_team 값:", selectedTeamValue);
 
             try {
@@ -304,7 +304,7 @@
                         email: email,
                         ID: id,
                         PW: pw,
-                        selected_team: selectedTeamValue || "미정",
+                        selected_team: selected_team,
                         createdAt: new Date().toISOString(),
                     }),
                 });
@@ -334,6 +334,7 @@
                 selectedTeamValue = selectedTeam.value; // 전역 변수에 저장
                 document.getElementById("selected_team").textContent = "선택된 구단: " + selectedTeamValue;
                 document.getElementById("popupOverlay").style.display = "none";
+                console.log(selectedTeamValue);
             } else {
                 alert("구단을 선택해주세요.");
             }
