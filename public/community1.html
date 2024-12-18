@@ -806,13 +806,10 @@
         }
 
         // Firestore에서 최신 Q&A 가져오기
-        fetchQnAsFromFirestore();
         async function fetchDiariesFromFirestore() {
     try {
         const diariesSnapshot = await db
-            .collection("Diaries")
-            //.where("team", "==", team) // 팀 필터링
-            .orderBy("createdAt", "desc") // 최신 순으로 정렬
+            .collection("Diaries") // "Diaries" 컬렉션에서 데이터 가져오기
             .limit(5) // 최신 5개만 가져오기
             .get();
 
@@ -824,17 +821,20 @@
         diarySection.innerHTML = ""; // 기존 내용 초기화
         diariesSnapshot.forEach((doc) => {
             const diary = doc.data();
+
+            // createdAt 처리: createdAt이 Timestamp 형식이라면 toDate() 사용하여 JavaScript Date로 변환
+            const createdAt = diary.createdAt ? new Date(diary.createdAt.toDate()).toLocaleString() : '날짜 없음';
+
             const postItem = document.createElement("div");
             postItem.className = "post-item";
             postItem.innerHTML = `
                 <div>
                     <!-- gameDate를 제목으로 사용 -->
                     <div class="post-title" onclick="goToDiaryDetail('${doc.id}', '${diary.author || '익명'}')">
-                        ${diary.gameDate || "게임 날짜 없음"}
+                        ${diary.diaryData.gameDate || "게임 날짜 없음"}
                     </div>
                     <div class="post-meta">
-                        작성자: ${diary.author || "익명"} | 
-                        ${new Date(diary.createdAt.toDate()).toLocaleString()} <!-- createdAt을 변환 -->
+                        작성자: ${diary.author || "익명"} | ${createdAt}
                     </div>
                 </div>
             `;
@@ -885,7 +885,7 @@ fetchDiariesFromFirestore();
                 document.getElementById("event2-image").src = teamContent[team].event2.image;
 
                 // 페이지 3
-                const event3Texts = document.getElementById("event3-texts");
+                const event3Texts = document.getElementById("event3-texts");$
                 event3Texts.innerHTML = "";
                 teamContent[team].event3.texts.forEach(text => {
                     const li = document.createElement("li");

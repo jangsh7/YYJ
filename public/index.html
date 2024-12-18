@@ -168,19 +168,26 @@ firebase.initializeApp(firebaseConfig);
             });
             console.log("조회된 사용자 데이터:", userData); // 디버깅 로그
 
+            let selected_team;
+            userQuery.forEach((doc) => {
+                userData = doc.data();
+            });
+            
             // 비밀번호 확인
             if (userData.PW === password) {
-                // 비밀번호 일치
-                console.log("비밀번호 일치: 로그인 성공!"); // 디버깅 로그
-                errorMessage.style.display = "none";
-                alert("로그인 성공!");
-                // 세션 스토리지에 userID 저장
-                sessionStorage.setItem("userID", username); 
-                console.log("userName in sessionStorage:", sessionStorage.getItem("userID"));
-                sessionStorage.setItem("selectedTeam", userData.selected_team || "미정");
-                console.log("selectedTeam in sessionStorage:", sessionStorage.getItem("selectedTeam"));
+            // 비밀번호 일치
+            console.log("비밀번호 일치: 로그인 성공!"); // 디버깅 로그
+            errorMessage.style.display = "none";
+            alert("로그인 성공!");
 
-                window.location.href = "calendar.html"; // 메인 페이지로 이동
+            // 세션 스토리지에 userID와 selected_team 저장
+            sessionStorage.setItem("userID", username);
+            sessionStorage.setItem("selected_team", userData.selected_team); // Firestore에서 가져온 selected_team 값 저장
+            console.log("userName in sessionStorage:", sessionStorage.getItem("userID"));
+            console.log("selected_team in sessionStorage:", sessionStorage.getItem("selected_team"));
+
+            // 메인 페이지로 이동
+            window.location.href = "calendar.html"; // 메인 페이지로 이동
             } else {
                 // 비밀번호 불일치
                 console.log("비밀번호 불일치"); // 디버깅 로그
