@@ -11,33 +11,33 @@
 
 
 ## Project Schedule
-![Sample Gantt](/roadmap.png)
+![Sample Gantt](public/example_images//roadmap.png)
 - 2024.11.29 기준 4주차 진행 중에 있습니다.
 
 
 ## Project Screenshot
 ### 🔏Login
-<img src="login_example.png" alt="logo image" width="400px">
+<img src="public/example_images/login_example.png" alt="logo image" width="400px">
 
 ### 🔐SignUp
-<img src="signup_update.png" alt="logo image" width="400px">
-<img src="signup_success.png" alt="logo image" width="400px">
+<img src="public/example_images/signup_update.png" alt="logo image" width="400px">
+<img src="public/example_images/signup_success.png" alt="logo image" width="400px">
 
 ### 🔍Find id/pw
-![Sample UI](/find_idpw_example.png)
+![Sample UI](public/example_images/find_idpw_example.png)
 
 ### 📅Calendar
-![Sample UI](/calendar_example.png)
+![Sample UI](public/example_images/calendar_example.png)
 
 ### 📖Diary
-![Sample UI](/diary_example.png)
+![Sample UI](public/example_images/diary_example.png)
 
 ### 👨‍👩‍👧‍👦community
-<img src="community_example.png" alt="logo image" width="400px">
+<img src="public/example_images/community_example.png" alt="logo image" width="400px">
 
-<img src="memo_example1.png" alt="logo image" width="400px">
-<img src="memo_example2.png" alt="logo image" width="400px">
-<img src="memo_example3.png" alt="logo image" width="400px">
+<img src="public/example_images/memo_example1.png" alt="logo image" width="400px">
+<img src="public/example_images/memo_example2.png" alt="logo image" width="400px">
+<img src="public/example_images/memo_example3.png" alt="logo image" width="400px">
 
 
 
