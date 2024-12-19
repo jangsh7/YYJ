@@ -118,7 +118,7 @@
         <input type="submit" value="아이디 찾기" class="btn">
     </form>
     <div class="links">
-        <a href="login.html">로그인 페이지로 돌아가기</a>
+        <a href="index.html">로그인 페이지로 돌아가기</a>
     </div>
 </div>
 
@@ -185,7 +185,7 @@
     function sendIdEmail(toEmail, userId) {
         // 백엔드 API를 호출해 이메일 전송 요청
         $.ajax({
-            url: "http://localhost:8080/send-id", // 백엔드 엔드포인트
+            url: "https://api-htauzstwia-uc.a.run.app/send-id", // 백엔드 엔드포인트
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({

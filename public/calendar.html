@@ -1,257 +1,411 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>전체 화면 캘린더</title>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<style>
-    @font-face { 
-        font-family: "SCDream4";
-        src: url("font/SCDream4.otf") format("truetype");
-        font-weight: normal;
-    }
-    * {
-        font-family: 'SCDream4';
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캘린더</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "SCDream4";
+            src: url("font/SCDream4.otf") format("truetype");
+            font-weight: normal;
+        }
 
-    body, html {
-        background-color: white;
-        margin: 0;
-        font-family: 'Roboto', sans-serif;
-    }
+        * {
+            font-family: 'SCDream4';
+        }
 
-    /* 상단 메뉴 스타일 */
-    .top-menu {
-        background-color: #333333;
-        color: white;
-        padding: 12px 0px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        body,
+        html {
+            background-color: white;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+        }
 
-    .top-menu .title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-left: 50px;
-    }
+        /* 상단 메뉴 스타일 */
+        .top-menu {
+            background-color: #333333;
+            color: white;
+            padding: 12px 20px;
+            /*양쪽에 동일한 여백 20px 결정*/
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
 
-    .top-menu .nav-links {
-        margin-right: 100px;
-    }
+        .top-menu .logo-space {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-    .top-menu .nav-links a {
-        color: white;
-        text-decoration: none;
-        margin: 0 10px;
-    }
+        .top-menu .title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
 
-    .top-menu .nav-links a:hover {
-        color: #ff6347;
-    }
+        .title_logo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
 
-    .container {
-        display: flex;
-        width: 90vw;
-        max-width: 1200px;
-        height: 90vh;
-        margin: 20px auto;
-    }
+        .top-menu .logo-space img {
+            width: 90px;
+            height: 90px;
+        }
 
-    .image-space {
-        width: 25%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border-right: 1px solid #ccc;
-        text-align: center;
-    }
+        .top-menu .nav-links {
+            display: flex;
+            align-items: center;
+        }
 
-    .calendar-container {
-        background-color: white;
-        width: 75%;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+        .top-menu .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
 
-    .month-year {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
+        .top-menu .nav-links a:hover {
+            color: #ff6347;
+        }
 
-    .month-year select, .month-year button {
-        border: none;
-        background-color: white;
-        font-size: 18px;
-        color: #333;
-        font-family: 'Roboto', sans-serif;
-        outline: none;
-        padding: 5px;
-        cursor: pointer;
-        appearance: none;
-    }
+        .container {
+            display: flex;
+            width: 90vw;
+            max-width: 1200px;
+            height: 90vh;
+            margin: 20px auto;
+        }
 
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 10px;
-        width: 100%;
-        padding-left: 10px;
-        padding-right: 10px;
-        box-sizing: border-box;
-    }
+        .image-space {
+            width: 25%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
 
-    .calendar-day {
-        width: 100%;
-        aspect-ratio: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 18px;
-        color: #333;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
+        .calendar-container {
+            background-color: white;
+            width: 75%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .day-header {
-        color: #c8c8c8;
-        font-weight: bold;
-        font-size: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        .month-year {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
 
-    .day-header:nth-child(1) {
-        color: #d9534f;
-    }
+        .month-year select,
+        .month-year button {
+            border: none;
+            background-color: white;
+            font-size: 18px;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+            outline: none;
+            padding: 5px;
+            cursor: pointer;
+            appearance: none;
+        }
 
-    .day-header:nth-child(7) {
-        color: #002063;
-    }
+        /*.calendar-grid*/
+        #calendarGrid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: 100px;
+            gap: 10px;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
 
-    .today {
-        background-color: #9a1010d3;
-        color: white;
-        border-radius: 10px;
-    }
+        .calendar-day {
+            position: relative;
+            overflow: hidden;
+            min-height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
 
-    .stats-section {
-        margin-top: 20px;
-        font-size: 18px;
-    }
+        .day-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            /*날짜보다 뒤에 위치하도록*/
+        }
 
-    .stats-section input[type="number"] {
-        width: 50px;
-        font-size: 16px;
-        padding: 5px;
-        border: none;
-        text-align: center;
-        margin: 0 5px;
-    }
+        .day-text {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.6);
+            /*font-weight: bold;*/
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 14px;
+        }
 
-    .stats-section input[type="text"] {
-        width: 70px;
-        font-size: 16px;
-        text-align: center;
-        border: none;
-        background-color: transparent;
-    }
-</style>
+        .calendar-day.selected {
+            border: 2px solid #0c3b6d;
+            border-radius: 10px;
+        }
+
+        .day-header {
+            color: #c8c8c8;
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .day-header:nth-child(1) {
+            color: #d9534f;
+        }
+
+        .day-header:nth-child(7) {
+            color: #002063;
+        }
+
+        .today {
+            background-color: #9a1010d3;
+            color: white;
+            border-radius: 10px;
+        }
+
+        .stats-section {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .stats-section input[type="number"] {
+            width: 50px;
+            font-size: 16px;
+            padding: 5px;
+            border: none;
+            text-align: center;
+            margin: 0 5px;
+        }
+
+        .stats-section input[type="text"] {
+            width: 70px;
+            font-size: 16px;
+            text-align: center;
+            border: none;
+            background-color: transparent;
+        }
+
+        .logo-space img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+        }
+
+        .yyj_logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background-color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calendar-text {
+            position: absolute;
+            top: 70%;
+            left: 50%;
+            /*left: 150px;
+            bottom: 3px;
+            transform: translateX(-27px);*/
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            font-weight: bold;
+            color: black;
+            text-shadow: 1px 1px 2px white;
+        }
+
+        .calendar-day.selected {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+        }
+    </style>
 </head>
+
 <body>
-
-<!-- 상단 메뉴 -->
-<div class="top-menu">
-    <div class="title">요야정 - 요즘 야구 정리</div>
-    <div class="nav-links">
-        <a href="community1.html?team=kia">KIA</a>
-        <a href="community1.html?team=samsung">삼성</a>
-        <a href="community1.html?team=lg">LG</a>
-        <a href="community1.html?team=doosan">두산</a>
-        <a href="community1.html?team=kt">KT</a>
-        <a href="community1.html?team=ssg">SSG</a>
-        <a href="community1.html?team=lotte">롯데</a>
-        <a href="community1.html?team=hanwha">한화</a>
-        <a href="community1.html?team=nc">NC</a>
-        <a href="community1.html?team=kiwoom">키움</a>
-        <a href="https://www.koreabaseball.com/Default.aspx">KBO 사이트</a>
-        <a href="login.html">로그아웃</a>
-    </div>
-</div>
-
-<div class="container">
-    <div class="image-space">
-        <img src="images/KIWOOMheroes.jpg" alt="달력 이미지" width="150">
-        
-        <div class="stats-section">
-            <div>
-                승률: <input type="text" id="winRate" value="0.0%" readonly>
+    <!-- 상단 메뉴 -->
+    <div class="top-menu">
+        <div class="logo-space">
+            <div class="yyj_logo">
+                <img src="example_images/YOYAJUNG_big.png" alt="로고 이미지" width="90">
             </div>
-            <div>
-                <input type="number" id="winsInput" placeholder="0" oninput="calculateWinRate()" min="0"> 승
-                <input type="number" id="lossesInput" placeholder="0" oninput="calculateWinRate()" min="0"> 패
+            <div class="title_logo">요야정: 요즘 야구 정리</div>
+        </div>
+
+        <div class="nav-links">
+            <a href="community1.html?team=kia">KIA</a>
+            <a href="community1.html?team=samsung">삼성</a>
+            <a href="community1.html?team=lg">LG</a>
+            <a href="community1.html?team=doosan">두산</a>
+            <a href="community1.html?team=kt">KT</a>
+            <a href="community1.html?team=ssg">SSG</a>
+            <a href="community1.html?team=lotte">롯데</a>
+            <a href="community1.html?team=hanwha">한화</a>
+            <a href="community1.html?team=nc">NC</a>
+            <a href="community1.html?team=kiwoom">키움</a>
+            <a href="https://www.koreabaseball.com/Default.aspx">KBO 사이트</a>
+            <a href="index.html">로그아웃</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="image-space">
+            <!--<img src="images/KTwiz.jpg" alt="달력 이미지" width="150">-->
+            <div style="position: relative; width: 300px; height: 300px; border: 1px solid white;">
+                <!-- 배경 이미지 -->
+                <img id="calendarBackground" src="images/KTwiz.jpg" alt="달력 배경 이미지" style="width: 300px; height: 300px; object-fit: contain;">
+
+                <!-- 월 숫자 텍스트 -->
+                <div class="calendar-text">
+                    <p>changeYearMonth()</p>
+                </div>
+            </div>
+
+
+
+            <div class="stats-section">
+                <div>
+                    나의 승률: <input type="text" id="winRate" value="0.0%" readonly>
+                </div>
+                <div>
+                    <input type="number" id="winsInput" placeholder="0" readonly> 승
+                    <input type="number" id="lossesInput" placeholder="0" readonly> 패
+                    <input type="number" id="drawsInput" placeholder="0" readonly> 무
+                </div>
+            </div>
+        </div>
+
+        <div class="calendar-container">
+            <div class="month-year">
+                <button onclick="changeMonth(-1)">&#10094;</button>
+                <select id="yearSelect" onchange="changeYearMonth()"></select>
+                <select id="monthSelect" onchange="changeYearMonth()"></select>
+                <button onclick="changeMonth(1)">&#10095;</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                <div class="day-header">SUN</div>
+                <div class="day-header">MON</div>
+                <div class="day-header">TUE</div>
+                <div class="day-header">WED</div>
+                <div class="day-header">THU</div>
+                <div class="day-header">FRI</div>
+                <div class="day-header">SAT</div>
             </div>
         </div>
     </div>
+    <!--파일 업로드 input 태그 추가-->
+    <input type="file" id="imageUpload" style="display: none;" accept="image/*">
 
-    <div class="calendar-container">
-        <div class="month-year">
-            <button onclick="changeMonth(-1)">&#10094;</button>
-            <select id="yearSelect" onchange="changeYearMonth()"></select>
-            <select id="monthSelect" onchange="changeYearMonth()"></select>
-            <button onclick="changeMonth(1)">&#10095;</button>
-        </div>
-        <div class="calendar-grid" id="calendarGrid">
-            <div class="day-header">SUN</div>
-            <div class="day-header">MON</div>
-            <div class="day-header">TUE</div>
-            <div class="day-header">WED</div>
-            <div class="day-header">THU</div>
-            <div class="day-header">FRI</div>
-            <div class="day-header">SAT</div>
-        </div>
-    </div>
-</div>
+    <!-- Firebase App (기본 Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-storage.js"></script>
 
-<script src="calendar.js"></script>
-<script>
-    let currentDate = new Date();
+    <script src="calendar.js"></script>
+    <script>
+        // Firestore 초기화
+    const firebaseConfig = {
+        apiKey: "AIzaSyAx3iFpiJFVA_UTyHSKw0m1Ke2GEns1TJA",
+        authDomain: "yyjdb-1e121.firebaseapp.com",
+        projectId: "yyjdb-1e121",
+        storageBucket: "gs://yyjdb-1e121.firebasestorage.app",
+        messagingSenderId: "455353963754",
+        appId: "1:455353963754:web:2a64f5411a4061e9143393"
+    };
 
-    function initYearMonthSelectors() {
-        const yearSelect = document.getElementById("yearSelect");
-        const monthSelect = document.getElementById("monthSelect");
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    console.log("Firebase initialized.");
 
-        for (let year = 2020; year <= 2030; year++) {
-            const option = document.createElement("option");
-            option.value = year;
-            option.textContent = year;
-            yearSelect.appendChild(option);
-        }
+        // 팀 이미지 매핑 객체
+    const teamImages = {
+        "두산 베어스": "DOOSANbears.jpg",
+        "한화 이글스": "HANHWAeagles.jpg",
+        "KIA 타이거즈": "KIAtigers.jpg",
+        "키움 히어로즈": "KIWOOMheroes.jpg",
+        "KT 위즈": "KTwiz.jpg",
+        "LG 트윈스": "LGtwins.jpg",
+        "롯데 자이언츠": "LOTTEgiants.jpg",
+        "NC 다이노스": "NCdinos.jpg",
+        "삼성 라이온즈": "SAMSUNGlions.jpg",
+        "SSG 랜더스": "SSGlanders.jpg"
+    };
 
-        for (let month = 1; month <= 12; month++) {
-            const option = document.createElement("option");
-            option.value = month - 1;
-            option.textContent = month;
-            monthSelect.appendChild(option);
-        }
+    // 세션 스토리지에서 selected_team 가져오기
+    const selectedTeam = sessionStorage.getItem("selected_team") || "미정";
+    console.log("Selected Team from sessionStorage:", selectedTeam);
 
-        yearSelect.value = currentDate.getFullYear();
-        monthSelect.value = currentDate.getMonth();
+    // 배경 이미지 설정
+    const calendarBackground = document.getElementById("calendarBackground");
+    if (teamImages[selectedTeam]) {
+        calendarBackground.src = `images/${teamImages[selectedTeam]}`;
+    } else {
+        console.warn("No matching image for selected team. Using default.");
     }
 
-    function renderCalendar() {
-        const calendarGrid = document.getElementById("calendarGrid");
-        calendarGrid.innerHTML = `
+        let currentDate = new Date();
+        let selectedDayElement = null;
+
+        function initYearMonthSelectors() {
+            const yearSelect = document.getElementById("yearSelect");
+            const monthSelect = document.getElementById("monthSelect");
+
+            for (let year = 2020; year <= 2030; year++) {
+                const option = document.createElement("option");
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+
+            for (let month = 1; month <= 12; month++) {
+                const option = document.createElement("option");
+                option.value = month - 1;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            }
+
+            yearSelect.value = currentDate.getFullYear();
+            monthSelect.value = currentDate.getMonth();
+
+            // 초기 월 숫자 표시
+            const calendarTextElement = document.querySelector(".calendar-text p");
+            calendarTextElement.textContent = currentDate.getMonth() + 1; // 월 초기값 설정
+        }
+
+        function renderCalendar() {
+            const calendarGrid = document.getElementById("calendarGrid");
+            calendarGrid.innerHTML = `
             <div class="day-header">SUN</div>
             <div class="day-header">MON</div>
             <div class="day-header">TUE</div>
@@ -261,69 +415,169 @@
             <div class="day-header">SAT</div>
         `;
 
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
 
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-
-        for (let i = 0; i < firstDay.getDay(); i++) {
-            const emptyDiv = document.createElement("div");
-            calendarGrid.appendChild(emptyDiv);
-        }
-
-        for (let day = 1; day <= lastDay.getDate(); day++) {
-            const dateDiv = document.createElement("div");
-            dateDiv.classList.add("calendar-day");
-            dateDiv.textContent = day;
-
-            // 클릭 이벤트
-            dateDiv.addEventListener("click", (event) => {
-                const formattedDate = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
-                showGameOptions(formattedDate, event); // 마우스 위치를 함께 전달
-            });
-
-            if (
-                day === new Date().getDate() &&
-                month === new Date().getMonth() &&
-                year === new Date().getFullYear()
-            ) {
-                dateDiv.classList.add("today");
+            for (let i = 0; i < firstDay.getDay(); i++) {
+                const emptyDiv = document.createElement("div");
+                calendarGrid.appendChild(emptyDiv);
             }
 
-            calendarGrid.appendChild(dateDiv);
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateDiv = document.createElement("div");
+                dateDiv.classList.add("calendar-day");
+                //dateDiv.textContent = day;
+
+                // dateDiv.innerHTML = `
+                // <img src="" alt="이미지" class="day-image" style="display: none;">
+                // <span class="day-text">${day}</span>
+                // `;
+
+                // 날짜를 YYYY-MM-DD 형식으로 data-date에 저장
+                const formattedDate = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+                dateDiv.setAttribute("data-date", formattedDate);
+
+                // 날짜 텍스트 추가
+                const dayText = document.createElement("div");
+                dayText.classList.add("day-text");
+                dayText.textContent = day;
+
+                dateDiv.appendChild(dayText);
+
+                // 클릭 이벤트
+                dateDiv.addEventListener("click", (event) => {
+                    const formattedDate_click = `${year}.${(month + 1).toString().padStart(2, "0")}.${day.toString().padStart(2, "0")}`;
+                    showGameOptions(formattedDate_click, event); // 마우스 위치를 함께 전달
+                });
+
+                if (
+                    day === new Date().getDate() &&
+                    month === new Date().getMonth() &&
+                    year === new Date().getFullYear()
+                ) {
+                    dateDiv.classList.add("today");
+                }
+
+                calendarGrid.appendChild(dateDiv);
+            }
         }
-    }
 
-    function changeMonth(offset) {
-        currentDate.setMonth(currentDate.getMonth() + offset);
-        updateSelectors();
-        renderCalendar();
-    }
+        function changeMonth(offset) {
+            currentDate.setMonth(currentDate.getMonth() + offset);
+            updateSelectors();
+            renderCalendar();
 
-    function changeYearMonth() {
-        const yearSelect = document.getElementById("yearSelect").value;
-        const monthSelect = document.getElementById("monthSelect").value;
-        currentDate = new Date(yearSelect, monthSelect);
-        renderCalendar();
-    }
+            updateMonthText();
+            // 이미지 다시 로드
+            loadDiaryImagesToCalendar();
+        }
 
-    function updateSelectors() {
-        document.getElementById("yearSelect").value = currentDate.getFullYear();
-        document.getElementById("monthSelect").value = currentDate.getMonth();
-    }
+        function changeYearMonth() {
+            const yearSelect = document.getElementById("yearSelect").value;
+            const monthSelect = document.getElementById("monthSelect").value;
+            currentDate = new Date(yearSelect, monthSelect);
+            renderCalendar();
 
-    function calculateWinRate() {
-        const wins = parseInt(document.getElementById("winsInput").value) || 0;
-        const losses = parseInt(document.getElementById("lossesInput").value) || 0;
-        const totalGames = wins + losses;
+            updateMonthText();
+            // 이미지 다시 로드
+            loadDiaryImagesToCalendar();
+        }
 
-        let winRate = totalGames > 0 ? ((wins / totalGames) * 100).toFixed(1) : "0.0";
-        document.getElementById("winRate").value = winRate + "%";
-    }
+        // 월 숫자 텍스트를 업데이트하는 함수
+        function updateMonthText() {
+            const calendarTextElement = document.querySelector(".calendar-text p");
+            const monthNumber = currentDate.getMonth() + 1; // JavaScript의 월은 0부터 시작
+            calendarTextElement.textContent = monthNumber;
+        }
 
-    initYearMonthSelectors();
-    renderCalendar();
-</script>
+        function updateSelectors() {
+            document.getElementById("yearSelect").value = currentDate.getFullYear();
+            document.getElementById("monthSelect").value = currentDate.getMonth();
+        }
+
+        // // 날짜 클릭 이벤트
+        // document.getElementById("calendarGrid").addEventListener("click", function (e) {
+        //     const dayElement = e.target.closest(".calendar-day");
+        //     if (dayElement) {
+        //         if (selectedDayElement) {
+        //             selectedDayElement.classList.remove("selected");
+        //         }
+
+        //         selectedDayElement = dayElement;
+        //         selectedDayElement.classList.add("selected");
+
+        //         // 파일 업로드 창 열기
+        //         document.getElementById("imageUpload").click();
+        //     }
+        // });
+
+        // document.getElementById("imageUpload").addEventListener("change", function () {
+        //     const file = this.files[0];
+        //     if (file && selectedDayElement) {
+        //         const reader = new FileReader();
+
+        //         reader.onload = function (event) {
+        //             const imageUrl = event.target.result;
+        //             const dayImage = selectedDayElement.querySelector(".day-image");
+
+        //             if (dayImage) {
+        //                 dayImage.src = imageUrl;
+        //                 dayImage.style.display = "block";
+
+        //                 // 이미지가 삽입되면 셀 크기 조정
+        //                 selectedDayElement.style.minHeight = "110px";
+        //             }
+        //         };
+
+        //         reader.readAsDataURL(file);
+        //     }
+        // });
+        // Diary 이미지 캘린더에 추가하는 함수
+        async function loadDiaryImagesToCalendar() {
+            try {
+                const diariesSnapshot = await db.collection("Diaries").where("author", "==", loggedInUser).get();
+
+                if (diariesSnapshot.empty) {
+                    console.warn("해당 사용자의 다이어리가 존재하지 않습니다.");
+                    return;
+                }
+
+                diariesSnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    const gameDate = data.diaryData.gameDate; // YYYY-MM-DD 형식
+                    const imageURL = data.diaryData.imageURL;
+
+                    if (gameDate && imageURL) {
+                        const calendarDayElement = document.querySelector(`[data-date="${gameDate}"]`);
+
+                        if (calendarDayElement) {
+                            // 이미지 엘리먼트 추가
+                            const img = document.createElement("img");
+                            img.src = imageURL;
+                            img.classList.add("day-image");
+                            img.alt = "Diary Image";
+
+                            // 중복 추가 방지
+                            if (!calendarDayElement.querySelector("img")) {
+                                calendarDayElement.appendChild(img);
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("다이어리 이미지 불러오기 중 오류 발생:", error);
+            }
+        }
+
+        // 페이지 로드 시 실행
+        window.addEventListener("load", async () => {
+            initYearMonthSelectors();
+            renderCalendar();
+            await loadDiaryImagesToCalendar(); // 날짜에 이미지 추가
+        });
+    </script>
 </body>
+
 </html>

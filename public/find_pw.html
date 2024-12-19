@@ -118,7 +118,7 @@
         <input type="submit" value="비밀번호 찾기" class="btn">
     </form>
     <div class="links">
-        <a href="login.html">로그인 페이지로 돌아가기</a>
+        <a href="index.html">로그인 페이지로 돌아가기</a>
     </div>
 </div>
 
@@ -183,7 +183,7 @@
     // 이메일 전송 함수
     function sendPasswordEmail(toEmail, userPassword) {
         $.ajax({
-            url: "http://localhost:8080/send-password", // 백엔드 엔드포인트
+            url: "https://api-htauzstwia-uc.a.run.app/send-password", // 백엔드 엔드포인트
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
